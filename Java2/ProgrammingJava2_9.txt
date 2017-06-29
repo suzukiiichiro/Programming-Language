@@ -1,0 +1,971 @@
+	
+
+
+============================================================================================
+
+            Programming Java2 Vol.9
+
+============================================================================================
+
+	Learn More About Java2 Professional Tutrial
+
+			Chapter 1 変数とオブジェクト
+			Chapter 2 お約束とコメント
+			Chapter 3 メソッドと基本制御
+			Chapter 4 コンストラクタと初期化
+			Chapter 5 クラスの再利用
+			Chapter 6 継承
+			Chapter 7 ポリモフィズム
+			Chapter 8 インターフェイスとインナークラス
+			Chapter 9 コレクション
+			Chapter10 エラーハンドリング
+			Chapter11 ファイル入出力
+			Chapter12 Creating Windows AWT
+			Chapter13 Creating Windows Swing
+			Chapter14 Multiple Threads
+			Chapter15 ネットワーク
+		  Chapter16 アルゴリズムとデータ構造
+
+
+
+Index 	
+	1.オブジェクト指向
+	2.リニアサーチ(線形探索)
+	3.バイナリサーチ(二分木探索)
+	4.バブルソート		(サンプルアプレット付き)
+	5.選択ソート		(サンプルアプレット付き)
+	6.挿入ソート		(サンプルアプレット付き)
+	7.スタック		(サンプルアプレット付き)
+	8.キュー		(サンプルアプレット付き)
+	9.プライオリティキュー	(サンプルアプレット付き)
+	10.連結リスト		(サンプルアプレット付き)
+	11.再帰(ハノイの塔)	(サンプルアプレット付き)
+	12.シェルソート		(サンプルアプレット付き)
+	13.クイックソート	(サンプルアプレット付き)
+
+//////////////////////////////////////////////////////////////////////
+// 基本版
+
+import java.io.*;// I/Oの為
+class ArrayApp
+{
+	public static void main(String[] args) throws IOException
+	{
+		int[] arr = new int[100]; // 配列を作成
+		int nElems = 0;  // 配列内の項目数
+		//--------------------------------------------------------------
+		arr[0] = 77;  // 10項目挿入
+		arr[1] = 99;
+		arr[2] = 44;
+		arr[3] = 55;
+		arr[4] = 22;
+		arr[5] = 88;
+		arr[6] = 11;
+		arr[7] = 00;
+		arr[8] = 66;
+		arr[9] = 33;
+		nElems = 10;  // これで10項目が入った
+		  //--------------------------------------------------------------
+		for(int j=0; j<nElems; j++)  // 項目を表示
+		{
+			System.out.println( arr[j] + " ");
+		}
+	}
+}
+
+
+//////////////////////////////////////////////////////////////////////
+// オブジェクト指向版1
+
+import java.io.*;  // I/Oの為
+class LowArray
+{
+	private int[] a; // a の参照
+	//--------------------------------------------------------------
+	public LowArray(int size)// コンストラクタ
+	{ 
+		a = new int[size]; // a を作成
+	}
+	//--------------------------------------------------------------
+	public void setElem(int index, int value)
+	{
+		 a[index] = value;//配列に値をセット
+	}
+	//--------------------------------------------------------------
+}
+class LowArrayApp
+{
+	public static void main(String[] args)
+	{
+		LowArray arr;  // LowArrayクラスの参照
+		arr = new LowArray(100);// LowArrayオブジェクトを作成
+		int nElems = 0;// 配列数
+		//--------------------------------------------------------------
+		arr.setElem(0, 77);  // 10項目を挿入
+		arr.setElem(1, 99);
+		arr.setElem(2, 44);
+		arr.setElem(3, 55);
+		arr.setElem(4, 22);
+		arr.setElem(5, 88);
+		arr.setElem(6, 11);
+		arr.setElem(7, 00);
+		arr.setElem(8, 66);
+		arr.setElem(9, 33);
+		nElems = 10;  // これで配列には10項目が入った
+		for(int j=0; j<nElems; j++)// 項目表示
+		{
+			System.out.println(arr.getElem(j) + " ");
+		}
+	//--------------------------------------------------------------
+	}
+}
+
+
+//////////////////////////////////////////////////////////////////////
+// オブジェクト指向版2完成型
+
+import java.io.*;  // I/Oの為
+class HighArray
+{
+	private int[] a;// 配列を指す参照
+	private int nElems;// データ項目の数
+	//-----------------------------------------------------------
+	public HighArray(int max)// コンストラクタ
+	{
+		a = new int[max];// 配列を作成
+		nElems = 0;// まだアイテムはない
+	}
+	//-----------------------------------------------------------
+	public void insert(int value)  // 成分に配列を入れる
+	{
+	a[nElems] = value; // 挿入
+	nElems++; // 場所をインクリメント
+	}
+	//-----------------------------------------------------------
+	public void display() // 配列の内容を表示
+	{
+		for(int j=0; j<nElems; j++) // 各成分を順番に
+		{
+			System.out.println(a[j] + " ");  // 表示する
+		}
+	}
+	//-----------------------------------------------------------
+}
+class HighArrayApp
+{
+	public static void main(String[] args)
+	{
+		int maxSize = 100;// 配列のサイズ
+		HighArray arr = new HighArray(maxSize); // 配列を作成
+		//-----------------------------------------------------------
+		arr.insert(77);// 10項目挿入する
+		arr.insert(99);
+		arr.insert(44);
+		arr.insert(55);
+		arr.insert(22);
+		arr.insert(88);
+		arr.insert(11);
+		arr.insert(00);
+		arr.insert(66);
+		arr.insert(33);
+		arr.display(); // 項目を表示
+	}
+}
+
+
+//////////////////////////////////////////////////////////////////////
+// 検索のためのメソッド　線形探索(リニアサーチ)
+
+/** main() 部分記述
+
+	int searchKey = 55;// 検索する値
+	if( arr.find(searchKey) != arr.size() )
+	{
+		System.out.println("見つかった " + searchKey);
+	} else {
+		System.out.println("なかった～ " + searchKey);
+	}
+*/
+
+public int find(int searchKey)
+{
+	int re = nElems ;
+	for(int j=0; j<nElems; j++)// 項目を順番に探す
+	{
+		if(a[j] == searchKey)  // 見つかった
+		{
+			re = j ;// 項目番号を格納
+		}
+	}
+	return re ;//項目番号を返す 見つからなかったら配列数を返す
+}
+
+
+//////////////////////////////////////////////////////////////////////
+// 検索のためのメソッド 二分探索(バイナリサーチ)
+
+/** main() 部分記述
+
+	int searchKey = 55;// 検索する値
+	if( arr.find(searchKey) != arr.size() )
+	{
+		System.out.println("見つかった " + searchKey);
+	} else {
+		System.out.println("なかった～ " + searchKey);
+	}
+*/
+
+//-----------------------------------------------------------
+public int find(int searchKey)
+{
+	int lowerBound = 0;// 項目列の一番左端先頭
+	int upperBound = nElems-1;// 項目列の一番右端後方
+	int curIn;// 真ん中
+
+	while(true)
+	{
+		curIn = (lowerBound + upperBound ) / 2;//真ん中を調べる
+		if(a[curIn]==searchKey)// いきなり真ん中でビンゴだったら
+		{
+			return curIn;  // 見つかった
+		}
+		else if(lowerBound > upperBound)
+		{
+			return nElems; // 見つかった
+		}
+		else  // 見つからなかったら項目列を半分に分けて・・
+		{
+			if(a[curIn] < searchKey)
+				lowerBound = curIn + 1; // 上半分を調べる
+			else
+				upperBound = curIn - 1; // 下半分を調べる
+		}
+	}
+}
+
+
+//////////////////////////////////////////////////////////////////////
+// 並べ替え　ベースソース
+
+import java.io.*;  // I/Oの為
+class Array
+{
+	private int[] a;// ]//配列を指す参照
+	private int nElems;// データ項目の数
+	//--------------------------------------------------------------
+	public Array(int max) // コンストラクタ
+	{
+		a = new int[max];// 配列を作成
+		nElems = 0;// まだ項目はない
+	}
+	//--------------------------------------------------------------
+	public void insert(int value)  // 新たな成分を配列に入れる
+	{
+		a[nElems] = value; // 挿入
+		nElems++; // サイズをインクリメント
+	}
+	//--------------------------------------------------------------
+	public void display() // 配列の内容を表示
+	{
+		for(int j=0; j<nElems; j++) // 各成分を順番に
+		{
+			System.out.println(a[j] + " ");  // 表示する
+		}
+	}
+	//--------------------------------------------------------------
+	public void swap(int one, int two)//値を交換するメソッド
+	{
+		int  temp = a[one];
+
+		a[one] = a[two];
+		a[two] = temp;
+	}
+	//--------------------------------------------------------------
+}
+//--------------------------------------------------------------
+class SortApp
+{
+	public static void main(String[] args)
+	{
+		int maxSize = 100;// 配列のサイズ
+		Array arr = new Array(maxSize);  // 配列を作成
+
+		arr.insert(77);// 項目を１０挿入
+		arr.insert(99);
+		arr.insert(44);
+		arr.insert(55);
+		arr.insert(22);
+		arr.insert(88);
+		arr.insert(11);
+		arr.insert(00);
+		arr.insert(66);
+		arr.insert(33);
+
+		arr.display(); // 項目を表示
+	}
+}
+
+
+//////////////////////////////////////////////////////////////////////
+// バブルソート
+
+BubbleSort.htmlサンプルアプレット
+
+
+/** main() 部分記述
+
+	arr.bubbleSort(); // 配列内の項目をソートする
+
+*/
+//--------------------------------------------------------------
+public void bubbleSort()
+{
+	for(int out = nElems-1 ; out > 1 ; out--)// 配列の最後からスタート
+	{
+		for(int in = 0 ; in < out; in++)  // 配列の最初からスタート
+		{
+			if( a[in] > a[in+1] ) // 項目列の内側と外側を比べて内側の値が大きかったら
+			{
+				swap(in, in+1); // 内側と外側の値を交換する
+			}
+		}
+	}
+}
+//--------------------------------------------------------------
+
+
+//////////////////////////////////////////////////////////////////////
+// 選択ソート
+
+SelectSort.htmlサンプルアプレット
+
+
+/** main() 部分記述
+
+	arr.selectSort(); // 配列内の項目をソートする
+
+*/
+
+//--------------------------------------------------------------
+public void selectionSort()
+{
+	for(int out = 0 ; out < nElems-1; out++)// 左外側のループはスタートしてより高いインデクスへと進みます
+	{
+		int min = out;// 最小値を左外側の値とする
+		for(int in = out+1 ; in < nElems; in++) // 左外側のループもスタートしてやはり右へ進みます
+		{
+			if(a[in] < a[min] )// inが一つ身議へ幾たびに配列の成分が比較される
+			{
+				 min = in;// 右内側の値を最小値へ保存する
+			}
+			swap(out, min); // 内側のループが終了したときmin(最小値)とout(左外側)を入れ替える
+		}
+	}
+}
+//--------------------------------------------------------------
+
+
+//////////////////////////////////////////////////////////////////////
+// 挿入ソート
+
+InsertSort.htmlサンプルアプレット
+
+
+/** main() 部分記述
+
+	arr.insertionSort(); // 配列内の項目をソートする
+
+*/
+
+//--------------------------------------------------------------
+public void insertionSort()
+{
+	for(int out = 1 ; out < nElems ; out++)  // outは１からスタートして右へ進みます
+	{
+		int temp = a[out]; // 未ソート部分の左端のデータa[out]をマーク付きと見なすしtempに待避
+		int in = out; // 内側ループのためのループ変数にoutの値を入れます。
+		while(in > 0 && a[in-1] >= temp) // inがoutからスタートして左へ進みます
+		{
+			a[in] = a[in-1];// ソート済み部分のデータを一つ右へ移動
+			--in;  // 左へ一つ移動
+		}
+		a[in] = temp;// マークした項目を挿入
+	}
+}
+//--------------------------------------------------------------
+
+
+//////////////////////////////////////////////////////////////////////
+// スタック
+
+データ項目をスタックのトップにおくことをプッシュすると言います。スタックのトップから
+データを取り出すことをポップすると言います。プッシュとポップが、スタック操作の基本で
+す。スタックは、後入れ先出し型の記憶装置であると言われます。最後に入れた項目を最初に
+取り出すからです。
+
+
+Stack.htmlサンプルアプレット
+
+
+
+import java.io.*;  // I/Oの為
+class StackX
+{
+	private int maxSize;  // スタック用配列のサイズ
+	private int[] stackArray;
+	private int top;// スタックのトップ
+	//--------------------------------------------------------------
+	public StackX(int s)// コンストラクタ
+	{
+		maxSize = s; // 配列のサイズを指定
+		stackArray = new int[maxSize];  // 配列を作る
+		top = -1; // 項目はまだない
+	}
+	//--------------------------------------------------------------
+	public void push(int j)  // スタックのトップに項目を入れる
+	{
+		stackArray[++top] = j;  // topをインクリメントして項目を入れる
+	}
+	//--------------------------------------------------------------
+	public double pop()// スタックのトップから項目を取る
+	{
+		return stackArray[top--];  // 項目にアクセスしてtopをデクリメントする
+	}
+	//--------------------------------------------------------------
+	public double peek()  // スタックのトップをのぞき見する
+	{
+		return stackArray[top];
+	}
+	//--------------------------------------------------------------
+	public boolean isEmpty() // スタックが空ならtrue
+	{
+		return (top == -1);
+	}
+	//--------------------------------------------------------------
+	public boolean isFull()  // スタックが満杯ならtrue
+	{
+		return (top == maxSize-1);
+	}
+	//--------------------------------------------------------------
+}
+class StackApp
+{
+	public static void main(String[] args)
+	{
+		StackX theStack = new StackX(10);// 新たなスタックを作る
+
+		if( !theStack.isFull() ) // 簡単なエラー処理
+			theStack.push(20);// スタックに項目をプッシュする
+		if( !theStack.isFull() )
+			theStack.push(40);
+		if( !theStack.isFull() )
+			theStack.push(60);
+		if( !theStack.isFull() )
+			theStack.push(80);
+
+		while( !theStack.isEmpty() )  	// スタックが空になるまで
+		{  				// 項目を削除する
+			int value = theStack.pop();
+			System.out.println(value);// 項目の値を表示する
+		} 
+	}
+}
+
+
+//////////////////////////////////////////////////////////////////////
+// キュー
+
+最初に入れた項目が最初に取り出されます。スタックは最後に入れた項目が最初
+に取り出されます。
+
+
+Queue.htmlサンプルアプレット
+
+
+
+import java.io.*;  // I/Oの為
+class Queue
+{
+	private int maxSize;
+	private int[] queArray;
+	private int front;
+	private int rear;
+	private int nItems;
+	//--------------------------------------------------------------
+	public Queue(int s)// コンストラクタ
+	{
+		maxSize = s;
+		queArray = new int[maxSize];
+		front = 0;// 項目はまだない
+		rear = -1;// 水面下にある
+		nItems = 0;// 項目はまだない
+	}
+	//--------------------------------------------------------------
+	public void insert(int j)// キューの後尾に項目を入れる
+	{
+		if(rear == maxSize-1)// ラップアラウンドを処理する
+		{
+			rear = -1;
+		}
+		queArray[++rear] = j;// rearをインクリメントして挿入する
+		nItems++;// 項目数を一つ増やす
+	}
+	//--------------------------------------------------------------
+	public int remove()// キューの前端から項目を取る
+	{
+		int temp = queArray[front++]; // 項目をコピーしてfrontをインクリメント
+		if(front == maxSize) // ラップアラウンドを処理する
+		front = 0;
+		nItems--;// 項目数を一つ減らす
+		return temp;
+	}
+	//--------------------------------------------------------------
+	public int peekFront()// キューの先端をのぞき見する
+	{
+		return queArray[front];
+	}
+	//--------------------------------------------------------------
+	public boolean isEmpty() // キューが空ならtrue
+	{
+		return (nItems==0);
+	}
+	//--------------------------------------------------------------
+	public boolean isFull()  // キューが満杯ならtrue
+	{
+		return (nItems==maxSize);
+	}
+	//--------------------------------------------------------------
+	public int size()  // キューの中の項目の数
+	{
+		return nItems;
+	}
+	//--------------------------------------------------------------
+}
+class QueueApp
+{
+	public static void main(String[] args)
+	{
+		Queue theQueue = new Queue(5);  // 大きさ５項目のキュー
+
+		theQueue.insert(10);// ４項目を挿入
+		theQueue.insert(20);
+		theQueue.insert(30);
+		theQueue.insert(40);
+
+		theQueue.remove();  // ３項目を削除
+		theQueue.remove();  // (10, 20, 30)
+		theQueue.remove();
+
+		theQueue.insert(50);// さらに４項目を挿入
+		theQueue.insert(60);// ラップアラウンドする
+		theQueue.insert(70);
+		theQueue.insert(80);
+
+		while( !theQueue.isEmpty() ) // 全ての項目を削除しつつ表示する
+		{ // all items
+			int n = theQueue.remove();// (40, 50, 60, 70, 80)
+			System.out.println(n);
+		}
+	}
+}
+
+
+//////////////////////////////////////////////////////////////////////
+// プライオリティキュー
+
+項目がキーの値の順に並びます。キーの値が最も低い項目が常に前端におかれます。
+そして新たに挿入される項目は、そのキーの値によって、正しい位置、全項目が正し
+い並び順（ソート順）になる位置へ挿入されます。
+プライオリティキューに納めるキーの値は値が小さいほど優先度が上と解釈します。
+最小のキーが最高の優先度を貰ってアクセスされるという仕組みです。
+
+PriorityQ.htmlサンプルアプレット
+
+
+import java.io.*; // I/Oの為
+class PriorityQ
+{
+	// ソート済み配列、最大値がインデックス0, 最小値がsize-1に
+	private int maxSize;
+	private double[] queArray;
+	private int nItems;
+	//-------------------------------------------------------------
+	public PriorityQ(int s) // コンストラクタ
+	{
+		maxSize = s;
+		queArray = new double[maxSize];
+		nItems = 0;
+	}
+	//-------------------------------------------------------------
+	public void insert(double item)  // 項目を挿入する
+	{
+		int j;
+
+		if(nItems==0) // 項目がないなら
+			queArray[nItems++] = item;// 0のところに挿入する
+		else  // 項目があるなら
+		{
+			for(j=nItems-1; j>=0; j--)// 後尾からスタート
+			{
+				if( item > queArray[j] )// 新項目の方が大きいなら
+					queArray[j+1] = queArray[j]; // 上へシフト
+				else  // 小さいなら
+					break;// 終わり
+			}
+			queArray[j+1] = item;// 挿入する
+			nItems++;
+		}
+	}
+	//-------------------------------------------------------------
+	public double remove()  // 最小の項目を取り出す
+	{
+		 return queArray[--nItems]; 
+	}
+	//-------------------------------------------------------------
+	public double peekMin() // 最小の項目をのぞき見する
+	{ 
+		return queArray[nItems-1]; 
+	}
+	//-------------------------------------------------------------
+	public boolean isEmpty()// キューが空ならtrue 
+	{ 
+		return (nItems==0); 
+	}
+	//-------------------------------------------------------------
+	public boolean isFull() // キューが満杯ならtrue
+	{ 
+		return (nItems == maxSize); 
+	}
+	//-------------------------------------------------------------
+}
+class PriorityQApp
+{
+	public static void main(String[] args) throws IOException
+	{
+		PriorityQ thePQ = new PriorityQ(5);
+
+		thePQ.insert(30);
+		thePQ.insert(50);
+		thePQ.insert(10);
+		thePQ.insert(40);
+		thePQ.insert(20);
+
+		while( !thePQ.isEmpty() )
+		{
+			double item = thePQ.remove();
+			System.out.println(item + " ");  // 10, 20, 30, 40, 50
+		}
+	}
+}
+
+
+//////////////////////////////////////////////////////////////////////
+// 連結リスト
+
+連結リストと配列のもっとも大きな違いは何でしょうか？配列では各項目が特定の場所にいます。
+プログラマは配列のインデクス番号を使って、その場所に直接アクセスします。
+リストでは鎖のように連なった項目の並びを辿り歩く事によって初めて特定の項目を見つける事が
+出来ます。最初の項目からスタートして第２の項目、第３の項目と辿り、最後に目的の項目に行き
+当たるのです。
+
+	first 		88	66	44	22
+	next		66	44	22	null
+
+		↓挿入
+
+	first 	99	88	66	44	22
+	next	88	66	44	22	null
+
+	// -------------------------------------------------------------
+	public void insertFirst(int id, int dd)
+	{
+		Link newLink = new Link(id, dd);// 新たなリンクを作る
+		newLink.next = first; // nextフィールドにリンクの先頭を入れる
+		first = newLink;// firstフィールドに新しいデータを入れる
+	}
+	// -------------------------------------------------------------
+
+LinkList.htmlサンプルアプレット
+
+
+
+////////////////////////////////////////////////////////////////
+class Link
+{
+	public int iData;  // データ項目（キー）
+	public int dData;  // データ項目
+	public Link next;  // リスト内の次のリンク(自己参照型)
+	// -------------------------------------------------------------
+	public Link(int id, int dd) // コンストラクタ
+	{
+		iData = id;
+		dData = dd;
+	}
+	// -------------------------------------------------------------
+	public void displayLink()// 自分を表示する
+	{
+		System.out.println("{" + iData + ", " + dData + "} ");
+	}
+}
+////////////////////////////////////////////////////////////////
+class LinkList
+{
+	private Link first;// リストの最初のリンクを指す参照
+	// -------------------------------------------------------------
+	public LinkList()  // コンストラクタ
+	{
+		first = null;// リストにリンクがまだない
+	}
+	// -------------------------------------------------------------
+	public void insertFirst(int id, int dd)
+	{
+		Link newLink = new Link(id, dd);// 新たなリンクを作る
+		newLink.next = first; // nextフィールドにリンクの先頭を入れる
+		first = newLink;// firstフィールドに新しいデータを入れる
+	}
+	// -------------------------------------------------------------
+	public void displayList()// display the list
+	{
+		System.out.println("List (first-->last): ");
+		Link current = first; // リストの頭からスタート
+		while(current != null)// リストの最後まで
+		{
+			current.displayLink();// データを表示
+			current = current.next;  // 次のリンクへ行く
+		}
+	}
+	// -------------------------------------------------------------
+}
+////////////////////////////////////////////////////////////////
+class LinkList2App
+{
+	public static void main(String[] args)
+	{
+		LinkList theList = new LinkList();  // リストを作る
+
+		theList.insertFirst(22, 2);// ４項目挿入
+		theList.insertFirst(44, 4);
+		theList.insertFirst(66, 6);
+		theList.insertFirst(88, 8);
+		theList.displayList();  // リスト表示
+		theList.insertFirst(99, 10);
+		theList.displayList();  // リスト表示
+	}
+}
+
+
+//////////////////////////////////////////////////////////////////////
+// 再帰（ハノイの塔）
+
+再帰はメソッドが自分自身を呼び出すというプログラミングテクニックです。
+
+			□
+		□	□■
+	□	□■	□■■
+□	□■	□■■	□■■■
+１列	２列	３列	４列
+１こ	３こ	６こ	１０こ
+
+５列は？何個？　
+
+考え方：□の部分にある列数 + ■の部分にある(列数-1)の個数
+で、求めることが出来ます。
+	５ + (5-1)列目の個数
+	５ + 10 = 15
+
+int triangle(int n)  // nは個数
+{
+	return ( n + sumAllColumns(n-1) ) ;//sumAllColumns()は個数を合計する
+}
+
+となります。でもよく考えるとsumAllColumns()メソッドがやる事はtriangle()メソッド
+がやる事と全く同じです。ですからここで別のメソッドを設ける必要は無くてtriangle()
+を呼び出せばいいはずですね
+
+int triangle(int n)  // nは個数
+{
+	return ( n + triangle(n-1) ) ;//自分自身を呼び出す
+}
+
+求める列が１だったときのことを考えて１行追加します。
+
+int triangle(int n)  // nは個数
+{
+	if( n==1 )
+		return 1 ;
+	else
+		( n + triangle(n-1) ) ;//自分自身を呼び出す これが再帰！
+}
+
+ハノイの塔
+インドの神話では遠い卑怯のお寺で僧侶たちが毎日毎晩、６４枚の黄金の円盤を
+ダイヤモンドをちりばめた３つの塔の間で移し替え作業をしています。
+その移し替えが完了したら、世界の終末が訪れるのだそうです。
+
+Towers.htmlサンプルアプレット
+
+
+原理原則：
+移動させたい部分機の円盤の枚数が奇数なら１番上の円盤を目的の柱へ移す。
+偶数枚数の円盤を移動させたい時には一番上の円盤を中間的な柱へ移す
+
+アルゴリズム：元Source<S> 目的Destination<D> 中間Intermediate<I>
+上のn-1まいの円盤からなる部分木を元<S>から中間<D>へごっそり移す
+残りの円盤を<S>から<D>へ移す
+部分木を<I>から<D>へ移す
+
+勿論部分木を一挙に持ち上げて移動することは許されていません。円盤は一枚
+ずつしか動かせません。しかし再帰を使うことで４枚の円盤から３枚をごっそ
+り移動３枚を２枚、２枚を１枚といった具合に進めていきます。
+
+結論：
+そこの円盤をのぞく全ての円盤からなる部分木を中間的なとうに移し最後
+に部分木を目的地の塔へ移すという再帰的なアルゴリズムによって溶けます。
+
+import java.io.*;  // I/Oの為
+class TowersApp
+{
+	static int nDisks = 3;//円盤は３枚
+
+	public static void main(String[] args)
+	{
+		doTowers(nDisks, 'A', 'B', 'C');
+	}
+	//-----------------------------------------------------------
+	public static void doTowers(int topN, char src, char inter, char dest)
+	{
+		if(topN==1)//円盤が１枚になったら
+			System.out.println("Disk 1 from " + src + " to "+ dest);
+		else
+		{
+			doTowers(topN-1, src, dest, inter);// <S> --> <I>
+			System.out.println("Disk " + topN + " from " + src + " to "+ dest);
+			doTowers(topN-1, inter, src, dest);// <I> --> <D>
+		}
+	}
+	//-------------------------------------------------------------
+}
+
+
+//////////////////////////////////////////////////////////////////////
+// シェルソート
+
+シェルソートは挿入ソートの改良版です。シェルソートは大きな歩幅でとびとびに
+挿入ソートをすることによってこのような一挙移動を実現するのです。大きな歩幅
+によるソートが終わったら、今度はその最初の歩幅の間に並んでいる項目を、より
+狭い歩幅でソートが出来ます。このようなソートの歩幅感覚の事を伝統的にhという
+文字で表します。項目の配列を４の歩幅h=4でソートする場合0, 4, 8がソートされ
+たら次は一つ右へ動いて項目1,5,9をソートします。この処理を全ての項目がh=4で
+ソートされるまで続け、全ての項目が幅4で見た場合にはソート順になっているとい
+う状態ができあがります。h=3*h+1というインターバル数列を求める式によって算出
+します。1.4.13.40.121.364.1093......です。
+1000の成分の配列なら364,121,40,13,4,1のような数列になります。最初は364からス
+タートし次々とこの数列の値を歩幅にしてとびとびソートをするのです。歩幅1でソ
+ートしたら完了です。
+
+ShellSort.htmlサンプルアプレット
+
+
+
+//--------------------------------------------------------------
+public void shellSort()
+{
+	int inner, outer;
+	double temp;
+
+	int h = 1;// hの初期値を見つける
+	while(h <= nElems/3)
+	{
+		h = h*3 + 1; // (1, 4, 13, 40, 121,364 ...)
+	}
+	while(h>0)// h=1になるまでhを減らす
+	{
+		 // ファイルをhでソート
+		for(outer=h; outer<nElems; outer++)
+		{
+			temp = theArray[outer];
+			inner = outer;
+			 // １つの部分的パス(0, 4, 8)
+			while(inner > h-1 && theArray[inner-h] >=  temp)
+			{
+				theArray[inner] = theArray[inner-h];
+				inner -= h;
+			}
+			theArray[inner] = temp;
+		}
+		h = (h-1) / 3;  // hを減らす
+	}
+}
+//--------------------------------------------------------------
+
+
+//////////////////////////////////////////////////////////////////////
+// クイックソート
+
+クイックソートには３つの基本的なステップがあります。
+１．配列ないし部分配列を左（小さなキー）と右（大きなキー）のグループに分割する
+２．左側に関して自分自身を呼びだしてソートする
+３．右側に関して自分自身を呼びだしてソートする
+
+分割をした後は
+
+ShellSort.htmlサンプルアプレット
+
+
+//--------------------------------------------------------------
+public void quickSort()
+{
+	recQuickSort(0, nElems-1);//配列の左端と右端を指定
+}
+//--------------------------------------------------------------
+public void recQuickSort(int left, int right)
+{
+	if(right-left <= 0)  // 部分配列のサイズが１なら
+		 return; // すでにソートした再帰処理の基底条件
+	else  // サイズが２以上であれば
+	{
+		double pivot = theArray[right]; // 分割位置を右端の値に決める
+		int partition = partitionIt(left, right, pivot);// 配列の右端の値で配列を分割
+		recQuickSort(left, partition-1);// 左側をソート
+		recQuickSort(partition+1, right);  // 右側をソート
+	}
+}
+//--------------------------------------------------------------
+ public int partitionIt(int left, int right, double pivot)
+ {	//分割後の右（大きなキー）のグループの左端の成分を指すインデクスを返す
+	 int leftPtr = left-1;  // 最初の成分の右
+	 int rightPtr = right;  // 分割値の左
+
+	 while(true)
+	 {
+		 while( theArray[++leftPtr] < pivot )//より大きい項目を見つける
+		 {
+		 	;  // 何もしない
+		 }
+		 while(rightPtr > 0 && theArray[--rightPtr] > pivot)//より小さい項目を見つける
+		 {
+			 ;  // 何もしない
+		 }
+		 if(leftPtr >= rightPtr)// ポインタが交差したら
+			 break;  // 分割は終了
+		 else // 交差していないので
+			 swap(leftPtr, rightPtr);  // 成分を入れ替える
+	 }
+	 swap(leftPtr, right);  // 成分を入れ替える
+	 return leftPtr;  // 分割を返す
+ }
+//--------------------------------------------------------------
+   public void swap(int dex1, int dex2)  // swap two elements
+      {
+      double temp = theArray[dex1];      // A into temp
+      theArray[dex1] = theArray[dex2];   // B into A
+      theArray[dex2] = temp;             // temp into B
+      }  // end swap(
+//--------------------------------------------------------------
+
+
+
+
+
+
+

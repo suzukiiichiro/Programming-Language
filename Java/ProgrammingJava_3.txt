@@ -1,0 +1,885 @@
+	
+
+
+================================================================================
+
+	Programming Java Launguage   ---- Vol. 3
+
+================================================================================
+
+
+Index
+		Vol.1
+		1.Javaの基礎
+		2.クラスとメソッド
+		3.Javaの制御ステートメントの概要
+		4.制御ステートメントと演算子
+
+		Vol.2
+		1.クラスの作成
+		2.継承
+
+	  Vol.3
+	  1.インターフェイスとパッケージ
+	  2.例外
+
+		Vol.4
+		1.マルチスレッド
+		2.Javaクラスライブラリの初歩
+		3.入出力
+		4.ネットワーク
+
+		Vol.5
+		1.アプレット
+		2.イベント処理
+		3.ツール
+
+
+////////////////////////////////////////////////////////////////////////////////
+// インターフェイス
+interface Shape2D {			// ここでは実装しない
+	double getArea();		// 閉じられた２次元の図形の面積を計算して返す
+}
+interface Shape3D {			// ここでは実装しない
+	double getVolume();		// 閉じられた３次元の図形の体積を計算して返す
+}
+class Point3D {				// ある１点の座標を返す
+	double x, y, z;
+	Point3D(double x, double y, double z) {	// コンストラクタ
+		this.x = x;
+		this.y = y;
+		this.z = z;
+	}
+}
+abstract class Shape {			// ここでは実装されないShapeクラス
+	abstract void display();
+}
+class Circle extends Shape implements Shape2D {// implemntsキーワードによってinterfaceを実装
+	Point3D center, p; 		// pは円周上の任意の1点
+	Circle(Point3D center, Point3D p) {	// コンストラクタ
+		this.center = center;
+		this.p = p;
+	}
+	public void display() {		// インスタンスメソッド抽象メソッドを拡張
+		System.out.println("Circle");
+	}
+	public double getArea() {	// インスタンスメソッドで実装　getArea() ;
+		double dx = center.x - p.x;
+		double dy = center.y - p.y;
+		double d = dx * dx + dy * dy;
+		double radius = Math.sqrt(d);
+		return Math.PI * radius * radius;
+	}
+}
+class Sphere extends Shape implements Shape3D {// implemntsキーワードによってinterfaceを実装
+	Point3D center;
+	double radius;
+	Sphere(Point3D center, double radius) {	// コンストラクタ
+		this.center = center;
+		this.radius = radius;
+	}
+	public void display() {			// インスタンスメソッド抽象メソッドを拡張
+		System.out.println("Sphere");
+	}
+	public double getVolume() {		// インスタンスメソッドで実装 getArea() ;
+		return 4 * Math.PI * radius * radius * radius / 3;
+	}
+}
+class Shapes {
+	public static void main(String args[]) {
+		Circle c = new Circle(new Point3D(0, 0, 0), new Point3D(1, 0, 0));
+		c.display();
+		System.out.println(c.getArea());
+		Sphere s = new Sphere(new Point3D(0, 0, 0), 1);
+		s.display();
+		System.out.println(s.getVolume());
+	}
+}
+////////////////////////////////////////////////////////////////////////////////
+// インターフェイス
+interface Material {			// 様々な文字列定数を定義
+	String bronze = "bronze";
+	String gold = "gold";
+	String marble = "marble";
+	String silver = "silver";
+	String wood = "wood";
+}
+abstract class MaterialObject {		// 抽象クラス abstract class
+	String material;		// インスタンスメンバ
+}
+class Ball extends MaterialObject {	// MaterialObjectを派生拡張
+	Ball(String material) {		// コンストラクタ
+		this.material = material;
+	}
+}
+class Coin extends MaterialObject {	// MaterialObjectを派生拡張
+	Coin(String material) {		// コンストラクタ
+		this.material = material;
+	}
+}
+class Ring extends MaterialObject {	// MaterialObjectを派生拡張
+	Ring(String material) {		// コンストラクタ
+		this.material = material;
+	}
+}
+class MaterialObjects {
+	public static void main(String args[]) {
+		Ball ball = new Ball(Material.wood);	// インスタンスオブジェクト
+		Coin coin = new Coin(Material.silver);	// インスタンスオブジェクト
+		Ring ring = new Ring(Material.gold);	// インスタンスオブジェクト
+		System.out.println(ball.material);
+		System.out.println(coin.material);
+		System.out.println(ring.material);
+	}
+}
+
+////////////////////////////////////////////////////////////////////////////////
+// インターフェイスの参照
+interface A {
+	void display(String s);		// display()メソッドを宣言。実装はしない
+}
+class C1 implements A {
+	public void display(String s) {	// display()メソッドを実装
+		System.out.println("C1: " + s);
+	}
+}
+class C2 implements A {
+	public void display(String s) {	// display()メソッドを実装
+		System.out.println("C2: " + s);
+	}
+}
+class C3 implements A {
+	public void display(String s) {	// display()メソッドを実装
+		System.out.println("C3: " + s);
+	}
+}
+class InterfaceReferenceVariable {
+	public static void main(String args[]) {
+		A a;
+		a = new C1();		// aクラスでC1インスタンスオブジェクト作成
+		a.display("String 1");
+		a = new C2();		// aクラスでC2インスタンスオブジェクト作成
+		a.display("String 2");
+		a = new C3();		// aクラスでC3インスタンスオブジェクト作成
+		a.display("String 3");
+	}
+}
+////////////////////////////////////////////////////////////////////////////////
+// インターフェイスの継承
+interface J {
+	int j = 200;
+	int j1();		// ここでは実装しない
+}
+interface K {
+	double k1();		// ここでは実装しない
+}
+interface L extends J, K {	// JインターフェイスとKインターフェイスを継承
+	boolean l1();		// ここでは実装しない
+}
+class I implements L {
+	public int j1() {	// インスタンスメソッドで実装
+		return 4;
+	}
+	public double k1() {	// インスタンスメソッドで実装
+		return 6.8;
+	}
+	public boolean l1() {	// インスタンスメソッドで実装
+		return true;
+	}
+}
+class InterfaceInheritance {
+	public static void main(String args[]) {
+		I i = new I();	// インスタンスオブジェクト
+		System.out.println(i.j);
+		System.out.println(i.j1());
+		System.out.println(i.k1());
+		System.out.println(i.l1());
+	}
+}
+////////////////////////////////////////////////////////////////////////////////
+// instanceof演算子
+abstract class Fish {					// 抽象クラス abstract
+	abstract void display();			// ここでは実装しない
+}
+abstract class FreshWaterFish extends Fish {		// 抽象クラス abstract Fishを継承
+}
+abstract class SaltWaterFish extends Fish {		// 抽象クラス abstract Fishを継承
+}
+class Trout extends FreshWaterFish {			// FreshWaterFishを継承 display()を実装
+	void display() {				// インスタンスメソッドでabstractメソッドを実装
+		System.out.println("Trout");
+	}
+}
+class Flounder extends SaltWaterFish {			// SaltWaterFishを継承 display()を実装
+	void display() {				// インスタンスメソッドでabstractメソッドを実装
+		System.out.println("Flounder");
+	}
+}
+class Tuna extends SaltWaterFish { 			// SaltWaterFishを継承 display()を実装
+	void display() {				// インスタンスメソッドでabstractメソッドを実装
+		System.out.println("Tuna");
+	}
+}
+class InstanceofClass {
+	public final static int NUMFISH = 4;		// 定数として宣言
+	public static void main(String args[]) {
+		Fish fishes[] = new Fish[NUMFISH];	// 魚類の配列を作成するインスタンスオブジェクト
+		fishes[0] = new Trout();		// オブジェクトを作成する
+		fishes[1] = new Flounder();
+		fishes[2] = new Tuna();
+		fishes[3] = new Trout();
+		for (int i = 0; i < NUMFISH; i++) {	// instanceofを利用して特定のクラスだけを指定
+			Fish fish = fishes[i];
+			if(fish instanceof SaltWaterFish) {	// 特定のクラスSaltWaterFishを指定
+				fish.display();		// 出力
+			}
+		}
+	}
+}
+///////////////////////////////////////////////////////////////////////////////
+interface Vehicle {
+	void drive(); 				// ここでは実装しない
+}
+abstract class Mammal {
+}
+class Bear extends Mammal {
+}
+class Lion extends Mammal {
+}
+class Elephant extends Mammal implements Vehicle {
+	public void drive() {			// Vehicleをimplementsしてここでdrive()を実装
+		System.out.println("Elephant: drive");
+	}
+}
+class Horse extends Mammal implements Vehicle {
+	public void drive() {			// Vehicleをimplementsしてここでdrive()を実装
+		System.out.println("Horse: drive");
+	}
+}
+class InstanceofInterface {
+	public final static int NUMMAMMALS = 4;			// 定数として変数に代入
+	public static void main(String args[]) {
+		Mammal mammals[] = new Mammal[NUMMAMMALS];	// 哺乳動物の配列を作成する
+		mammals[0] = new Bear();			// オブジェクトを作成する
+		mammals[1] = new Elephant();
+		mammals[2] = new Horse();
+		mammals[3] = new Lion();
+		for (int i = 0; i < NUMMAMMALS; i++) {		// instanceof演算子を利用する
+			if(mammals[i] instanceof Vehicle) {	// Vehicle(乗り物)だけを指定
+				Vehicle v = (Vehicle)mammals[i];
+				v.drive();
+			}
+		}
+	}
+}
+////////////////////////////////////////////////////////////////////////////////
+// パッケージ　４つの別々に定義したソースクラスを一つのpというパッケージにまとめる
+// 同じディレクトリに格納する事
+package p;
+class PackageDemo {
+	public static void main(String args[]) {
+		A a = new A();
+		a.a1();
+		B b = new B();
+		b.b1();
+		C c = new C();
+		c.c1();
+	}
+}
+//-------------------------------------------------------
+package p;
+class A {
+	void a1() {
+		System.out.println("a1");
+	}
+}
+//-------------------------------------------------------
+package p;
+class B {
+	void b1() {
+		System.out.println("b1");
+	}
+}
+//-------------------------------------------------------
+package p;
+class C {
+	void c1() {
+		System.out.println("c1");
+	}
+}
+
+////////////////////////////////////////////////////////////////////////////////
+// import ステートメント　別のパッケージの方にアクセスする方法
+package q;
+import r.*;
+import s.*;
+
+class ImportDemo {
+	public static void main(String args[]) {
+		R r = new R();
+		r.r1();
+		S s = new S();
+		s.s1();
+	}
+}
+//-------------------------------------------------------
+package r;
+public class R {
+	public void r1() {
+		System.out.println("r1");
+	}
+}
+//-------------------------------------------------------
+package s;
+public class S {
+	public void s1() {
+		System.out.println("s1");
+	}
+}
+////////////////////////////////////////////////////////////////////////////////
+// アクセス制御とパッケージ
+package e;
+
+public class E {
+	public int e1 = 11;
+	protected int e2 = 22;
+	private int e3 = 33;
+}
+//-------------------------------------------------------
+package f;
+import e.*;
+public class F extends E {		// クラスEの派生extends
+
+	public void display() {
+					// publicメンバにアクセスできる
+		System.out.println(e1);
+					// スーパークラスのprotectedメンバに
+					// アクセスできる Eの派生クラスだから
+		System.out.println(e2);
+					// privateメンバにはアクセスできない
+		// System.out.println(e3);
+	}
+}
+//-------------------------------------------------------
+package g;
+import e.*;
+public class G {
+
+	public void display() {
+					// Eのインスタンスを作成する
+		E e = new E();
+					// publicメンバにアクセスできる
+		System.out.println(e.e1);
+					// protectedメンバにアクセスできない
+					// Eの派生クラスでは無いから
+		// System.out.println(e.e2);
+					// privateメンバにアクセスできない
+		// System.out.println(e.e3);
+	}
+}
+//-------------------------------------------------------
+package h;
+import f.F;
+import g.G;
+class ProtectedDemo {
+	public static void main(String args[]) {
+					// 別のパッケージ内のサブクラスをテストする
+		F f = new F();
+		f.display();
+					// 別のパッケージ内の非サブクラスをテストする
+		G g = new G();
+		g.display();
+	}
+}
+////////////////////////////////////////////////////////////////////////////////
+// 例外処理
+class DivideByZero {
+	public static void main(String args[]) {
+		a();
+	}
+	static void a() {
+		b();
+	}
+	static void b() {
+		c();
+	}
+	static void c() {
+		d();
+	}
+	static void d() {
+		int i = 1;
+		int j = 0;
+		System.out.println(i/j);
+	}
+}
+////////////////////////////////////////////////////////////////////////////////
+// 例外処理
+class Divider {	// コマンドライン引数として２つの文字列を正数形式で受け取る
+	public static void main(String args[]) {
+		try {
+			System.out.println("Before Division");
+			int i = Integer.parseInt(args[0]);	// 一つ目の値を整数に変換
+			int j = Integer.parseInt(args[1]);	// 一つ目の値を整数に変換
+			System.out.println(i/j);		// 一つ目の数値を二つ目の数値で割り算
+			System.out.println("After Division");
+		}
+		catch (ArithmeticException e) {			// ゼロで割り算すると発生する
+			System.out.println("ArithmeticException");
+		}
+		catch (ArrayIndexOutOfBoundsException e) {	// コマンドライン引数のうち両方又は
+								// 一方が指定されていない時
+			System.out.println("ArrayIndex" + "OutOfBoundsException");
+		}
+		catch (NumberFormatException e) {		// 引数の形式が整数で無い時
+			System.out.println("NumberFormatException");
+		}
+		finally {					// 最後に必ず実行される
+			System.out.println("Finally block");
+		}
+	}
+}
+////////////////////////////////////////////////////////////////////////////////
+class ClassCast {
+	public static void main(String args[]) {
+		try {
+			Object obj = new Integer("85");
+			System.out.println("Before cast");
+			Double dobj = (Double)obj;
+			System.out.println("After cast");
+		}
+		catch (Exception e) {
+			System.out.println(e);
+		}
+	}
+}
+////////////////////////////////////////////////////////////////////////////////
+// catchブロックの検索
+class CatchSearch {
+	public static void a() {
+		try {
+			System.out.println("Before b");
+			b();
+			System.out.println("After b");
+		}
+		catch (ArithmeticException e) {
+			System.out.println("a: " + e);
+		}
+		finally {
+			System.out.println("a: finally");// finallyブロックを実行してmain()へ
+		}
+	}
+	public static void b() {
+		try {
+			System.out.println("Before c");
+			c();
+			System.out.println("After c");
+		}
+		catch (ArrayIndexOutOfBoundsException e) {//ここに該当するエラーが見つかり実行
+			System.out.println("b: " + e);
+		}
+		finally {				// finallyブロックを実行してa()に進む
+			System.out.println("b: finally");
+		}
+	}
+	public static void c() {
+		try {
+			System.out.println("Before d");
+			d();
+			System.out.println("After d");
+		}
+		catch (NumberFormatException e) {
+			System.out.println("c: " + e);
+		}
+		finally {
+			System.out.println("c: finally");// C()ブロックにも該当する例外が用意され
+		}					// て居ないのでb()に進む
+	}
+	public static void d() {
+		try {
+			int array[] = new int[4];	// ここでエラーが発生
+			array[10] = 10;			// ArrayIndexOutOfBoundExceptionエラー
+		}
+		catch (ClassCastException e) {
+			System.out.println("d: " + e);
+		}
+		finally {
+			System.out.println("d: finally");// 取り敢えずfinallyブロックを実行後c()
+		}					// メソッドへ進む
+	}
+	public static void main(String args[]) {
+		try {
+			System.out.println("Before a");
+			a();				// a()へ進む
+			System.out.println("After a");	// a()から戻りfinallyブロックへ
+		}
+		catch (Exception e) {
+			System.out.println("main: " + e);
+		}
+		finally {
+			System.out.println("main: finally");// 終了
+		}
+	}
+}
+////////////////////////////////////////////////////////////////////////////////
+class CatchSearch2 {
+	public static void a() {
+		try {
+			System.out.println("Before b");
+			b();
+			System.out.println("After b");
+		}
+		catch (ArithmeticException e) {
+			System.out.println("a: " + e);
+		}
+		finally {
+			System.out.println("a: finally");
+		}
+	}
+	public static void b() {
+		try {
+			System.out.println("Before c");
+			c();
+			System.out.println("After c");
+		}
+		catch (ArrayIndexOutOfBoundsException e) {
+			System.out.println("b: " + e);
+		}
+		finally {
+			System.out.println("b: finally");
+		}
+	}
+	public static void c() {
+		try {
+			System.out.println("Before d");
+			d();
+			System.out.println("After d");
+		}
+		catch (NumberFormatException e) {
+			System.out.println("c: " + e);
+		}
+		finally {
+			System.out.println("c: finally");
+		}
+	}
+	public static void d() {
+		try {
+			Object obj = new Float("85.56");
+			System.out.println("Before cast");
+			Double dobj = (Double)obj;
+			System.out.println("After cast");
+		}
+		catch (ClassCastException e) {
+			System.out.println("d: " + e);
+			int i = 1;
+			int j = 0;
+			System.out.println("Before division");
+			int k = i/j;
+			System.out.println("After division");
+			System.out.println(k);
+		}
+		finally {
+			System.out.println("d: finally");
+		}
+	}
+	public static void main(String args[]) {
+		try {
+			System.out.println("Before a");
+			a();
+			System.out.println("After a");
+		}
+		catch (Exception e) {
+			System.out.println("main: " + e);
+		}
+		finally {
+			System.out.println("main: finally");
+		}
+	}
+}
+////////////////////////////////////////////////////////////////////////////////
+// throwステートメント
+// 呼び出しもとメソッド内のcatchブロックでも同じ例外を処理する事が出来ます。
+class ThrowDemo {
+	public static void main(String args[]) {
+		try {
+			System.out.println("Before a");
+			a();
+			System.out.println("After a");		//最終的にここに戻りfinallyへ
+		}
+		catch (ArithmeticException e) {
+			System.out.println("main: " + e);
+		}
+		finally {
+			System.out.println("main: finally");	// finallyを実行
+		}
+	}
+	public static void a() {
+		try {
+			System.out.println("Before b");
+			b();
+			System.out.println("After b");
+		}
+		catch (ArithmeticException e) {
+			System.out.println("a: " + e);
+		}
+		finally {
+			System.out.println("a: finally");	// finallyを実行　main()に進む
+		}
+	}
+	public static void b() {
+		try {
+			System.out.println("Before c");
+			c();
+			System.out.println("After c");
+		}
+		catch (ArithmeticException e) {		//ここにもArithmeticExceptionが用意されて居る
+			System.out.println("b: " + e);
+		}
+		finally {
+			System.out.println("b: finally");	// finallyを実行 a()に進む
+		}
+	}
+	public static void c() {
+		try {
+			System.out.println("Before d");
+			d();
+			System.out.println("After d");
+		}
+		catch (ArithmeticException e) {		//ここにもArithmeticExceptionが用意されて居る
+			System.out.println("c: " + e);
+			throw e;			// この例外オブジェクトを持ってfinallyへ
+		}
+		finally {
+			System.out.println("c: finally");// 例外オブジェクトを持ったままb()へ
+		}
+	}
+	public static void d() {
+		try {
+			int i = 1;
+			int j = 0;
+			System.out.println("Before division");
+			System.out.println(i/j);	// 0で割り算すると起きる
+							// ArithmeticException例外発生
+			System.out.println("After division");
+		}
+		catch (ArithmeticException e) {		//ここにArithmeticExceptionが用意されて居る
+			System.out.println("d: " + e);
+			throw e;			// この例外オブジェクトを持ってfinallyへ
+		}
+		finally {
+			System.out.println("d: finally");// 例外オブジェクトを持ったままc()へ
+		}
+	}
+}
+////////////////////////////////////////////////////////////////////////////////
+class ThrowDemo2 {
+	public static void main(String args[]) {
+		try {
+			System.out.println("Before a");
+			a();
+			System.out.println("After a");
+		}
+		catch (Exception e) {
+			System.out.println("main: " + e);
+		}
+		finally {
+			System.out.println("main: finally");
+		}
+	}
+	public static void a() {
+		try {
+			System.out.println("Before throw statement");
+			throw new ArithmeticException();
+		}
+		catch (Exception e) {
+			System.out.println("a: " + e);
+		}
+		finally {
+			System.out.println("a: finally");
+		}
+	}
+}
+////////////////////////////////////////////////////////////////////////////////
+class ThrowExercise {
+
+	public static void main(String args[]) {
+		try {
+			System.out.println("Before a");
+			a();
+			System.out.println("After a");
+		}
+		catch (NumberFormatException e) {
+			System.out.println("main: " + e);
+		}
+		finally {
+			System.out.println("main: finally");
+		}
+	}
+	public static void a() {
+		try {
+			System.out.println("Before b");
+			b();
+			System.out.println("After b");
+		}
+		catch (NumberFormatException e) {
+			System.out.println("a: " + e);
+		}
+		finally {
+			System.out.println("a: finally");
+		}
+	}
+	public static void b() {
+		try {
+			System.out.println("Before c");
+			c();
+			System.out.println("After c");
+		}
+		catch (NumberFormatException e) {
+			System.out.println("b: " + e);
+		}
+		finally {
+			System.out.println("b: finally");
+		}
+	}
+	public static void c() {
+		try {
+			System.out.println("Before d");
+			d();
+			System.out.println("After d");
+		}
+		catch (ArithmeticException e) {
+			System.out.println("c: " + e);
+		}
+		finally {
+			System.out.println("c: finally");
+		}
+	}
+	public static void d() {
+		try {
+			Integer iobj = new Integer("45.67");
+		}
+		catch (NumberFormatException e) {
+			throw e;
+		}
+		finally {
+			System.out.println("d: finally");
+		}
+	}
+}
+////////////////////////////////////////////////////////////////////////////////
+// 例外とエラークラス
+class PrintStackTraceDemo {
+	public static void main(String args[]) {
+		try {
+			a();
+		}
+		catch (ArithmeticException e) {
+			e.printStackTrace();
+		}
+	}
+	public static void a() {
+		try {
+			b();
+		}
+		catch (NullPointerException e) {
+			e.printStackTrace();
+		}
+	}
+	public static void b() {
+		try {
+			c();
+		}
+		catch (NullPointerException e) {
+			e.printStackTrace();
+		}
+	}
+	public static void c() {
+		try {
+			d();
+		}
+		catch (NullPointerException e) {
+			e.printStackTrace();
+		}
+	}
+	public static void d() {
+		try {
+			int i = 1;
+			int j = 0;
+			System.out.println(i/j);
+		}
+		catch (NullPointerException e) {
+			e.printStackTrace();
+		}
+	}
+}
+////////////////////////////////////////////////////////////////////////////////
+// throwステートメント
+class ThrowsDemo {
+	public static void main(String args[]) {
+		a();
+	}
+	public static void a() {
+		try {
+			b();
+		}
+		catch (ClassNotFoundException e) {
+			e.printStackTrace();
+		}
+	}
+	public static void b() throws ClassNotFoundException {
+		c();
+	}
+	public static void c() throws ClassNotFoundException {
+		Class cls = Class.forName("java.lang.Integer");
+		System.out.println(cls.getName());
+		System.out.println(cls.isInterface());
+	}
+}
+////////////////////////////////////////////////////////////////////////////////
+// 独自の例外
+import java.util.*;
+
+class ExceptionSubclass {
+	public static void main(String args[]) {
+		a();
+	}
+	static void a() {
+		try {
+			b();
+		}
+		catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+	static void b() throws ExceptionA {
+		try {
+			c();
+		}
+		catch (ExceptionB e) {
+			e.printStackTrace();
+		}
+	}
+	static void c() throws ExceptionA, ExceptionB {
+		Random random = new Random();
+		int i = random.nextInt();
+		if(i % 2 == 0) {
+			throw new ExceptionA("We have a problem");
+		}
+		else {
+			throw new ExceptionB("We have a big problem");
+		}
+	}
+}
+class ExceptionA extends Exception {
+	public ExceptionA(String message) {
+		super(message);
+	}
+}
+class ExceptionB extends Exception {
+	public ExceptionB(String message) {
+		super(message);
+	}
+}
+
+==============================================================================
+
+

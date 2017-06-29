@@ -1,0 +1,798 @@
+	
+
+
+============================================================================================
+
+              Programming Java2 Vol.2
+
+============================================================================================
+
+	Learn More About Java2 Professional Tutrial
+
+			Chapter 1 変数とオブジェクト
+			Chapter 2 お約束とコメント
+			Chapter 3 メソッドと基本制御
+			Chapter 4 コンストラクタと初期化
+      Chapter 5 クラスの再利用
+      Chapter 6 継承
+      Chapter 7 ポリモフィズム
+			Chapter 8 インターフェイスとインナークラス
+			Chapter 9 コレクション
+			Chapter10 エラーハンドリング
+			Chapter11 ファイル入出力
+			Chapter12 Creating Windows AWT
+			Chapter13 Creating Windows Swing
+			Chapter14 Multiple Threads
+			Chapter15 ネットワーク
+			Chapter16 アルゴリズムとデータ構造
+
+
+
+///////////////////////////////////////////////////////////////////////////////////////////
+//// 	Chapter 5 クラスの再利用
+
+
+//---------------------------------------------------
+//: c05:SprinklerSystem.java
+// 宣言時の変数の値
+
+class WaterSource 
+{
+	private String s;
+	WaterSource() 
+	{
+		System.out.println("WaterSource()");
+		s = new String("Constructed");
+	}
+	public String toString() 
+	{
+		 return s; 
+	}
+}
+public class SprinklerSystem 
+{
+	private String valve1, valve2, valve3, valve4;
+	// WaterSource source = new WaterSource() ;
+	WaterSource source;
+	int i;
+	float f;
+	void print() 
+	{
+		System.out.println("valve1 = " + valve1);
+		System.out.println("valve2 = " + valve2);
+		System.out.println("valve3 = " + valve3);
+		System.out.println("valve4 = " + valve4);
+		System.out.println("i = " + i);
+		System.out.println("f = " + f);
+		System.out.println("source = " + source);
+	}
+	public static void main(String[] args) 
+	{
+		SprinklerSystem x = new SprinklerSystem();
+		x.print();
+	}
+} 
+
+/**
+ * valve1 = null
+ * valve2 = null
+ * valve3 = null
+ * valve4 = null
+ * i = 0
+ * f = 0.0
+ * source = null
+ */
+
+
+//---------------------------------------------------
+//: c05:Bath.java
+// コンストラクタの必要性と toString()の意味
+
+class Soap 
+{
+	private String s;
+	Soap() 
+	{
+		System.out.println("Soap()");
+		s = new String("Constructed");
+	}
+	public String toString() 
+	{
+		return s; 
+	}
+}
+public class Bath 
+{
+	private String s1 = new String("Happy") ;// Initializing at point of definition:
+	private String s2 = "Happy" ;
+	private String s3 ;
+	private String s4 ;
+	Soap castille;
+	int i;
+	float toy;
+
+	public Bath() 
+	{
+		System.out.println("Inside Bath()");
+		s3 = new String("Joy");
+		i = 47;
+		toy = 3.14f;
+		castille = new Soap();
+	}
+	void print() 
+	{
+		// Delayed initialization:
+		if(s4 == null)
+		{
+			s4 = new String("Joy");
+		}
+		System.out.println("s1 = " + s1);
+		System.out.println("s2 = " + s2);
+		System.out.println("s3 = " + s3);
+		System.out.println("s4 = " + s4);
+		System.out.println("i = " + i);
+		System.out.println("toy = " + toy);
+		System.out.println("castille = " + castille);
+	}
+	public static void main(String[] args) 
+	{
+		Bath b = new Bath();
+		b.print();
+	}
+} 
+
+/**
+ * Inside Bath()
+ * Soap()
+ * s1 = Happy
+ * s2 = Happy
+ * s3 = Joy
+ * s4 = Joy
+ * i = 47
+ * toy = 3.14
+ * castille = Constructed
+ */
+
+
+
+///////////////////////////////////////////////////////////////////////////////////////////
+//// 	Chapter 6 継承
+
+//: c06:Detergent.java　継承
+
+class Cleanser 
+{
+	private String s = new String("Cleanser");
+	public void append(String a) 
+	{
+		s += a; 
+	}
+	public void dilute() 
+	{
+		append(" dilute()"); 
+	}
+	public void apply() 
+	{
+		append(" apply()"); 
+	}
+	public void scrub() 
+	{
+		append(" scrub()"); 
+	}
+	public void print() 
+	{
+		System.out.println(s); 
+	}
+	public static void main(String[] args) 
+	{
+		Cleanser x = new Cleanser();
+		x.dilute(); 
+		x.apply(); 
+		x.scrub();
+		x.print();
+	}
+}
+public class Detergent extends Cleanser 
+{
+	// Change a method:
+	public void scrub() 
+	{
+		append(" Detergent.scrub()");
+		super.scrub(); // Call base-class version
+	}
+	// Add methods to the interface:
+	public void foam() 
+	{
+		append(" foam()"); 
+	}
+	// Test the new class:
+	public static void main(String[] args) 
+	{
+		Detergent x = new Detergent();
+		x.dilute();
+		x.apply();
+		x.scrub();
+		x.foam();
+		x.print();
+		System.out.println("Testing base class:");
+		Cleanser.main(args);
+	}
+}
+
+/**
+ * Cleanser dilute() apply() Detergent.scrub()
+ * Testing base class:
+ * Cleanser dilute() apply() scrub()
+ */
+
+
+//---------------------------------------------------
+//: c06:Cartoon.java 継承クラスの実行順序
+// 継承先から実行される事に注意
+
+class Art 
+{
+	public Art() 
+	{
+		System.out.println("Art constructor");
+	}
+}
+class Drawing extends Art 
+{
+	public Drawing() 
+	{
+		System.out.println("Drawing constructor");
+	}
+}
+public class Cartoon extends Drawing 
+{
+	public Cartoon() 
+	{
+		System.out.println("Cartoon constructor");
+	}
+	public static void main(String[] args) 
+	{
+		Cartoon x = new Cartoon();
+	}
+} 
+
+/**
+ * Art constructor
+ * Drawing constructor
+ * Cartoon constructor
+ */
+
+
+//---------------------------------------------------
+//: c06:Chess.java 継承の場合のスーパークラスへの値渡し
+
+class Game 
+{
+	public Game(int i) 
+	{
+		System.out.println("Game constructor i = " + i);
+	}
+}
+class BoardGame extends Game 
+{
+	public BoardGame(int i) 
+	{
+		super(i);
+		System.out.println("BoardGame constructor i = " + i);
+	}
+}
+public class Chess extends BoardGame 
+{
+	public Chess() 
+	{
+		super(11);
+		System.out.println("Chess constructor i = " + i);
+	}
+	public static void main(String[] args) 
+	{
+		Chess x = new Chess();
+	}
+} 
+
+/**
+ * Game constructor i = 11
+ * BoardGame constructor i = 11
+ * Chess constructor
+ */
+
+
+//---------------------------------------------------
+//: c06:Hide.java スーパークラスコンストラクタのオーバーロード
+
+class Homer 
+{
+	char doh(char c) 
+	{
+		System.out.println("doh(char)");
+		return 'd';
+	}
+	float doh(float f) 
+	{
+		System.out.println("doh(float)");
+		return 1.0f;
+	}
+}
+class Milhouse {}
+class Bart extends Homer
+{
+	void doh(Milhouse m) {}
+}
+class Hide 
+{
+	public static void main(String[] args) 
+	{
+		Bart b = new Bart();
+		b.doh(1); // doh(float) used
+		b.doh('x');
+		b.doh(1.0f);
+		b.doh(new Milhouse());
+	}
+} 
+
+/**
+ * doh(float)
+ * doh(char)
+ * doh(float)
+ */
+
+
+//---------------------------------------------------
+//: c06:Wind.java クラスオブジェクトを渡す
+
+class Instrument 
+{
+	public void play() 
+	{
+		System.out.println("play....") ;
+	}
+	static void tune(Instrument i) 
+	{
+		i.play();
+	}
+}
+class Wind extends Instrument
+{
+	public static void main(String[] args) 
+	{
+		Wind flute = new Wind();
+		Instrument.tune(flute); // Upcasting
+	}
+} 
+
+
+//---------------------------------------------------
+//: c06:BlankFinal.java final 修飾子
+
+class Poppet { }
+class BlankFinal 
+{
+	final int i = 0; // Initialized final
+	final int j; // Blank final
+	final Poppet p; // Blank final reference
+	// Blank finals MUST be initialized in the constructor:
+	BlankFinal() 
+	{
+		// i = 1 ; // Error!
+		j = 1; // Initialize blank final
+		p = new Poppet();
+	}
+	public static void main(String[] args) 
+	{
+		BlankFinal bf = new BlankFinal();
+	}
+} 
+
+
+//---------------------------------------------------
+//: c06:Jurassic.java finalクラスはextendsできない
+
+class SmallBrain {}
+final class Dinosaur 
+{
+	int i = 7;
+	int j = 1;
+	SmallBrain x = new SmallBrain();
+	void f() {}
+}
+public class Jurassic
+{
+	public static void main(String[] args) 
+	{
+		Dinosaur n = new Dinosaur();
+		n.f();
+		n.i = 40;
+		n.j++;
+	}
+} 
+
+
+//---------------------------------------------------
+//: c06:Beetle.java スーパークラスを含む場合の実行プロセス分析
+
+class Insect 
+{
+	int i = 9;
+	int j;
+	static int x1 = prt("static Insect.x1 initialized");
+
+	public Insect() 
+	{
+		prt("i = " + i + ", j = " + j);
+		j = 39;
+	}
+
+	static int prt(String s) 
+	{
+		System.out.println(s);
+		return 47;
+	}
+}
+public class Beetle extends Insect 
+{
+	int k = prt("Beetle.k initialized");
+	static int x2 =	prt("static Beetle.x2 initialized");
+
+	public Beetle() //ここを実行する前にsuperクラスのコンストラクタを実行
+	{
+		prt("k = " + k);
+		prt("j = " + j);
+	}
+
+	public static void main(String[] args) 
+	{
+		prt("Beetle constructor");
+		Beetle b = new Beetle();
+	}
+} 
+
+/**
+ * static Insect.x1 initialized
+ * static Beetle.x2 initialized
+ * Beetle constructor
+ * i = 9, j = 0
+ * Beetle.k initialized
+ * k = 47
+ * j = 39
+ */
+
+
+
+///////////////////////////////////////////////////////////////////////////////////////////
+//// 	Chapter 7: ポリモフィズム
+
+//------------------------------------------------
+
+//: c07:music:Music.java 
+
+class Note 
+{
+    private int value;
+    private Note(int val) 
+    {
+	 value = val; 
+    }
+    public int getValue()
+    {
+	return value ;
+    }
+	public static final Note MIDDLE_C = new Note(0) ;
+	public static final Note C_SHARP = new Note(1) ;
+	public static final Note B_FLAT = new Note(2);
+}
+class Instrument 
+{
+    public void play(Note n) 
+    {
+	    System.out.println("Instrument.play()");
+    }
+}
+class Wind extends Instrument 
+{
+    // Redefine interface method:
+    public void play(Note n) 
+    {
+	    System.out.println("Wind.play() : " + n.getValue());
+    }
+}
+public class Music
+{
+    public static void tune(Instrument i) 
+    {
+	    // ...
+	    i.play(Note.MIDDLE_C);
+    }
+    public static void main(String[] args) 
+    {
+	    Wind flute = new Wind();
+	    tune(flute); // Upcasting
+    }
+} 
+
+/**
+ * Wind.play() : 0
+ */
+
+
+//------------------------------------------------
+//: c07:Shapes.java ポリモフィズムとは
+
+class Shape 
+{ 
+    void draw() 
+	{
+		System.out.println("Shape.draw()"); 
+	}
+    void erase() 
+	{
+		System.out.println("Shape.draw()"); 
+	} 
+}
+class Circle extends Shape 
+{
+    void draw() 
+	{ 
+		System.out.println("Circle.draw()"); 
+    }
+    void erase() 
+	{ 
+		System.out.println("Circle.erase()"); 
+    }
+}
+class Square extends Shape 
+{
+    void draw() 
+	{ 
+		System.out.println("Square.draw()"); 
+    }
+    void erase() 
+	{ 
+		System.out.println("Square.erase()"); 
+    }
+}
+class Triangle extends Shape 
+{
+    void draw() 
+	{ 
+		System.out.println("Triangle.draw()"); 
+    }
+    void erase() 
+	{ 
+		System.out.println("Triangle.erase()");
+    }
+}
+public class Shapes 
+{
+    public static Shape randShape() 
+    {
+	    switch((int)(Math.random() * 3)) 
+	    {
+	        default:
+	        case 0: return new Circle();
+	        case 1: return new Square();
+	        case 2: return new Triangle();
+	    }
+    }
+    public static void main(String[] args) 
+    {
+	    Shape[] s = new Shape[9];
+	    for(int i = 0; i < s.length; i++)// Fill up the array with shapes:
+	    {
+	        s[i] = randShape();
+	    }
+	    for(int i = 0; i < s.length; i++)// Make polymorphic method calls:
+	    {
+	        s[i].draw();
+	    }
+    }
+} 
+
+/**
+ * Circle.draw()
+ * Triangle.draw()
+ * Circle.draw()
+ * Circle.draw()
+ * Circle.draw()
+ * Square.draw()
+ * Triangle.draw()
+ * Square.draw()
+ * Square.draw()
+ */
+
+
+//------------------------------------------------
+//: c07:WindError.java 
+// 引っかかるな　ポリモフィズム２
+
+class NoteX 
+{
+    public static final int
+    MIDDLE_C = 0 ;
+	C_SHARP = 1 ;
+	C_FLAT = 2;
+}
+class InstrumentX 
+{
+    public void play(int NoteX) // This one
+	{
+		System.out.println("InstrumentX.play()");
+    }
+}
+class WindX extends InstrumentX	
+{
+    // OOPS! Changes the method interface:
+    public void play(NoteX n) 
+	{
+		System.out.println("WindX.play(NoteX n)");
+    }
+}
+public class WindError 
+{
+    public static void tune(InstrumentX i) 
+    {
+	    i.play(NoteX.MIDDLE_C);//MIDDLE_C = 0 ;
+    }
+    public static void main(String[] args) 
+    {
+	    WindX flute = new WindX();
+	    tune(flute); // Not the desired behavior!
+    }
+} 
+
+/**
+ * InstrumentX.play()
+ */
+
+
+//------------------------------------------------
+//: c07:Sandwich.java コンストラクタからの呼び出し
+
+class Bread 
+{
+    Bread() { System.out.println("Bread()"); }
+}
+class Cheese 
+{
+    Cheese() { System.out.println("Cheese()"); }
+}
+class Lettuce 
+{
+    Lettuce() { System.out.println("Lettuce()"); }
+}
+
+class Meal 
+{
+    Meal() { System.out.println("Meal()"); }
+}
+class Lunch extends Meal 
+{
+    Lunch() { System.out.println("Lunch()");}
+}
+class PortableLunch extends Lunch 
+{
+    PortableLunch() {System.out.println("PortableLunch()"); }
+}
+
+class Sandwich extends PortableLunch 
+{
+    Bread b = new Bread();
+    Cheese c = new Cheese();
+    Lettuce l = new Lettuce();
+    Sandwich() 
+    { 
+    	System.out.println("Sandwich()");
+    }
+    public static void main(String[] args) 
+    {
+	new Sandwich();
+    }
+} 
+
+/**
+ * Meal()
+ * Lunch()
+ * PortableLunch()
+ * Bread()
+ * Cheese()
+ * Lettuce()
+ * Sandwich()
+ */
+
+
+//------------------------------------------------
+//: c07:PolyConstructors.java
+// extendsを考える
+
+abstract class Glyph 
+{
+    abstract void draw();
+    Glyph() 
+    {
+	    System.out.println("Glyph() before draw()");
+	    draw(); 
+	    System.out.println("Glyph() after draw()");
+    }
+}
+class RoundGlyph extends Glyph 
+{
+    int radius = 1;
+    RoundGlyph(int r) 
+    {
+	    radius = r;
+	    System.out.println("RoundGlyph.RoundGlyph(), radius = " + radius);
+    }
+    void draw() 
+    { 
+	    System.out.println("RoundGlyph.draw(), radius = " + radius);
+    }
+}
+public class PolyConstructors 
+{
+    public static void main(String[] args) 
+    {
+    	new RoundGlyph(5);
+    }
+} 
+
+/**
+ * Glyph() before draw()
+ * RoundGlyph.draw(), radius = 0
+ * Glyph() after draw()
+ * RoundGlyph.RoundGlyph(), radius = 5
+ */
+
+
+//------------------------------------------------
+//: c07:Transmogrify.java　 new で自在に操る
+
+abstract class Actor 
+{
+    abstract void act();
+}
+class HappyActor extends Actor 
+{
+    public void act() 
+    { 
+    	System.out.println("HappyActor"); 
+    }
+}
+class SadActor extends Actor 
+{
+    public void act() 
+    { 
+    	System.out.println("SadActor");
+    }
+}
+class Stage 
+{
+    Actor a = new HappyActor();// This one
+    void go() 
+    {
+	 a.act(); 
+    }
+    void change() 
+    {
+	 a = new SadActor(); // and this one!
+    }
+}
+public class Transmogrify 
+{
+    public static void main(String[] args) 
+    {
+	    Stage s = new Stage();
+	    s.go(); // Prints "HappyActor"
+	    s.change();
+	    s.go(); // Prints "SadActor"
+    }
+} 
+
+/**
+ * HappyActor
+ * SadActor
+ */ 
+
+

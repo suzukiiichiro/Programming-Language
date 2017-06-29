@@ -1,0 +1,308 @@
+	
+
+
+============================================================================================
+
+            Programming Java2 Vol.4
+
+============================================================================================
+
+	Learn More About Java2 Professional Tutrial
+
+			Chapter 1 変数とオブジェクト
+			Chapter 2 お約束とコメント
+			Chapter 3 メソッドと基本制御
+			Chapter 4 コンストラクタと初期化
+			Chapter 5 クラスの再利用
+			Chapter 6 継承
+			Chapter 7 ポリモフィズム
+			Chapter 8 インターフェイスとインナークラス
+			Chapter 9 コレクション
+			Chapter10 エラーハンドリング
+		  Chapter11 ファイル入出力
+			Chapter12 Creating Windows AWT
+			Chapter13 Creating Windows Swing
+			Chapter14 Multiple Threads
+			Chapter15 ネットワーク
+			Chapter16 アルゴリズムとデータ構造
+
+
+
+///////////////////////////////////////////////////////////////////////////////////////////
+//// 	Chapter 11: ファイル入出力
+
+//------------------------------------------------
+// How to read from standard input.
+import java.io.*;
+public class Echo 
+{
+    public static void main(String[] args)
+	throws IOException 
+    {
+	// KeyInput Ready...
+	    BufferedReader in = new BufferedReader(
+				    	new InputStreamReader(System.in));
+	// Display out
+	    String s;
+	    while((s = in.readLine()).length() != 0)
+	        System.out.println(s);
+    }
+} 
+
+/**
+Hello
+Hello
+Java
+Java
+*/
+
+
+//------------------------------------------------
+// Turn System.out into a PrintWriter.
+import java.io.*;
+public class ChangeSystemOut 
+{
+    public static void main(String[] args) 
+    {
+	    PrintWriter out = new PrintWriter(System.out, true);
+	    out.println("Hello, world");
+    }
+} 
+
+/**
+Hello, world
+*/
+
+
+//------------------------------------------------
+import java.io.*;
+public class TestEOF 
+{
+    // Throw exceptions to console:
+    public static void main(String[] args) 
+	throws IOException 
+    {
+	// File Reading Ready...
+    	DataInputStream in = new DataInputStream( 
+    				new BufferedInputStream(
+    				new FileInputStream("TestEof.java")));
+	// File Reading and Display out
+	while(in.available() != 0) 
+		System.out.print((char)in.readByte());
+    }
+} 
+
+/**
+import java.io.*;
+public class TestEOF 
+{
+    // Throw exceptions to console:
+    public static void main(String[] args) 
+	throws IOException 
+    {
+	// File Reading Ready...
+    	DataInputStream in = new DataInputStream( 
+    				new BufferedInputStream(
+    				new FileInputStream("TestEof.java")));
+	// File Reading and Display out
+	while(in.available() != 0) 
+		System.out.print((char)in.readByte());
+    }
+} 
+*/
+
+
+//------------------------------------------------
+import java.io.*;
+public class IOProblem 
+{
+    // Throw exceptions to console:
+    public static void main(String[] args) throws IOException 
+    {
+	// File writing Ready...
+	    DataOutputStream out = new DataOutputStream(
+				        new BufferedOutputStream(
+	            			new FileOutputStream("Data.txt")));
+	// File writing
+	    out.writeBytes("That was the value of pi\n");
+	    out.writeBytes("This is pi/2:\n");
+	    out.close();
+	// File Reading Ready...
+	    DataInputStream in = new DataInputStream(
+			        	new BufferedInputStream(
+	        			new FileInputStream("Data.txt")));
+	// File Reading and Display out
+	    while(in.available() != 0)
+		System.out.print((char)in.readByte());
+    }
+} 
+
+/**
+That was the value of pi
+This is pi/2:
+*/
+
+
+
+//------------------------------------------------
+// Demonstrates standard I/O redirection.
+import java.io.*;
+class Redirecting 
+{
+    // Throw exceptions to console:
+    public static void main(String[] args) throws IOException 
+    {
+	    BufferedInputStream in = 
+	        new BufferedInputStream(
+	        new FileInputStream("Redirecting.java"));
+	    PrintStream out =
+	        new PrintStream(
+	        new BufferedOutputStream(
+	            new FileOutputStream("test.out")));
+	    System.setIn(in);
+	    System.setOut(out);
+	    System.setErr(out);
+	    BufferedReader br = 
+	        new BufferedReader(
+	        new InputStreamReader(System.in));
+	    String s;
+	    while((s = br.readLine()) != null)
+	        System.out.println(s);
+	    out.close(); // Remember this!
+    }
+} 
+
+/**
+import java.io.*;
+class Redirecting 
+{
+    // Throw exceptions to console:
+    public static void main(String[] args) throws IOException 
+    {
+	    BufferedInputStream in = 
+	        new BufferedInputStream(
+	        new FileInputStream("Redirecting.java"));
+	    PrintStream out =
+	        new PrintStream(
+	        new BufferedOutputStream(
+	            new FileOutputStream("test.out")));
+	    System.setIn(in);
+	    System.setOut(out);
+	    System.setErr(out);
+	    BufferedReader br = 
+	        new BufferedReader(
+	        new InputStreamReader(System.in));
+	    String s;
+	    while((s = br.readLine()) != null)
+	        System.out.println(s);
+	    out.close(); // Remember this!
+    }
+} 
+*/
+
+//------------------------------------------------
+// Uses GZIP compression to compress a file 
+// whose name is passed on the command line.
+import java.io.*;
+import java.util.zip.*;
+
+public class GZIPcompress 
+{
+    // Throw exceptions to console:
+    public static void main(String[] args) throws IOException 
+    {
+	    BufferedReader in =
+	        new BufferedReader(
+	        new FileReader("GZIPcompress.java"));
+	    BufferedOutputStream out =
+	        new BufferedOutputStream(
+	        new GZIPOutputStream(
+	            new FileOutputStream("test.gz")));
+	    System.out.println("Writing file");
+	    int c;
+	    while((c = in.read()) != -1)
+	        out.write(c);
+	    in.close();
+	    out.close();
+	    System.out.println("Reading file");
+	    BufferedReader in2 =
+	        new BufferedReader(
+	        new InputStreamReader(
+	            new GZIPInputStream(
+	            new FileInputStream("test.gz"))));
+	    String s;
+	    while((s = in2.readLine()) != null)
+	        System.out.println(s);
+    }
+} 
+
+/**
+import java.io.*;
+import java.util.zip.*;
+
+public class GZIPcompress 
+{
+    // Throw exceptions to console:
+    public static void main(String[] args) throws IOException 
+    {
+	    BufferedReader in =
+	        new BufferedReader(
+	        new FileReader("GZIPcompress.java"));
+	    BufferedOutputStream out =
+	        new BufferedOutputStream(
+	        new GZIPOutputStream(
+	            new FileOutputStream("test.gz")));
+	    System.out.println("Writing file");
+	    int c;
+	    while((c = in.read()) != -1)
+	        out.write(c);
+	    in.close();
+	    out.close();
+	    System.out.println("Reading file");
+	    BufferedReader in2 =
+	        new BufferedReader(
+	        new InputStreamReader(
+	            new GZIPInputStream(
+	            new FileInputStream("test.gz"))));
+	    String s;
+	    while((s = in2.readLine()) != null)
+	        System.out.println(s);
+    }
+} 
+*/
+
+
+//------------------------------------------------
+import java.io.*;
+// A serializable class.
+class Alien implements Serializable 
+{
+} 
+
+// Create a serialized output file.
+public class FreezeAlien 
+{
+    // Throw exceptions to console:
+    public static void main(String[] args) 
+    	throws IOException, ClassNotFoundException 
+    {
+	    ObjectOutput out = 
+	        new ObjectOutputStream(
+	        new FileOutputStream("X.file"));
+	    Alien zorcon = new Alien();
+	    out.writeObject(zorcon); 
+	    out.close() ;
+	    ObjectInputStream in =
+	        new ObjectInputStream(
+	        new FileInputStream("X.file"));
+	    Object mystery = in.readObject();
+	    System.out.println(mystery.getClass());
+    }
+} 
+
+/**
+class Alien
+*/
+
+
+

@@ -1,0 +1,1113 @@
+
+
+================================================================================
+
+	Programming C++ Language  ---- Vol. 3
+
+================================================================================
+
+Index
+		9　ポインタと配列
+		10　文字列
+		11　クラス
+		12　簡単なクラスの作成
+
+
+
+
+////////////////////////////////////////////////////////////////////////////////////////
+9　ポインタと配列
+
+##############################################################################
+Q6-1
+配列xの先頭から順に0, 1, 2....と添え字と同じ値を代入する関数
+	void fill_num(int* x, int n) {              }
+を作成せよ
+***********************************
+View
+
+a[0] = 0
+a[1] = 1
+a[2] = 2
+a[3] = 3
+a[4] = 4
+a[5] = 5
+a[6] = 6
+a[7] = 7
+a[8] = 8
+a[9] = 9
+#######################################################
+Answer
+
+#include <iostream.h>
+
+void fill_num(int* x, int n) {
+	for (int i = 0 ;i < n ; i++ )
+		x[i] = i ;
+} // End fill_num() ;
+
+int main(void) {
+	const int asize = 10 ;
+	int a[asize] ;
+
+	fill_num(a, asize) ;
+	for (int i = 0 ; i < asize ; i++)
+	cout << "a[" << i << "] = " << a[i] << '\n' ;
+
+	return(0) ;
+} // End main() ;
+
+
+ポインタと配列
+
+	int x[10] ;
+	int* p ;
+
+要素数が１０であるint型の配列xと、intへのポインタpとがあり、
+
+	p = &x[0]
+
+と、配列xの先頭要素x[0]へのポインタをpに代入した場合を考えます。
+pはx[0]を指しますから、*pはx[0]のエイリアスとなります。
+
+	p + i はpが指すオブジェクトのi個後ろの要素を指すポインタとなる。
+	p - i はpが指すオブジェクトのi個前の要素を指すポインタとなる。
+
+p + 5はx[5]を指します。
+*(p + 2)はx[2]のエイリアスですね
+
+	pがポインタでiが整数であるとき　*(p + i) はptr[i]と表記出来る
+
+	x[2]	*(p + 2)	p[2]はすべて同じ要素を表すことになります。
+
+
+関数間の配列の受け渡し
+関数fill_numを呼び出す箇所に着目しましょう
+
+	fill_num(a, asize) ;
+
+単独で現れた配列名は、先頭要素へのポインタですから最初の引数aは配列aの先頭要素a[0]へのポ
+インタである&a[0]のことです
+呼び出される側の関数fill_numでは、仮引数xは&a[0]で初期化されることになります。
+ポインタxはa[0]を指し、*xはa[0]のエイリアスとなります。
+
+	a[0] = *x 	= x[0]
+	a[1] = *(x + 1)	= x[1]
+	.
+	.
+	.
+	a[9] = *(x + 9) = x[9]
+
+関数fill_numの中では、ポインタであるxに対して[]演算子を適用する事によって、ちょうどxが配
+列であるかの様に取り扱う事が出来るのです。
+
+
+##############################################################################
+Q6-2
+int型のオブジェクトを動的に生成し、値の代入及び表示を行うプログラムを作成せよ
+***********************************
+View
+
+整数を入力してください：5
+*x = 5
+#######################################################
+Answer
+
+#include <iostream.h>
+int main(void) {
+	int* x = new int ;
+
+	cout <<"整数を入力してください：" ;
+	cin >> *x ;
+	cout << "*x = " << *x << '\n' ;
+
+	delete x ;
+
+	return(0) ;
+} // End main() ;
+
+
+動的記憶寿命　dynamic strage duration
+C++ではオブジェクトが必要になった時点でオブジェクトを生成し、不要になったら消滅させるこ
+とが出来ます。
+この様なプログラムに運命をゆだねているオブジェクトの寿命を動的記憶寿命と呼びます。
+
+int型のオブジェクトを動的に生成するためにはnew演算子(new operator)を使って
+
+	new int
+
+とします。これでint型のオブジェクトを格納するためのsizeof(int)の大きさの領域が確保され
+ます。
+ただし、動的記憶寿命を持つオブジェクトは「名前がない」という点でほかのオブジェクトと異な
+ります。よって、エイリアス（あだ名）を与えなければなりません。その為には以下の様にポイン
+タを使えば良さそうです。
+
+	x = new int ;
+
+もちろんxはintへのポインタ型でなければなりません。
+new演算子は確保した領域へのポインタを返却しますので、ポインタxは動的に生成したオブジェク
+トを指す事になります。ちょうど*xという名前が与えられた事になります。
+
+なお、動的に生成したオブジェクトが不要になった時にそれを消滅させるのもプログラマの役目
+です。具体的にはdelete演算子(delete operator)を用いて
+
+	delete x ;
+
+とします。
+
+動的記憶寿命を持つオブジェクトの初期化
+初期化子を()で囲んだ物を型名の後ろに付け加える事によって、new演算子によってオブジェクト
+を生成すると同時に、初期化を行う事が出来ます。
+なお初期化子が与えられていない場合は、自動記憶寿命を持つオブジェクトと同様に、ゴミの値で
+初期化される事になります。
+
+	a = new int(5)		// 5で初期化
+
+
+
+##############################################################################
+Q6-3
+キーボードから読み込んだ要素数を持つint型の配列オブジェクトを動的に生成し、各要素に適当
+な値を代入・表示するプログラムを作成せよ。
+***********************************
+View
+
+要素数を入力してください：5
+a[0] = 0
+a[1] = 1
+a[2] = 2
+a[3] = 3
+a[4] = 4
+#######################################################
+Answer
+
+#include <iostream.h>
+int main(void) {
+
+	int asize ;
+	int i ;
+	int* a ;
+
+	cout << "要素数を入力してください：" ;
+	cin >> asize ;
+
+	a = new int[asize] ;
+
+	for(i = 0 ;i < asize ; i++)
+		a[i] = i ;
+
+	for(i = 0 ; i < asize ; i++)
+		cout << "a[" << i << "] = " << a[i] << '\n' ;
+
+		delete[] a ;
+
+	return(0) ;
+} // End main() ;
+
+
+配列オブジェクトの動的生成
+配列オブジェクトを動的に生成するためには以下の様に要素数を与えて
+
+	a = new int[要素数] ;
+
+とします。もちろんaはintへのポインタ型でなければなりません。
+これでint型オブジェクトを要素数分だけ並べた領域が確保される事になります。
+
+配列オブジェクトを消滅するにはdelete[]演算子(delete operator)を用いて
+
+	delete[] a ;
+
+とします。
+
+
+////////////////////////////////////////////////////////////////////////////////////////
+10　文字列
+
+##############################################################################
+Q10-1
+文字列strの長さを調べる関数
+	int strlength(char str[]) {           }
+***********************************
+View
+
+文字列x ("ABCDE")の長さ：5
+文字列y ("123")の長さ：3
+#######################################################
+Answer
+
+#include <iostream.h>
+int strlength(char str[]) {
+
+	int len = 0 ;
+
+	while(str[len])
+		len++ ;
+	return(len) ;
+} // End strlength() ;
+
+int main(void) {
+	char x[6] = "ABCDE" ;
+	char y[] = "123" ;
+
+	cout << "文字列x (\"" << x << "\")の長さ：" << strlength(x) << '\n' ;
+	cout << "文字列y (\"" << y << "\")の長さ：" << strlength(y) << '\n' ;
+
+	return(0) ;
+} // End main() ;
+
+文字列と文字の配列
+文字列リテラルは整数で言えば50や213と言った定数のような物です。整数では定数だけでなく、
+変数（オブジェクト）を使うことによって、自由な演算を行えます。文字の並びを表す文字
+列(string)も自由自在に取り扱える様になっています。
+
+C++の文字列はcharの配列として実現されます。配列の各要素には先頭から順に
+
+	'A', 'B', 'C', '\0'
+
+と格納されていなければなりません。
+文字列は文字の配列として表現されその末尾はヌル文字'\0'である
+
+文字配列の初期化
+	char str[4] = "ABC" ;
+
+空文字列
+文字列の内容が空である文字列を特に空文字列(null string)と呼びます。
+空文字列とは先頭の文字がヌル文字'\0'である文字列のことです。
+
+	char ns[] = "" ;
+
+文字列の長さを求める
+配列xは以下の様に宣言されています。
+
+	char x[6] = "ABCDE" ;
+
+文字列にはその終端を示す'\0'が必ずありますから先頭から'\0'までに文字がいくつあるかをカウ
+ントすればその文字列の長さを知る事が出来ます。
+
+	while (str[len] != '\n')
+		len++ ;
+
+0に初期化されたlenは文字'\0'が出現するまでインクリメントされていきます。
+
+
+##############################################################################
+Q10-2
+文字列strを表示する関数、及び文字列を後ろから逆順に表示する関数
+	void putstring(const char str[]) {           }
+	void putreverse(const char str[]) {           }
+を作成せよ。
+***********************************
+View
+
+文字列を入力してください：12345
+そのまま表示：12345
+逆向きに表示：54321
+#######################################################
+Answer
+
+#include <string.h>
+#include <iostream.h>
+
+void putstring(const char str[]) {
+	for (int i = 0 ; str[i] != '\0' ;i++)
+		cout << str[i] ;
+} // End putstring() ;
+
+void putreverse(const char str[]) {
+	for (int i = strlen(str) -1 ;i >= 0 ; i--)
+		cout << str[i] ;
+} // End putreverse() ;
+
+int main(void) {
+
+	char str[100] ;
+
+	cout <<"文字列を入力してください：" ;
+	cin >> str ;
+	cout <<"そのまま表示：" ;	putstring(str) ;	cout << '\n' ;
+	cout <<"逆向きに表示: " ;	putreverse(str) ;	cout << '\n' ;
+
+	return(0) ;
+} // End main() ;
+
+
+##############################################################################
+Q10-3
+文字列srcをdstにコピーする関数
+	void strcopy(char dst[], const char src[]) {              }
+を作成せよ。
+***********************************
+View
+
+文字列xを入力してください：Suzuki
+文字列yはSuzukiです
+#######################################################
+Answer
+
+#include <iostream.h>
+
+void strcopy(char dst[], const char src[]) {
+	for (int i = 0 ; dst[i] = src[i] ; i++)
+	 	 ;
+} // End strcopy() ;
+
+int main(void) {
+	char x[100] ;
+	char y[100] ;
+
+	cout << "文字列xを入力してください：" ;
+	cin >> x ;
+
+	strcopy(y, x) ;
+
+	cout << "文字列yは" << y << "です\n" ;
+
+	return(0) ;
+} // End main() ;
+
+
+文字列のコピー
+for分の繰り返しのための条件判断部の式
+
+	dst[i] = src[i]
+
+は、代入後の左辺の型と値となるのでした。条件判定式は
+
+	(dst[i] = src[i] ) != '\0'
+
+と同じ意味ですからdst[i]に代入された文字が'\0'でなければ繰り返しが続けられる事になります
+文字列!12345"の末尾の'\0'を代入した後の比較で条件判定が成立し、繰り返しの処理が終了しま
+すので'\0'までが正しくコピーされることになります。
+
+
+// 文字列st1とst2を比較する
+int strcmp(const char* st1, const char* st2) {
+	while(*st1 == *st2) {
+		if(*st1 == '\0')
+			return(0) ;//等しければ0を返す
+		st1++ ;
+		st2++ ;
+	} // End while
+
+	return((unsigned char)*st1 - (unsigned char)*st2) ;
+} // End strcmp
+
+// 文字列srcをdstに最大maxlen文字コピーする
+char* strncpy(char *dest, const char *src, size_t maxlen) {
+	char* temp = dst ;
+
+	while (maxlen) {
+		if (!(*dst++ = *src++)) break ;// '\0'を見つけたら終了
+			maxlen-- ;
+	} // End while
+
+	while (maxlen--) *dst = '\0' ;	// 残りを'\0'で埋める
+	return(temp)  ;
+} // End strncpy() ;
+
+// 文字列srcをdstに付け加える
+char* strcat(char *dest, const char *src) {
+	char* temp = dst ;
+
+	while (*dst) dst++ ;	// dstを末尾まで進める
+	while (*dst++ = *src++) ;// srcに'\0'がみつかるまでコピー
+	return(temp) ;
+} // End strcat
+
+
+##############################################################################
+Q10-4
+
+文字の配列に格納された文字列とポインタによって指された文字列リテラルによる文字列の内容を
+書き換え、それを表示するプログラムを作成せよ。
+***********************************
+View
+
+配　　列：ABC
+ポインタ：ABC
+配　　列：12345
+ポインタ：12345
+#######################################################
+Answer
+
+#include <string.h>
+#include <iostream.h>
+
+int main(void) {
+	char ary[10] = "ABC" ;
+	char* ptr = "ABC" ;
+
+	cout << "配　　列：" << ary << '\n' ;
+	cout << "ポインタ：" << ptr << '\n' ;
+
+	strcpy(ary, "12345") ;
+	ptr = "12345" ;
+
+	cout << "配　　列：" << ary << '\n' ;
+	cout << "ポインタ：" << ptr << '\n' ;
+
+	return(0) ;
+} // End main() ;
+
+
+配列とポインタ
+変数ptrはcharへのポインタ型であり、文字列リテラル"ABC"という初期化子が与えられています。
+一般に文字列リテラルを評価すると、型はchar*となり、その値は先頭文字へのポインタとなるの
+です。
+
+char ary[10] = "ABC" ;
+ary = "12345" ;		// Error
+strcpy(ary, "12345") ; 	// OK
+
+char* ptr = "ABC" ;
+ptr = "12345" ;		// OK
+
+配列とポインタの違い
+配列として実現されているaryに対して、文字列を代入する事は出来ません。
+一方ポインタに対する代入は可能です。
+この代入によって、ptrは文字列リテラル"12345"の先頭文字を指すように変更されます。
+
+
+##############################################################################
+Q10-5
+
+文字列"March", "iz", "EK11"を格納・表示するプログラムを作成せよ。
+「文字の配列」の配列と、「ポインタ」の配列の２つを対比すること
+***********************************
+View
+
+文字配列の配列
+March
+iz
+EK11
+ポインタの配列
+March
+iz
+EK11
+#######################################################
+Answer
+
+#include <iostream.h>
+
+const int smax = 3 ;
+const int slen = 6 ;
+
+int main(void) {
+
+	int i ;
+
+	char s[smax] [slen] = {"March", "iz", "EK11"} ;
+	char* p[smax] = {"March", "iz", "EK11"} ;
+
+	cout << "文字配列の配列\n" ;
+	for(i = 0 ; i < smax ; i++)
+		cout <<s[i] << '\n' ;
+
+	cout << "ポインタの配列\n" ;
+	for(i = 0 ; i < smax ; i++)
+		cout << p[i] << '\n' ;
+
+	return(0) ;
+} // End main() ;
+
+
+２次元配列による実現
+"March", "iz", "EK11"の３つの文字列の配列を「文字の配列」の配列として実現する宣言をして
+いるのが、以下の箇所ですね。
+
+	char s[smax][slen] = {"March", "iz", "EK11"} ;
+
+最も長い文字列"March"は'\0'を含めて6文字ですから3 X 6 の大きさを持つ２元配列を用意してい
+ます。
+
+ポインタの配列による実現
+一方pには以下に示す型を与えています。
+「charへのポインタを要素とする要素数３の配列」
+配列の要素であるp[0], p[1], p[2]はそれぞれcharへのポインタ型であり、その初期化子とし
+て"March", "iz", "EK11"が与えられていますので、それらの文字列(の先頭文字）を指すように初
+期化されます。
+
+	２元配列による文字列の配列
+	s[0][0]		'M'
+	s[0][1]		'a'
+	s[0][2]		'r'
+	s[0][3]		'c'
+	s[0][4]		'h'
+	s[0][5]		'\0'
+	s[1][0]		'i'
+	s[1][1]		'z'
+	s[1][2]		'\0'
+	s[1][3]		'\0'
+	s[1][4]		'\0'
+	s[1][5]		'\0'
+	s[2][0]		'E'
+	s[2][1]		'K'
+	s[2][2]		'1'
+	s[2][3]		'1'
+	s[2][4]		'\0'
+	s[2][5]		'\0'
+
+	ポインタの配列による文字列の配列
+
+	p[0]		"March"
+	p[1]		"iz"
+	p[2]		"EK11"
+
+	s[0][0]		'M'
+	s[0][1]		'a'
+	s[0][2]		'r'
+	s[0][3]		'c'
+	s[0][4]		'h'
+	s[0][5]		'\0'
+
+	s[1][0]		'i'
+	s[1][1]		'z'
+	s[1][2]		'\0'
+
+	s[2][0]		'E'
+	s[2][1]		'K'
+	s[2][2]		'1'
+	s[2][3]		'1'
+	s[2][4]		'\0'
+
+
+////////////////////////////////////////////////////////////////////////////////////////
+10 クラス
+
+##############################################################################
+Q10-1
+預金口座と口座番号のデータを扱うクラスkouzaを作成せよ
+***********************************
+View
+
+すずき君の口座
+口座番号=1234569
+預金額=100円
+
+宮田君の口座
+口座番号=3468924
+預金額=5円
+#######################################################
+Answer
+
+#include <iostream.h>
+class kouza {
+	public:
+		long number ;
+		long yokin ;
+} ;
+
+int main(void) {
+	kouza suzuki = {1234569, 0} ;
+
+	kouza miyata ;
+	miyata.number = 3468924 ;
+	miyata.yokin = 10 ;
+
+	suzuki.yokin += 100 ;	//１００円預ける
+	miyata.yokin -= 5 ;	// ５円引き出す
+
+	cout << "Suzuki君の口座\n" ;
+	cout << "口座番号=" << suzuki.number << "\n" ;
+	cout << "預金額=" << suzuki.yokin << "円\n\n" ;
+
+	cout << "宮田君の口座\n" ;
+	cout << "口座番号=" << miyata.number << "\n" ;
+	cout << "預金額=" << miyata.yokin << "円\n\n" ;
+
+	return(0) ;
+} // End main() ;
+
+クラス型のオブジェクト
+クラス宣言はその性質（方）を宣言する物であり、実体であるオブジェクト（変数）を定義する訳では
+ありません。クラスkouzaは２つのデータメンバ(data member)から構成される物として定義されていま
+すが、この型を持つオブジェクトは次の様に宣言・定義出来る事になります。
+
+	kouza miyata ;
+
+最初のkouzaが型名であり、miyataがオブジェクトの名前です。
+
+	long x ;
+
+と同じです。
+
+	class kouza {			// クラスの宣言
+		public:
+			long number ;
+			long yokin ;
+	} ;
+
+	kouza suzuki ;			// オブジェクトの定義
+	kouza miyata ;
+
+クラスオブジェクトのメンバと初期化
+オブジェクトのここのメンバは、ドット演算子と呼ばれる.演算子(.operator)を使って表現します。
+例えば宮田君の銀行口座の口座番号であるオブジェクトmiyataのメンバnumberはmiyata.numberと表す
+事が出来ます。
+
+	kouza suzuki = {1234569.0} ;
+
+この宣言によって、suzukiという名前を持つkouza型のオブジェクトが定義されると同時に口座番号
+suzuki.numberは1234569で初期化され、預金額suzuki.yokinは0で初期化されていることになります。
+
+	kouza miyata ;
+
+は初期歌子が与えられていませんからオブジェクトmiyataは不定値即ちゴミの値で初期化されることに
+なります。
+
+#include <iostream.h>
+class kouza {
+	private:
+		long number ;
+		long yokin ;
+	public :
+		kouza(long no, long yok) {
+			number = no ;
+			yokin = yok ;
+		} // End kouza() ;
+
+	void ireru(long okane) { yokin += okane ; }
+	void orosu(long okane) { yokin -= okane ; }
+	long kouza_no(void)    { return(number) ; }
+	long yokingaku(void)   { return(yokin)  ; }
+} ;
+
+int main(void) {
+	kouza suzuki(1234569, 0) ;
+	kouza miyata(3468924, 0) ;
+
+	suzuki.ireru(100) ;	//１００円預ける
+	miyata.orosu(5) ;	//５円引き出す
+
+	cout << "Suzukiの口座\n" ;
+	cout << "口座番号 =" << suzuki.kouza_no() << '\n' ;
+	cout << "預金額 =" << suzuki.yokingaku() << "円\n\n" ;
+
+	cout << "宮田の口座\n" ;
+	cout << "口座番号 =" << miyata.kouza_no() << '\n' ;
+	cout << "預金額 =" << miyata.yokingaku() << "円\n\n" ;
+
+	return(0) ;
+} // End main();
+
+
+データ隠蔽
+private:以降に宣言されたメンバはその存在（名前など）が外部に対して公開されなくなります。
+privateと宣言されたメンバを私的メンバ(private member)と呼び、publicと宣言されたメンバを公開
+メンバ(public member)と呼びます。
+
+main関数中で
+
+	suzuki.yokin = 100 ;
+
+と言った操作は出来なくなります。「公開すべきでないデータは公開しない」と言う当たり前の考え方
+を実現することをデータ隠蔽と言います。
+
+公開部分と私的部分の他に
+
+	protected :
+
+で指定する保護部分があり、そのメンバを保護メンバ(protected member）と呼びます。
+
+コンストラクタ
+確実な初期歌詞を保証するのがコンストラクタです。
+
+	kouza(long no, long yok) {
+		number = no ;
+		yokin = yok ;
+	} // End kouza() ;
+
+返却型がないことを除くと、ちょうど関数の定義と同じ形をしています。
+そのコンストラクタの名前は必ずクラスと同じ名前でなければなりません。
+クラスkouzaのオブジェクトが生成される時はこのコンストラクタが呼び出される事になります。
+
+コンストラクタは、クラスのオブジェクトを生成する際の初期化の方法を定義する関数です。
+
+main関数では、クラスkouzaのオブジェクトsuzukiを以下のように定義しています。
+
+	kouza suzuki { 1234569, 0} ;
+
+プログラムの流れが、この宣言文を通過して、オブジェクトsuzukiが生成される時に1234569と0と
+いう２つの値がコンストラクタに渡されます。ｓの受け渡しは関数の引数と同じ要領で行われます
+。
+
+	number = no ;
+	yokin = yok ;
+
+コンストラクタは現在どのオブジェクトを初期化しているかを知っていますから、suzuki.number
+やsuzuki.yokinとドット演算子を使う必要はなく、単にnumberとかyokinと呼べばよいのです。
+
+	kouza suzuki ;
+	とか
+	kouza suzuki{1234569} ;
+
+の様な引数の足りない不完全な初期化や不正な初期化を防止することが出来ます
+クラス型を宣言するときは必ずコンストラクタを用意し、オブジェクトを確実に初期化できるよう
+にし
+ましょう。
+
+メンバ関数
+クラスの内部に存在し、私的メンバにもアクセス出来ると言う特権を持つ、この様な関数をメンバ
+関数(member function)と呼びます。
+コンストラクタは、オブジェクト生成の際に自動的に呼び出されると言う特殊なメンバ関数です。
+
+クラスkouzaには、コンストラクタ以外にもいくつかのメンバ関数がありますが、その一つが以下
+に示すメンバ関数ireruです。
+
+	void ireru(long okane) { yokin += okane ; }
+
+このメンバ関数を呼び出す箇所をみてみましょう
+
+	suzuki.ireru(100) ;
+
+オブジェクトの名前に.演算子を付け、続いてメンバの名前を書くのは
+
+	suzuki.yokin
+
+と言ったデータメンバの表現と同一ですね。
+メンバ関数ireruは、引数okaneとして受け取った値を
+
+	yokin += okane ;
+
+と、預金額に加算しますから預金額がokaneの分だけ増える事になります。
+
+
+##############################################################################
+Q10-2
+前問で作成したクラスkouzaをインタフェース部、実現部に分離して実装せよ
+***********************************
+View
+
+すずき君の口座
+口座番号=1234569
+預金額=100円
+
+宮田君の口座
+口座番号=3468924
+預金額=5円
+#######################################################
+Answer
+
+// ------------------------------------------------------
+// 銀行口座クラス kouza (インターフェース部）	"kouza.h"
+// ------------------------------------------------------
+
+class kouza {
+	private:
+		long number ;	// 口座番号
+		long yokin ;	// 預金額
+	public :
+		kouza(long no, long yok) ;	// コンストラクタ
+
+		void ireru(long okane) ;	// お金を預ける
+		void orosu(long okane) ;	// 引き出す
+
+		long kouza_no(void) {
+			return(number) ;	// 口座番号
+		}
+
+		long yokingaku(void) {
+			return(yokin) ;		// 預金額
+		}
+} ;
+
+// ----------------------------------------------------------
+// 銀行口座クラス　kouza(実現部）			"kouza.cpp"
+// ----------------------------------------------------------
+
+#include <iostream.h>
+#include "kouza.h"
+
+kouza::kouza(long no, long yok) {
+	number = no ;
+	yokin = yok ;
+}
+
+void kouza::ireru(long okane) {
+	yokin += okane ;
+}
+
+void kouza::orosu(long okane) {
+	yokin -= okane ;
+}
+
+int main (void) {
+
+	kouza	suzuki(1234569, 0) ;
+	kouza	miyata(3468924, 10) ;
+
+	suzuki.ireru(100) ;
+	miyata.orosu(5) ;
+
+	cout << "Suzukiの口座\n" ;
+	cout << "口座番号 =" << suzuki.kouza_no() << '\n' ;
+	cout << "預金額 =" << suzuki.yokingaku() << "円\n\n" ;
+
+	cout << "宮田の口座\n" ;
+	cout << "口座番号 =" << miyata.kouza_no() << '\n' ;
+	cout << "預金額 =" << miyata.yokingaku() << "円\n\n" ;
+
+	return(0) ;
+
+} // End main();
+
+
+クラス宣言外部でのメンバ関数の定義
+メンバ関数ireruの関数頭部に着目しましょう
+
+	クラスの名前::メンバ関数の名前
+
+となっています。
+クラス名::名前と書く事によって、その名前がクラススコープ(class scope)中にある事を示す事が出
+来ます。
+即ちただのireruではなくクラスkouzaに属するireruであることを宣言するためにkouza::という前置き
+が必要なのです。
+
+// --------------------------------------------------------------------
+Car class (interface)					"car.h"
+// --------------------------------------------------------------------
+
+class Car {
+	private :
+		double fuel ;		// 残り燃料
+		double xp ;		// 現在位置x座標
+		double yp ;		// 現在位置y座標
+
+	public :
+		Car(double f, double x, double y) ;
+
+		double x(void) { return( xp ) ; }
+		double y(void) { return( yp ) ; }
+		double Tank(void) { return(fuel) ; }
+
+		int Move(double dx, double dy) ;
+} ;
+
+
+// --------------------------------------------------------------------
+// Car class(実現部)					"car.cpp"
+// --------------------------------------------------------------------
+#include <iostream.h>
+#include <math.h>
+#include "car.h"
+
+// ---------- constructor--------------//
+Car::Car(double f, double x, double y) {
+	fuel = f ; xp = x ; yp = y ;
+}
+
+// ---------- x及びy方向にそれぞれ(dx, dy)だけ移動------//
+
+int Car::Move(double dx, double dy) {
+	double dist = sqrt ( dx * dx + dy * dy ) ;
+
+	if (dist > fuel)
+		return(0) ;
+	else {
+		fuel -= dist ;	xp += dx ;	yp += dy ;
+		return(1);
+	} // End if
+} // Car::Move() ;
+
+int main(void)  {
+	Car benz(90.0, 0.0, 0.0) ;
+	char cont ;
+
+	while (1) {
+		cout << "現在地(" << benz.x() << ", " << benz.y()
+		     << ") / のこり燃料" << benz.Tank() << "リットル\n" ;
+
+		     cout << "移動しますか？(Y/N)" ;
+		     cin >> cont ;
+		     if(cont == 'N' || cont == 'n' ) break ;
+
+		     double dx, dy ;
+		     cout << "x方向の移動距離：" ;	cin >> dx ;
+		     cout << "y方向の移動距離：" ;	cin >> dy ;
+
+		     if(!benz.Move(dx, dy))
+		     	cout << "移動できません\n" ;
+	} // End while
+
+	return(0) ;
+} // End main() ;
+
+
+////////////////////////////////////////////////////////////////////////////////////////
+11 簡単なクラスの作成
+##############################################################################
+Q11-1
+
+座標(x座標とy座標の値から構成される）クラスPositionを定義せよ。 座標値の設定・取得が出来
+る様にする事
+***********************************
+View
+
+点a = (10, -10)
+点b = (3.5, 6)
+#######################################################
+Answer
+
+// ----------------------------------------------------------------
+//	座標クラスPosition第１版（インタフェース部）　	"position.h"
+// ----------------------------------------------------------------
+
+class Position {
+	privata :
+		double xp ;
+		double yp ;
+
+	public :
+		Position(double x, double y) { xp = x ; yp = y ; }
+
+		double X(void) { return(xp) ; }
+		couble Y(void) { return(yp) ; }
+
+	void set(double x, double y) { xp = x ; yp = y ; }
+}  ;
+
+#include <iostream.h>
+#include "position.h"
+
+int main(void) {
+	Position a(10.0, -10.0) ;
+
+	Position b = Position(3.5, 6.0) ;
+
+	cout <<"点a = (" << a.X() << ", " << a.Y() << ")\n" ;
+	cout <<"点b = (" << b.X() << ", " << b.Y() << ")\n" ;
+
+	return(0) ;
+} // End main() ;
+
+
+初期化とコンストラクタ
+整数であるint型のオブジェクトに明示的に初期値を与えるには、２つの方法があり、初期値を与
+えるための式を初期化子と呼びます。
+
+	int x = 5 ;
+	int x (5) ;
+
+オブジェクトaを初期化する宣言は後者と同じ形をしています。
+
+	Position a (10.0, -10.0) ;
+
+一方オブジェクトbは以下の様に宣言されています。
+
+	Position b = Position(3.5, 6.0) ;
+
+ここでの初期化子Position(3.5, 6.0) ;は明示的なコンストラクタの呼び出しでありPosition型の
+オブジェクトを生成します。
+生成されるオブジェクトには名前がないため、一時オブジェクト(temporary object)と呼ばれます
+
+bは生成された一時オブジェクトによって初期化されるのです。なお、その一時オブジェクトは用
+が済んだらすぐに消滅させられます。
+
+	Position b = Position(3.5, 6.0) ;
+
+は次の様に分解する事が出来ます。
+
+Position temp(3.5, 6.0) ;	// Position::Position(double, double)でtempを生成
+Position b = temp ;		// Position::Position(const Position&) でbをtempで初期化
+
+
+##############################################################################
+Q11-2
+
+日付（西暦年・月・日）を管理するクラスDateを作成せよ。
+***********************************
+View
+
+MyBirthday = 1963年11月18日
+UnivTokyo = 1995年8月23日
+Day[0] = 1999年8月22日
+Day[1] = 1999年8月22日
+Day[2] = 1999年8月22日
+
+#######################################################
+Answer
+
+#include <iostream.h>
+class Date {
+		private :
+			int year ;
+			int month ;
+			int day ;
+		public :
+			Date(void) ;
+			Date(int y, int m = 1, int d = 1) ;
+		int Year(void) const	{ return(year) ;	}
+		int Month(void) const	{ return(month) ;	}
+		int Day(void) const		{ return(day) ;		}
+} ;
+ostream& operator << (ostream& s,  const Date& x) ;
+
+#include <time.h>
+#include "date.h"
+
+Date::Date(void) {
+	time_t current ;
+	struct tm* local ;
+
+	time(&current) ;
+	local	= localtime(&current) ;
+	year	= local	->	tm_year + 1900 ;
+	month	= local	->	tm_mon + 1 ;
+	day		= local	->	tm_mday ;
+}
+Date::Date(int y, int m, int d) {
+	year = y ;
+	month = m ;
+	day = d ;
+}
+ostream& operator << (ostream& s, const Date& x) {
+	return(s << x.Year() << "年" <<x.Month() << "月" << x.Day() <<"日") ;
+} // End
+
+int main(void) {
+	Date MyBirthday( 1963, 11, 18) ;
+	Date UnivTokyo(1995, 8, 23) ;
+	Date Day[3] ;
+
+	cout <<"MyBirthday = " <<MyBirthday << '\n' ;
+	cout <<"UnivTokyo = " << UnivTokyo << '\n' ;
+
+	for (int i = 0 ; i < 3 ; i++)
+		cout << "Day[" << i << "] = " << Day[i] << '\n' ;
+
+	return(0) ;
+} // End main() ;
+
+
+クラスと構造体と共用体
+C++のクラスはC言語の構造体(structure)及び共用体(union)を拡張した物です。
+
+構造体
+C言語の構造体を用いると日付を表すdateは下の様に宣言する事が出来ます。
+
+		struct date {
+			int year ;
+			int month ;
+			int day ;
+		} ;
+
+欠点として
+	独立した型とならない
+	dateが宣言されても"date"単独では型とはならず、struct date"が型となります。
+
+	すべてのメンバは公開される
+	構造体のすべてのメンバは公開されます。
+	メンバをクラス外部から保護する事が出来ません。
+
+	メンバ関数を持つことは出来ない
+	構造体のメンバとしては、データメンバのみが許されるため、メンバ関数を持つ事は出来
+	ません。
+
+
+共用体
+	共用体を用いる事によって、選択的なデータ構造を実現する事が出来ます。
+	unionは共用体であることを宣言するためのキーワードです。
+	メンバの宣言方法や.演算子によって、メンバを扱えるのも構造体と同じです。
+	C言語の共用体はメンバ関数を持ったりメンバを非公開にしたりする機能はありません。
+
+

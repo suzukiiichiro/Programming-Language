@@ -1,0 +1,1782 @@
+
+
+==========================================================================================
+ 
+           Programming C# Language
+
+==========================================================================================
+
+		1 Hello World
+		2 Command Line Parameters
+		3 Arrays
+		4 Properties
+		5 Libraries
+		6 Versioning
+		7 Collection Classes
+		8 Structs 
+		9 Indexers 
+		10 User-Defined Conversions
+		11 Operator Overloading
+		12 Delegates
+		13 Events
+		14 Explicit Interface Implementation
+
+
+//////////////////////////////////////////////////////////////////////////////////////////////////
+/// 		1 Hello, world!
+/// 
+Example
+
+000: // HelloWorld\Hello1.cs
+001: public class Hello1
+002: {
+003:     public static void Main()
+004:     {
+005:         System.Console.WriteLine("Hello, World!");
+006:     }
+007: }
+
+Output
+Hello, World!
+
+
+Example
+
+000: // HelloWorld\Hello2.cs
+001: using System;
+002:
+003: public class Hello2
+004: {
+005:     public static void Main()
+006:     {
+007:         Console.WriteLine("Hello, World!");
+008:     }
+009: }
+
+Output
+Hello, World!
+
+
+Example
+
+000: // HelloWorld\Hello3.cs
+001: using System;
+002: 
+003: public class Hello3
+004: {
+005:   public static void Main(string[] args)
+006:   {
+007:     Console.WriteLine("Hello, World!");
+008:     Console.WriteLine("You entered the following {0} command line arguments:", args.Length );
+009:     for (int i=0; i < args.Length; i++)
+010:     {
+011:        Console.WriteLine("{0}", args[i]); 
+012:     }
+013:   }
+014: }
+
+Output
+Hello, World!
+You entered the following 4 command line arguments:
+A
+B
+C
+D
+
+Example
+
+000: // HelloWorld\Hello4.cs
+001: using System;
+002:
+003: public class Hello4
+004: {
+005:   public static int Main(string[] args)
+006:   {
+007:     Console.WriteLine("Hello, World!");
+008:     return 0;
+009:   }
+010: }
+
+Output
+Hello, World!
+
+
+
+
+
+//////////////////////////////////////////////////////////////////////////////////////////////////
+/// 		2 Command Line Parameters
+/// 
+Example
+
+000: // CommandLine\cmdline1.cs
+001: using System;
+002:
+003: public class CommandLine004: {
+005:     public static void Main(string[] args)
+006:     {
+007:         Console.WriteLine("Number of command line parameters = {0}", args.Length);
+008:         for(int i = 0; i < args.Length; i++)
+009:         {
+010:             Console.WriteLine("Arg[{0}] = [{1}]", i, args[i]);
+011:         }
+012:     }
+013: }
+
+Output
+Number of command line parameters = 3
+Arg[0] = [A]
+Arg[1] = [B]
+Arg[2] = [C]
+
+
+Example
+
+000: // CommandLine\cmdline2.cs
+001: using System;
+002: 
+003: public class CommandLine2
+004: {
+005:     public static void Main(string[] args)
+006:     {
+007:         Console.WriteLine("Number of command line parameters = {0}", args.Length);
+008:         foreach(string s in args)
+009:         {
+010:             Console.WriteLine(s);
+011:         }
+012:     }
+013: }
+
+Sample Run
+>cmdline2 John Paul Mary
+Number of command line parameters = 3
+John
+Paul
+Mary
+
+
+
+
+
+//////////////////////////////////////////////////////////////////////////////////////////////////
+/// 		3 Arrays
+/// 
+Example
+
+000: // Arrays\arrays.cs
+001: using System;
+002: class DeclareArraysSample
+003: {
+004:     public static void Main()
+005:     {
+006:         // Single-dimensional array
+007:         int[] numbers = new int[5];
+008: 
+009:         // Multidimensional array
+010:         string[,] names = new string[5,4];
+011: 
+012:         // Array-of-arrays (jagged array)
+013:         byte[][] scores = new byte[5][];
+014: 
+015:         // Create the jagged array
+016:         for (int i = 0; i < scores.Length; i++)
+017:         {
+018:             scores[i] = new byte[i+3];
+019:         }
+020: 
+021:         // Print length of each row
+022:         for (int i = 0; i < scores.Length; i++)
+023:         {
+024:             Console.WriteLine("Length of row {0} is {1}", i, scores[i].Length);
+025:         }
+026:     }
+027: }
+
+Output
+Length of row 0 is 3
+Length of row 1 is 4
+Length of row 2 is 5
+Length of row 3 is 6
+Length of row 4 is 7
+
+
+
+
+
+//////////////////////////////////////////////////////////////////////////////////////////////////
+/// 		4 Properties
+/// 
+Example
+
+000: // Properties\person.cs
+001: using System;
+002: class Person
+003: {
+004:     private string myName ="N/A";
+005:     private int myAge = 0;
+006: 
+007:     // Declare a Name property of type string
+008:     public string Name
+009:     {
+010:         get 
+011:         {
+012:            return myName; 
+013:         }
+014:         set 
+015:         { 
+016:            myName = value; 
+017:         }
+018:     }
+019: 
+020:     // Declare an Age property of type int
+021:     public int Age
+022:     {
+023:         get 
+024:         { 
+025:            return myAge; 
+026:         }
+027:         set 
+028:         { 
+029:            myAge = value; 
+030:         }
+031:     }
+032: 
+033:     public override string ToString()
+034:     {
+035:         return "Name = " + Name + ", Age = " + Age;
+036:     }
+037: 
+038:     public static void Main()
+039:     {
+040:         Console.WriteLine("Simple Properties");
+041: 
+042:         // Create a new Person Object
+043:         Person person = new Person();
+044: 
+045:         // Print out the name and the age associated with the person
+046:         Console.WriteLine("Person details - {0}", person);
+047: 
+048:         // Set some values on the person object
+049:         person.Name = "Joe";
+050:         person.Age = 99;
+051:         Console.WriteLine("Person details - {0}", person);
+052: 
+053:         // Increment the Age property
+054:         person.Age += 1;
+055:         Console.WriteLine("Person details - {0}", person);
+056:     }
+057: }
+
+Output
+Simple Properties
+Person details - Name = N/A, Age = 0
+Person details - Name = Joe, Age = 99
+Person details - Name = Joe, Age = 100
+
+
+Example
+
+000: // Properties\abstractshape.cs
+001: using System;
+002:
+003: public abstract class Shape
+004: {
+005:    private string myId;
+006:
+007:    public Shape(string s)
+008:    {
+009:       Id = s;   // calling the set accessor of the Id property
+010:    }
+011:
+012:    public string Id
+013:    {
+014:       get 
+015:       {
+016:          return myId;
+017:       }
+018:
+019:       set
+020:       {
+021:          myId = value;
+022:       }
+023:    }
+024:
+025:    public abstract double Area
+026:    {
+027:       get;
+028:    }
+029:
+030:    public override string ToString()
+031:    {
+032:       return Id + " Area = " + double.Format(Area, "F");
+033:    }
+034: }
+
+000: // Properties\shapes.cs
+001: public class Square : Shape
+002: {
+003:    private int mySide;
+004:
+005:    public Square(int side, string id) : base(id)
+006:    {
+007:       mySide = side;
+008:    }
+009:
+010:    public override double Area
+011:    {
+012:       get
+013:       {
+014:          return mySide * mySide;
+015:       }
+016:    }
+017: }
+018:
+019: public class Circle : Shape
+020: {
+021:    private int myRadius;
+022:
+023:    public Circle(int radius, string id) : base(id)
+024:    {
+025:       myRadius = radius;
+026:    }
+027:
+028:    public override double Area
+029:    {
+030:       get
+031:       {
+032:          return myRadius * myRadius * System.Math.PI;
+033:       }
+034:    }
+035: }
+036:
+037: public class Rectangle : Shape
+038: {
+039:    private int myWidth;
+040:    private int myHeight;
+041:
+042:    public Rectangle(int width, int height, string id) : base(id)
+043:    {
+044:       myWidth  = width;
+045:       myHeight = height;
+046:    }
+047:
+048:    public override double Area
+049:    {
+050:       get
+051:       {
+052:          return myWidth * myHeight;
+053:       }
+054:    }
+055: }
+
+000: // Properties\shapetest.cs
+001: public class TestClass
+002: {
+003:    public static void Main()
+004:    {
+005:       Shape[] shapes =
+006:          {
+007:             new Square(5, "Square #1"),
+008:             new Circle(3, "Circle #1"),
+009:             new Rectangle( 4, 5, "Rectangle #1")
+010:          };
+011:       
+012:       System.Console.WriteLine("Shapes Collection");
+013:       foreach(Shape s in shapes)
+014:       {
+015:          System.Console.WriteLine(s);
+016:       }
+017:          
+018:    }
+019: }
+
+Output
+Shapes Collection
+Square #1 Area = 25.00
+Circle #1 Area = 28.27
+Rectangle #1 Area = 20.00
+
+
+
+
+
+//////////////////////////////////////////////////////////////////////////////////////////////////
+/// 		5 Libraries
+/// 
+
+Example
+000: // Libraries\Factorial.cs
+001: using System; 
+002: 
+003: namespace Functions 
+004: { 
+005:     public class Factorial 
+006:     { 
+007:         public static int Calc(int i) 
+008:         { 
+009:             return((i <= 1) ? 1 : (i * Calc(i-1))); 
+010:         } 
+011:     }
+012: }
+
+000: // Libraries\DigitCounter.cs
+001: using System; 
+002: 
+003: namespace Functions 
+004: { 
+005:     public class DigitCount 
+006:     { 
+007:         public static int NumberOfDigits(string theString) 
+008:         { 
+009:             int count = 0; 
+010:             for ( int i = 0; i < theString.Length; i++ ) 
+011:             { 
+012:                 if ( Char.IsDigit(theString[i]) ) 
+013:                 { 
+014:                       count++; 
+015:                 } 
+016:             } 
+017: 
+018:             return count; 
+019:         } 
+020:     }
+021: }
+
+000: // Libraries\FunctionClient.cs
+001: using System; 
+002: using Functions;
+003: class FunctionClient 
+004: { 
+005:     public static void Main(string[] args) 
+006:     { 
+007:         Console.WriteLine("Function Client"); 
+008: 
+009:         if ( args.Length == 0 ) 
+010:         {
+011:             Console.WriteLine("Usage: FunctionTest ... "); 
+012:             return; 
+013:         } 
+014: 
+015:         for ( int i = 0; i < args.Length; i++ ) 
+016:         { 
+017:             int num = Int32.Parse(args[i]); 
+018:             Console.WriteLine(
+019:                "The Digit Count for String [{0}] is [{1}]", 
+020:                args[i], 
+021:                DigitCount.NumberOfDigits(args[i])); 
+022:             Console.WriteLine(
+023:                "The Factorial for [{0}] is [{1}]", 
+024:                 num,    
+025:                 Factorial.Calc(num) ); 
+026:         } 
+027:     } 
+028: }
+
+
+
+
+
+//////////////////////////////////////////////////////////////////////////////////////////////////
+/// 		6 Versioning
+/// 
+
+Example
+000: // Versioning\versioning.cs
+001: public class MyBase 
+002: {
+003:     public virtual string Meth1() 
+004:     {
+005:         return "MyBase-Meth1";
+006:     }
+007:     public virtual string Meth2() 
+008:     {
+009:         return "MyBase-Meth2";
+010:     }
+011:     public virtual string Meth3() 
+012:     {
+013:         return "MyBase-Meth3";
+014:     }
+015: }
+016: 
+017: class MyDerived : MyBase 
+018: {
+019:     public override string Meth1() 
+020:     {
+021:         return "MyDerived-Meth1";
+022:     }
+023:     public new string Meth2() 
+024:     {
+025:         return "MyDerived-Meth2";
+026:     }
+027:     public string Meth3() // Issues a warning to alert the programmer 
+028:                           // that the method hides the inherited 
+029:                           // member MyBase.Meth3().
+030:     {
+031:         return "MyDerived-Meth3";
+032:     }
+033: 
+034:     public static void Main() 
+035:     {
+036:         MyDerived mD = new MyDerived();
+037:         MyBase mB = (MyBase) mD;
+038: 
+039:         System.Console.WriteLine(mB.Meth1());
+040:         System.Console.WriteLine(mB.Meth2());
+041:         System.Console.WriteLine(mB.Meth3());
+042:     }
+043: }
+
+Output
+MyDerived-Meth1
+MyBase-Meth2
+MyBase-Meth3
+
+
+
+
+
+//////////////////////////////////////////////////////////////////////////////////////////////////
+/// 		7 Collection Classes
+/// 
+
+
+Example
+000: // CollectionClasses\tokens.cs
+001: using System;
+002: using System.Collections;
+003:
+004: public class Tokens : IEnumerable
+005: {
+006:    private string[] elements;
+007:
+008:    Tokens(string source, char[] delimiters)
+009:    {
+010:       elements = source.Split(delimiters);
+011:    }
+012:
+013:    // IEnumerable Interface Implementation
+014:
+015:    public IEnumerator GetEnumerator()
+016:    {
+017:       return new TokenEnumerator(this);
+018:    }
+019:
+020:    // Inner class implements IEnumerator interface
+021:
+022:    private class TokenEnumerator : IEnumerator
+023:    {   
+024:       private int position = -1;
+025:       private Tokens tokens;
+026:
+027:       public TokenEnumerator(Tokens tokens)
+028:       {
+029:          this.tokens = tokens;
+030:       }
+031:
+032:       public bool MoveNext()
+033:       {
+034:          if (position < tokens.elements.Length - 1)
+035:          {
+036:             position++;
+037:             return true;
+038:          }
+039:          else
+040:          {
+041:             return false;
+042:          }
+043:       }
+044:
+045:       public void Reset()
+046:       {
+047:          position = -1;
+048:       }
+049:
+050:       public object Current
+051:       {
+052:          get
+053:          {
+054:             return tokens.elements[position];
+055:          }
+056:       }
+057:    }
+058:
+059:    // Test Tokens, TokenEnumerator
+060:
+061:    static void Main()
+062:    {
+063:       Tokens f = new Tokens("This is a well-done program.", new char[] {' ','-'});
+064:       foreach (string item in f)
+065:       {
+066:          Console.WriteLine(item);
+067:       }
+068:    }
+069: }
+
+Output
+This
+is
+a
+well
+done
+program.
+
+
+Example
+000: // CollectionClasses\tokens2.cs
+001: using System;
+002: using System.Collections;
+003: 
+004: public class Tokens: IEnumerable
+005: {
+006:    private string[] elements;
+007: 
+008:    Tokens(string source, char[] delimiters)
+009:    {
+010:       elements = source.Split(delimiters);
+011:    }
+012: 
+013:    // IEnumerable Interface Implementation
+014: 
+015:    public TokenEnumerator GetEnumerator() // non-IEnumerable version
+016:    {
+017:       return new TokenEnumerator(this);
+018:    }
+019: 
+020:    IEnumerator IEnumerable.GetEnumerator() // IEnumerable version
+021:    {
+022:       return (IEnumerator) new TokenEnumerator(this);
+023:    }
+024: 
+025:    // Inner class implements IEnumerator interface
+026: 
+027:    public class TokenEnumerator: IEnumerator
+028:    {   
+029:       private int position = -1;
+030:       private Tokens tokens;
+031: 
+032:       public TokenEnumerator(Tokens tokens)
+033:       {
+034:          this.tokens = tokens;
+035:       }
+036: 
+037:       public bool MoveNext()
+038:       {
+039:          if (position < tokens.elements.Length - 1)
+040:          {
+041:             position++;
+042:             return true;
+043:          }
+044:          else
+045:          {
+046:             return false;
+047:          }
+048:       }
+049: 
+050:       public void Reset()
+051:       {
+052:          position = -1;
+053:       }
+054: 
+055:       public string Current // non-IEnumerator version: type-safe
+056:       {
+057:          get
+058:          {
+059:             return tokens.elements[position];
+060:          }
+061:       }
+062: 
+063:       object IEnumerator.Current // IEnumerator version: returns object
+064:       {
+065:          get
+066:          {
+067:             return tokens.elements[position];
+068:          }
+069:       }
+070:    }
+071: 
+072:    // Test Tokens, TokenEnumerator
+073: 
+074:    static void Main()
+075:    {
+076:       Tokens f = new Tokens("This is a well-done program.", new char [] {' ','-'});
+077:       foreach (string item in f) // try changing string to int
+078:       {
+079:          Console.WriteLine(item);
+080:       }
+081:    }
+082: }
+
+Output
+This
+is
+a
+well
+done
+program.
+
+
+
+//////////////////////////////////////////////////////////////////////////////////////////////////
+/// 		8 Structs
+/// 
+
+Example
+000: // Structs\struct1.cs
+001: using System;
+002: struct SimpleStruct
+003: {
+004:     private int xval;
+005:     public int X
+006:     {
+007:         get {
+008:             return xval;
+009:         }
+010:         set {
+011:             if (value < 100)
+012:                 xval = value;
+013:         }
+014:     }
+015:     public void DisplayX()
+016:     {
+017:         Console.WriteLine("The stored value is: {0}", xval);
+018:     }
+019: }
+020: 
+021: class TestClass
+022: {
+023:     public static void Main()
+024:     {
+025:         SimpleStruct ss = new SimpleStruct();
+026:         ss.X = 5;
+027:         ss.DisplayX();
+028:     }
+029: }
+
+Output
+The stored value is: 5
+
+
+Example
+000: // Structs\struct2.cs
+001: using System;
+002:
+003: class TheClass
+004: {
+005:     public int x;
+006: }
+007:
+008: struct TheStruct
+009: {
+010:     public int x;
+011: }
+012:
+013: class TestClass
+014: {
+015:     public static void structtaker(TheStruct s)
+016:     {
+017:         s.x = 5;
+018:     }
+019:     public static void classtaker(TheClass c)
+020:     {
+021:         c.x = 5;
+022:     }
+023:     public static void Main()
+024:     {
+025:         TheStruct a = new TheStruct();
+026:         TheClass b = new TheClass();
+027:         a.x = 1;
+028:         b.x = 1;
+029:         structtaker(a);
+030:         classtaker(b);
+031:         Console.WriteLine("a.x = {0}", a.x);
+032:         Console.WriteLine("b.x = {0}", b.x);
+033:     }
+034: }
+
+Output
+a.x = 1
+b.x = 5
+
+
+
+
+
+//////////////////////////////////////////////////////////////////////////////////////////////////
+/// 		9 Indexers
+/// 
+
+Example
+000: // Indexers\indexer.cs
+001: using System;
+002: using System.IO;
+003: 
+004: // Class to provide access to a large file
+005: // as if it were a byte array.
+006: public class FileByteArray
+007: {
+008:     Stream stream;      // Holds the underlying stream
+009:                         // used to access the file.
+010: // Create a new FileByteArray encapsulating a particular file.
+011:     public FileByteArray(string fileName)
+012:     {
+013:         stream = new FileStream(fileName, FileMode.Open);
+014:     }
+015:
+016:     // Close the stream. This should be the last thing done
+017:     // when you are finished.
+018:     public void Close()
+019:     {
+020:         stream.Close();
+021:         stream = null;
+022:     }
+023:
+024:     // Indexer to provide read/write access to the file.
+025:     public byte this[long index]   // long is a 64-bit integer
+026:     {
+027:         // Read one byte at offset index and return it.
+028:         get 
+029:         {
+030:             byte[] buffer = new byte[1];
+031:             stream.Seek(index, SeekOrigin.Begin);
+032:             stream.Read(buffer, 0, 1);
+033:             return buffer[0];
+034:         }
+035:         // Write one byte at offset index and return it.
+036:         set 
+037:         {
+038:             byte[] buffer = new byte[1] {value};
+039:             stream.Seek(index, SeekOrigin.Begin);
+040:             stream.Write(buffer, 0, 1);
+041:         }
+042:     }
+043: 
+044:     // Get the total length of the file.
+045:     public long Length 
+046:     {
+047:         get {
+048:             return stream.Seek(0, SeekOrigin.End);
+049:         }
+050:     }
+051: }
+052: 
+053: // Demonstrate the FileByteArray class.
+054: // Reverses the bytes in a file.
+055: public class Reverse 
+056: {
+057:     public static void Main(String[] args) 
+058:     {
+059:         // Check for arguments.
+060:         if (args.Length == 0)
+061:         {
+062:             Console.WriteLine("Please type following : Reverse <filename>");
+063:             return;
+064:         }
+065: 
+066:         FileByteArray file = new FileByteArray(args[0]);
+067:         long len = file.Length;
+068:         
+069:         // Swap bytes in the file to reverse it.
+070:         for (long i = 0; i < len / 2; ++i) 
+071:         {
+072:             byte t;
+073: 
+074:             // Note that indexing the "file" variable invokes the
+075:             // indexer on the FileByteStream class, which reads
+076:             // and writes the bytes in the file.
+077:             t = file[i];
+078:             file[i] = file[len - i - 1];
+079:             file[len - i - 1] = t;
+080:         }
+081: 
+082:         file.Close();
+083:     } 
+084: }
+
+
+Sample Run
+000: // Test.txt
+001: public class Hello1
+002: {
+003:     public static void Main()
+004:     {
+005:         System.Console.WriteLine("Hello, World!");
+006:     }
+007: } 
+
+Test.text--------->
+}
+}
+;)"!dlroW ,olleH"(eniLetirW.elosnoC.metsyS
+{
+)(niaM diov citats cilbup
+{
+1olleH ssalc cilbup
+txt.tseT //
+
+
+
+
+//////////////////////////////////////////////////////////////////////////////////////////////////
+/// 		10 User-Defined Conversions
+/// 
+Example 
+000: // UserConversions\conversion.cs
+001: using System;
+002: 
+003: struct RomanNumeral
+004: {
+005:     public RomanNumeral(int value) 
+006:     { 
+007:        this.value = value; 
+008:     }
+009:     static public implicit operator RomanNumeral(int value) 
+010:     {
+011:        return new RomanNumeral(value);
+012:     }
+013:     static public explicit operator int(RomanNumeral roman)
+014:     {
+015:        return roman.value;
+016:     }
+017:     static public implicit operator string(RomanNumeral roman)
+018:     {
+019:        return("Conversion not yet implemented");
+020:     }
+021:     private int value;
+022: }
+023: 
+024: class Test
+025: {
+026:     static public void Main()
+027:     {
+028:         RomanNumeral numeral;
+029: 
+030:         numeral = 10;
+031: 
+032: // Explicit conversion from numeral to int:
+033:         Console.WriteLine((int)numeral);
+034: 
+035: // Implicit conversion to string:
+036:         Console.WriteLine(numeral);
+037:  
+038: // Explicit conversion from numeral to int
+039: // and explicit conversion from int to short:
+040:         short s = (short)numeral;
+041: 
+042:         Console.WriteLine(s);
+043: 
+044:     }
+045: }
+
+Output
+10
+Conversion not yet implemented
+10
+
+
+Example 2
+000: // UserConversions\structconversion.cs
+001: using System;
+002: 
+003: struct RomanNumeral
+004: {
+005:     public RomanNumeral(int value) 
+006:	 {
+007:		 this.value = value; 
+008:	 }
+009:     static public implicit operator RomanNumeral(int value)
+010:     {
+011:		return new RomanNumeral(value);
+012:	 }
+013:     static public implicit operator RomanNumeral(BinaryNumeral binary)
+014:     {
+015:		return new RomanNumeral((int)binary);
+016:	 }
+017:     static public explicit operator int(RomanNumeral roman)
+018:     {
+019:		return roman.value;
+020:	 }
+021:     static public implicit operator string(RomanNumeral roman) 
+022:     {
+023:		return("Conversion not yet implemented");
+024:	 }
+025:     private int value;
+026: }
+027: 
+028: struct BinaryNumeral
+029: {
+030:     public BinaryNumeral(int value) 
+031:	 {
+032:		this.value = value;
+033:	 }
+034: 
+035:     static public implicit operator BinaryNumeral(int value)
+036:     {
+037:		return new BinaryNumeral(value);
+038:	 }
+039:     static public implicit operator string(BinaryNumeral binary)
+040:     {
+041:		return("Conversion not yet implemented");
+042:	 } 
+043:     static public explicit operator int(BinaryNumeral binary)
+044:     {
+045:		return(binary.value);
+046:	 }
+047: 
+048:     private int value;
+049: }
+050: 
+051: class Test
+052: {
+053:     static public void Main()
+054:     {
+055:         RomanNumeral roman;
+056:         roman = 10;
+057:         BinaryNumeral binary;
+058:         binary = (BinaryNumeral)(int)roman;
+059:         roman = binary;
+060:         Console.WriteLine((int)binary);
+061:         Console.WriteLine(binary);
+062:     }
+063: }
+
+Output
+10
+Conversion not yet implemented
+
+
+
+
+
+//////////////////////////////////////////////////////////////////////////////////////////////////
+/// 		11 Operator Overloading
+/// 
+
+Example 1
+000: // OperatorOverloading\complex.cs
+001: using System;
+002: 
+003: public class Complex 
+004: {
+005:    public int real = 0;
+006:    public int imaginary = 0;
+007: 
+008:    public Complex(int real, int imaginary) 
+009:    {
+010:       this.real = real;
+011:       this.imaginary = imaginary;
+012:    }
+013: 
+014:    public static Complex operator +(Complex c1, Complex c2) 
+015:    {
+016:       return new Complex(c1.real + c2.real, c1.imaginary + c2.imaginary);
+017:    }
+018: 
+019:    public static void Main() 
+020:    {
+021:       Complex num1 = new Complex(2,3);
+022:       Complex num2 = new Complex(3,4);
+023: 
+024:       Complex sum = num1 + num2;
+025: 
+026:       Console.WriteLine("Real: {0}", sum.real);
+027:       Console.WriteLine("Imaginary: {0}", sum.imaginary);
+028:    }
+029: }
+
+Output
+Real: 5
+Imaginary: 7
+
+
+Example 2
+000: // OperatorOverloading\dbbool.cs
+001: using System;
+002: 
+003: public struct DBBool
+004: {
+005:    // The three possible DBBool values.
+006:    public static readonly DBBool dbNull = new DBBool(0);
+007:    public static readonly DBBool dbFalse = new DBBool(-1);
+008:    public static readonly DBBool dbTrue = new DBBool(1);
+009:    // Private field that stores -1, 0, 1 for dbFalse, dbNull, dbTrue.
+010:    int value; 
+011: 
+012:    // Private constructor. The value parameter must be -1, 0, or 1.
+013:    DBBool(int value) 
+014:    {
+015:       this.value = value;
+016:    }
+017: 
+018:    // Implicit conversion from bool to DBBool. Maps true to 
+019:    // DBBool.dbTrue and false to DBBool.dbFalse.
+020:    public static implicit operator DBBool(bool x) 
+021:    {
+022:       return x? dbTrue: dbFalse;
+023:    }
+024: 
+025:    // Explicit conversion from DBBool to bool. Throws an 
+026:    // exception if the given DBBool is dbNull, otherwise returns
+027:    // true or false.
+028:    public static explicit operator bool(DBBool x) 
+029:    {
+030:       if (x.value == 0) throw new InvalidOperationException();
+031:       return x.value > 0;
+032:    }
+033: 
+034:    // Equality operator. Returns dbNull if either operand is dbNull, 
+035:    // otherwise returns dbTrue or dbFalse.
+036:    public static DBBool operator ==(DBBool x, DBBool y) 
+037:    {
+038:       if (x.value == 0 || y.value == 0) return dbNull;
+039:       return x.value == y.value? dbTrue: dbFalse;
+040:    }
+041: 
+042:    // Inequality operator. Returns dbNull if either operand is dbNull, 
+043:    // otherwise returns dbTrue or dbFalse.
+044:    public static DBBool operator !=(DBBool x, DBBool y) 
+045:    {
+046:       if (x.value == 0 || y.value == 0) return dbNull;
+047:       return x.value != y.value? dbTrue: dbFalse;
+048:    }
+049: 
+050:    // Logical negation operator. Returns dbTrue if the operand is 
+051:    // dbFalse, dbNull if the operand is dbNull, or dbFalse if the operand 
+052:    // is dbTrue.
+053:    public static DBBool operator !(DBBool x) 
+054:    {
+055:       return new DBBool(-x.value);
+056:    }
+057: 
+058:    // Logical AND operator. Returns dbFalse if either operand is 
+059:    // dbFalse, dbNull if either operand is dbNull, otherwise dbTrue.
+060:    public static DBBool operator &(DBBool x, DBBool y) 
+061:    {
+062:       return new DBBool(x.value < y.value? x.value: y.value);
+063:    }
+064: 
+065:    // Logical OR operator. Returns dbTrue if either operand is dbTrue, 
+066:    // dbNull if either operand is dbNull, otherwise dbFalse.
+067:    public static DBBool operator |(DBBool x, DBBool y) 
+068:    {
+069:       return new DBBool(x.value > y.value? x.value: y.value);
+070:    }
+071: 
+072:    // Definitely true operator. Returns true if the operand is 
+073:    // dbTrue, false otherwise.
+074:    public static bool operator true(DBBool x) 
+075:    {
+076:       return x.value > 0;
+077:    }
+078: 
+079:    // Definitely false operator. Returns true if the operand is 
+080:    // dbFalse, false otherwise.
+081:    public static bool operator false(DBBool x) 
+082:    {
+083:       return x.value < 0;
+084:    }
+085: 
+086:    // Overloading the conversion from DBBool to string.
+087:    public static implicit operator string(DBBool x) 
+088:    {
+089:       return x.value > 0 ? "dbTrue"
+090:            : x.value < 0 ? "dbFalse"
+091:            : "dbNull";
+092:    }
+093: 
+094:    // Override the ToString method to convert DBBool to a string.
+095:    public override string ToString()
+096:    {
+097:       return (string)this;
+098:    }
+099: }
+100: 
+101: class Test 
+102: {
+103:    static void Main() 
+104:    {
+105:       DBBool a, b;
+106:       a = DBBool.dbTrue;
+107:       b = DBBool.dbNull;
+108: 
+109:       Console.WriteLine( "!{0} = {1}", a, !a);
+110:       Console.WriteLine( "!{0} = {1}", b, !b);
+111:       Console.WriteLine( "{0} & {1} = {2}", a, b, a & b);
+112:       Console.WriteLine( "{0} | {1} = {2}", a, b, a | b);
+113:       if (b)
+114:          Console.WriteLine("b is definitely true");
+115:       else
+116:          Console.WriteLine("b is not definitely true");   
+117:    }
+118: }
+Output
+!dbTrue = dbFalse
+!dbNull = dbNull
+dbTrue & dbNull = dbNull
+dbTrue | dbNull = dbTrue
+b is not definitely true
+
+
+
+
+
+//////////////////////////////////////////////////////////////////////////////////////////////////
+/// 		12 Delegates
+/// 
+
+Example 1
+000: // Delegates\bookstore.cs
+001: using System;
+002: 
+003: // A set of classes for handling a bookstore.
+004: namespace Bookstore 
+005: {
+006:   using System.Collections;
+007: 
+008:   // Describes a book in the book list.
+009:   public struct Book
+010:   {
+011:     public string Title;        // Title of the book.
+012:     public string Author;       // Author of the book.
+013:     public decimal Price;       // Price of the book.
+014:     public bool Paperback;      // Is it paperback?
+015: 
+016:     public Book(string title, string author, decimal price, bool paperBack)
+017:     { 
+018:       Title = title;
+019:       Author = author;
+020:       Price = price;
+021:       Paperback = paperBack;
+022:     }
+023:   }
+024: 
+025:   // Declare a delegate type for processing a book.
+026:   public delegate void ProcessBookDelegate(Book book);
+027: 
+028:   // Maintains a book database.
+029:   public class BookDB
+030:   {
+031:     ArrayList list = new ArrayList();         // list of all books in the database.
+032: 
+033:     // Add a book to the database.
+034:     public void AddBook(string title, string author, decimal price, bool paperBack)
+035:     {
+036:       list.Add(new Book(title, author, price, paperBack));
+037:     }
+038: 
+039:     // Call a passed in delegate on each paperback book to process it. 
+040:     public void ProcessPaperbackBooks(ProcessBookDelegate processBook)
+041:     {
+042:       foreach (Book b in list) 
+043:       {
+044:         if (b.Paperback)
+045:           processBook(b);
+046:       }
+047:     }
+048:   }
+049: }
+050: 
+051: // Using the Bookstore classes.
+052: namespace BookTestClient
+053: {
+054:   using Bookstore;
+055: 
+056:   // Class to total and average prices of books.
+057:   class PriceTotaller
+058:   {
+059:     int countBooks = 0;
+060:     decimal priceBooks = 0.0m;
+061: 
+062:     internal void AddBookToTotal(Book book)
+063:     {
+064:       countBooks += 1;
+065:       priceBooks += book.Price;
+066:     }
+067: 
+068:     internal decimal AveragePrice()
+069:     {
+070:       return priceBooks / countBooks;
+071:     }
+072:   }
+073: 
+074:   // Class to test the book database.
+075:   class Test
+076:   {
+077:     // Print the title of the book.
+078:     static void PrintTitle(Book b)
+079:     {
+080:       Console.WriteLine("   {0}", b.Title);
+081:     }
+082: 
+083:     // Execution starts here.
+084:     static void Main()
+085:     {
+086:       BookDB bookDB = new BookDB();
+087: 
+088:       // Initialize the database with some books.
+089:       AddBooks(bookDB);      
+090: 
+091:       // Print all the titles of paperbacks
+092:       Console.WriteLine("Paperback Book Titles:");
+093:       bookDB.ProcessPaperbackBooks(new ProcessBookDelegate(PrintTitle));
+094: 
+095:       // Get the average price of a paperback by using a PriceTotaller object.
+096:       PriceTotaller totaller = new PriceTotaller();
+097:       bookDB.ProcessPaperbackBooks(new ProcessBookDelegate(totaller.AddBookToTotal));
+098:       Console.WriteLine("Average Paperback Book Price: ${0:#.##}", totaller.AveragePrice());
+099:     }
+100: 
+101:     // Initialize the book database with some test books.
+102:     static void AddBooks(BookDB bookDB)
+103:     {
+104:       bookDB.AddBook("The C Programming Language", "Brian W. Kernighan and Dennis M. Ritchie", 19.95m, true);
+105:       bookDB.AddBook("The Unicode Standard 2.0", "The Unicode Consortium", 39.95m, true);
+106:       bookDB.AddBook("The MS-DOS Encyclopedia", "Ray Duncan", 129.95m, false);
+107:       bookDB.AddBook("Dogbert's Clues for the Clueless", "Scott Adams", 12.00m, true);
+108:     }
+109:   }
+110: }
+Output
+Paperback Book Titles:
+   The C Programming Language
+   The Unicode Standard 2.0
+   Dogbert's Clues for the Clueless
+Average Paperback Book Price: $23.97
+
+Example 2
+000: // Delegates\compose.cs
+001: using System;
+002: 
+003: delegate void MyDelegate(string s);
+004: 
+005: class MyClass
+006: {
+007:     public static void Hello(string s)
+008:     {
+009:         Console.WriteLine("  Hello, {0}!", s);
+010:     }
+011: 
+012:     public static void Goodbye(string s)
+013:     {
+014:         Console.WriteLine("  Goodbye, {0}!", s);
+015:     }
+016: 
+017:     public static void Main()
+018:     {
+019:         MyDelegate a, b, c, d;
+020: 
+021:         a = new MyDelegate(Hello);
+022:         b = new MyDelegate(Goodbye);
+023:         c = a + b;   // Compose two delegates to make another
+024:         d = c - a;   // Remove a from the composed delegate
+025: 
+026:         Console.WriteLine("Invoking delegate a:");
+027:         a("A");
+028:         Console.WriteLine("Invoking delegate b:");
+029:         b("B");
+030:         Console.WriteLine("Invoking delegate c:");
+031:         c("C");
+032:         Console.WriteLine("Invoking delegate d:");
+033:         d("D");
+034:     }
+035: }
+Output
+Invoking delegate a:
+  Hello, A!
+Invoking delegate b:
+  Goodbye, B!
+Invoking delegate c:
+  Hello, C!
+  Goodbye, C!
+Invoking delegate d:
+  Goodbye, D!
+
+
+
+
+
+
+//////////////////////////////////////////////////////////////////////////////////////////////////
+/// 		13 Events
+/// 
+
+Example 1
+000: // Events\events1.cs
+001: using System;
+002: namespace MyCollections 
+003: {
+004:    using System.Collections;
+005: 
+006:    // A delegate type for hooking up change notifications.
+007:    public delegate void ChangedEventHandler();
+008: 
+009:    // A class that works just like ArrayList, but sends event
+010:    // notifications whenever the list changes.
+011:    public class ListWithChangedEvent: ArrayList 
+012:    {
+013:       // An event that clients can use to be notified whenever the
+014:       // elements of the list change.
+015:       public event ChangedEventHandler Changed;
+016: 
+017:       // Invoke the Changed event; called whenever list changes
+018:       protected virtual void OnChanged() 
+019:       {
+020:          if (Changed != null)
+021:             Changed();
+022:       }
+023: 
+024:       // Override some of the methods that can change the list;
+025:       // invoke event after each
+026:       public override int Add(object value) 
+027:       {
+028:          int i = base.Add(value);
+029:          OnChanged();
+030:          return i;
+031:       }
+032: 
+033:       public override void Clear() 
+034:       {
+035:          base.Clear();
+036:          OnChanged();
+037:       }
+038: 
+039:       public override object this[int index] 
+040:       {
+041:          set 
+042:          {
+043:             base[index] = value;
+044:             OnChanged();
+045:          }
+046:       }
+047:    }
+048: }
+049: 
+050: namespace TestEvents 
+051: {
+052:    using MyCollections;
+053: 
+054:    class EventListener 
+055:    {
+056:       private ListWithChangedEvent List;
+057: 
+058:       public EventListener(ListWithChangedEvent list) 
+059:       {
+060:          List = list;
+061:          // Add "ListChanged" to the Changed event on "List".
+062:          List.Changed += new ChangedEventHandler(ListChanged);
+063:       }
+064: 
+065:       // This will be called whenever the list changes.
+066:       private void ListChanged() 
+067:       {
+068:          Console.WriteLine("This is called when the event fires.");
+069:       }
+070: 
+071:       public void Detach() 
+072:       {
+073:          // Detach the event and delete the list
+074:          List.Changed -= new ChangedEventHandler(ListChanged);
+075:          List = null;
+076:       }
+077:    }
+078: 
+079:    class Test 
+080:    {
+081:       // Test the ListWithChangedEvent class.
+082:       public static void Main() 
+083:       {
+084:       // Create a new list.
+085:       ListWithChangedEvent list = new ListWithChangedEvent();
+086: 
+087:       // Create a class that listens to the list's change event.
+088:       EventListener listener = new EventListener(list);
+089: 
+090:       // Add and remove items from the list.
+091:       list.Add("item 1");
+092:       list.Clear();
+093:       listener.Detach();
+094:       }
+095:    }
+096: }
+Output
+This is called when the event fires.
+This is called when the event fires.
+
+
+Example 2
+000: // Events\events2.cs
+001: using System;
+002: namespace MyCollections 
+003: {
+004:    using System.Collections;
+005: 
+006:    // A class that works just like ArrayList, but sends event
+007:    // notifications whenever the list changes.
+008:    public class ListWithChangedEvent: ArrayList 
+009:    {
+010:       // An event that clients can use to be notified whenever the
+011:       // elements of the list change.
+012:       public event EventHandler Changed;
+013: 
+014:       // Invoke the Changed event; called whenever list changes
+015:       protected virtual void OnChanged(EventArgs e) 
+016:       {
+017:          if (Changed != null)
+018:             Changed(this,e);
+019:       }
+020: 
+021:       // Override some of the methods that can change the list;
+022:       // invoke event after each
+023:       public override int Add(object value) 
+024:       {
+025:          int i = base.Add(value);
+026:          OnChanged(EventArgs.Empty);
+027:          return i;
+028:       }
+029: 
+030:       public override void Clear() 
+031:       {
+032:          base.Clear();
+033:          OnChanged(EventArgs.Empty);
+034:       }
+035: 
+036:       public override object this[int index] 
+037:       {
+038:          set 
+039:          {
+040:             base[index] = value;
+041:             OnChanged(EventArgs.Empty);
+042:          }
+043:       }
+044:    }
+045: }
+046: 
+047: namespace TestEvents 
+048: {
+049:    using MyCollections;
+050: 
+051:    class EventListener 
+052:    {
+053:       private ListWithChangedEvent List;
+054: 
+055:       public EventListener(ListWithChangedEvent list) 
+056:       {
+057:          List = list;
+058:          // Add "ListChanged" to the Changed event on "List".
+059:          List.Changed += new EventHandler(ListChanged);
+060:       }
+061: 
+062:       // This will be called whenever the list changes.
+063:       private void ListChanged(object sender, EventArgs e) 
+064:       {
+065:          Console.WriteLine("This is called when the event fires.");
+066:       }
+067: 
+068:       public void Detach() 
+069:       {
+070:          // Detach the event and delete the list
+071:          List.Changed -= new EventHandler(ListChanged);
+072:          List = null;
+073:       }
+074:    }
+075: 
+076:    class Test 
+077:    {
+078:       // Test the ListWithChangedEvent class.
+079:       public static void Main() 
+080:       {
+081:       // Create a new list.
+082:       ListWithChangedEvent list = new ListWithChangedEvent();
+083: 
+084:       // Create a class that listens to the list's change event.
+085:       EventListener listener = new EventListener(list);
+086: 
+087:       // Add and remove items from the list.
+088:       list.Add("item 1");
+089:       list.Clear();
+090:       listener.Detach();
+091:       }
+092:    }
+093: }
+Output
+This is called when the event fires.
+This is called when the event fires.
+
+
+
+
+
+//////////////////////////////////////////////////////////////////////////////////////////////////
+/// 		14 Explicit Interface Implementation
+/// 
+
+
+Example 1
+000: // ExplicitInterface\explicit1.cs
+001: interface IDimensions 
+002: {
+003:    float Length();
+004:    float Width();
+005: }
+006: 
+007: class Box : IDimensions 
+008: {
+009:    float lengthInches;
+010:    float widthInches;
+011: 
+012:    public Box(float length, float width) 
+013:    {
+014:       lengthInches = length;
+015:       widthInches = width;
+016:    }
+017:    // Explicit interface member implementation: 
+018:    float IDimensions.Length() 
+019:    {
+020:       return lengthInches;
+021:    }
+022:    // Explicit interface member implementation:
+023:    float IDimensions.Width() 
+024:    {
+025:       return widthInches;      
+026:    }
+027: 
+028:    public static void Main() 
+029:    {
+030:       Box myBox = new Box(30.0f, 20.0f);
+031:       IDimensions myDimensions = (IDimensions) myBox;
+032:       //System.Console.WriteLine("Length: {0}", myBox.Length());
+033:       //System.Console.WriteLine("Width: {0}", myBox.Width());
+034:       System.Console.WriteLine("Length: {0}", myDimensions.Length());
+035:       System.Console.WriteLine("Width: {0}", myDimensions.Width());
+036:    }
+037: }
+Output
+Length: 30
+Width: 20
+
+
+Example 2
+000: // ExplicitInterface\explicit2.cs
+001: interface IEnglishDimensions 
+002: {
+003:    float Length();
+004:    float Width();
+005: }
+006: interface IMetricDimensions 
+007: {
+008:    float Length();
+009:    float Width();
+010: }
+011: class Box : IEnglishDimensions, IMetricDimensions 
+012: {
+013:    float lengthInches;
+014:    float widthInches;
+015:    public Box(float length, float width) 
+016:    {
+017:       lengthInches = length;
+018:       widthInches = width;
+019:    }
+020:    float IEnglishDimensions.Length() 
+021:    {
+022:       return lengthInches;
+023:    }
+024:    float IEnglishDimensions.Width() 
+025:    {
+026:       return widthInches;      
+027:    }
+028:    float IMetricDimensions.Length() 
+029:    {
+030:       return lengthInches * 2.54f;
+031:    }
+032:    float IMetricDimensions.Width() 
+033:    {
+034:       return widthInches * 2.54f;
+035:    }
+036:    public static void Main() 
+037:    {
+038:       Box myBox = new Box(30.0f, 20.0f);
+039:       IEnglishDimensions eDimensions = (IEnglishDimensions) myBox;
+040:       IMetricDimensions mDimensions = (IMetricDimensions) myBox;
+041:       System.Console.WriteLine("Length(in): {0}", eDimensions.Length());
+042:       System.Console.WriteLine("Width(in): {0}", eDimensions.Width());   
+043:       System.Console.WriteLine("Length(cm): {0}", mDimensions.Length());
+044:       System.Console.WriteLine("Width(cm): {0}", mDimensions.Width());
+045:    }
+046: }
+Output
+Length(in): 30
+Width(in): 20
+Length(cm): 76.2
+Width(cm): 50.8
+Code Discussion
+
+
+
+//////////////////////////////////////////////////////////////////////////////////////////////////
+/// 		15 Conditional Methods
+/// 
+
+Example
+
+File #1: Creating Conditional Methods
+000: // ConditionalMethods\CondMethod.cs
+001: using System; 
+002: using System.Diagnostics;
+003: namespace TraceFunctions 
+004: { 
+005:     public class Trace 
+006:     { 
+007:         [Conditional("DEBUG")] 
+008:         public static void Message(string traceMessage) 
+009:         { 
+010:             Console.WriteLine("[TRACE] - " + traceMessage); 
+011:         } 
+012:     } 
+013: }
+
+File #2: Using a Conditional Method
+000: // ConditionalMethods\tracetest.cs
+001: using System; 
+002: using TraceFunctions; 
+003: 
+004: public class TraceClient 
+005: { 
+006:     public static void Main(string[] args) 
+007:     { 
+008:         Trace.Message("Main Starting"); 
+009:     
+010:         if (args.Length == 0) 
+011:         { 
+012:             Console.WriteLine("No arguments have been passed"); 
+013:         } 
+014:         else 
+015:         { 
+016:             for( int i=0; i < args.Length; i++)    
+017:             { 
+018:                 Console.WriteLine("Arg[{0}] is [{1}]",i,args[i]); 
+019:             } 
+020:         } 
+021:             
+022:         Trace.Message("Main Ending"); 
+023:     } 
+024: }
+
+Sample Run
+The command:
+tracetest A B C
+gives the following output:
+[TRACE] - Main Starting
+Arg[0] is [A]
+Arg[1] is [B]
+Arg[2] is [C]
+[TRACE] - Main Ending
+
+The command:
+tracetest
+gives the following output:
+[TRACE] - Main Starting
+No arguments have been passed
+[TRACE] - Main Ending
+
+==============================================================================
+
+

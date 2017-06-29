@@ -1,0 +1,1120 @@
+	
+
+
+================================================================================
+
+	Programming Java Launguage   ---- Vol. 4
+
+================================================================================
+
+
+Index
+		Vol.1
+		1.Javaの基礎
+		2.クラスとメソッド
+		3.Javaの制御ステートメントの概要
+		4.制御ステートメントと演算子
+
+		Vol.2
+		1.クラスの作成
+		2.継承
+
+		Vol.3
+		1.インターフェイスとパッケージ
+		2.例外
+
+    Vol.4
+    1.マルチスレッド
+    2.Javaクラスライブラリの初歩
+    3.入出力
+    4.ネットワーク
+
+		Vol.5
+		1.アプレット
+		2.イベント処理
+		3.ツール
+
+
+////////////////////////////////////////////////////////////////////////////////
+// スレッドの作成
+class ThreadX extends Thread {
+	public void run() {
+		try {
+			while(true) {
+				Thread.sleep(2000);	// 2000毎に休止
+				System.out.println("Hello");
+			}
+		}
+		catch(InterruptedException ex) {
+			ex.printStackTrace();
+		}
+	}
+}
+class ThreadDemo1 {
+	public static void main(String args[]) {
+		ThreadX tx = new ThreadX();		// インスタンスオブジェクト
+		tx.start();				// run()を実行
+	}
+}
+////////////////////////////////////////////////////////////////////////////////
+class RunnableY implements Runnable {	// Runnableクラスを実装
+	public void run() {
+		try {
+			while(true) {
+				Thread.sleep(2000);	// 2000毎に休止
+				System.out.println("Hello");
+			}
+		}
+		catch(InterruptedException ex) {
+			ex.printStackTrace();
+		}
+	}
+}
+class ThreadDemo2 {
+	public static void main(String args[]) {
+		RunnableY ry = new RunnableY(); 	// インスタンスオブジェクト
+		Thread t = new Thread(ry);		// インスタンスオブジェクト Threadコンストラクタ引数としてRunnableYオブジェクト
+							// へ参照
+		t.start();
+	}
+}
+////////////////////////////////////////////////////////////////////////////////
+class ThreadM extends Thread {		// スレッドクラスを拡張
+	public void run() {
+		try {
+			for (int i = 0; i < 10; i++) {	// 1秒間隔で10回表示
+				Thread.sleep(1000);
+				System.out.println("ThreadM");
+			}
+		}
+		catch (InterruptedException ex) {
+			ex.printStackTrace();
+		}
+	}
+}
+class ThreadN extends Thread {		// スレッドクラスを拡張
+	public void run() {
+		try {
+			for (int i = 0; i < 20; i++) {	// ２秒間隔で２０回表示
+				Thread.sleep(2000);
+				System.out.println("ThreadN");
+			}
+		}
+		catch(InterruptedException ex) {
+			ex.printStackTrace();
+		}
+	}
+}
+class JoinDemo1 {
+	public static void main(String args[]) {
+		ThreadM tm = new ThreadM();
+		tm.start();
+		ThreadN tn = new ThreadN();
+		tn.start();
+		try {
+			tm.join();		// スレッドが終了するまで待機
+			tn.join();		// スレッドが終了するまで待機
+			System.out.println("Both threads have finished");
+		}
+		catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+}
+////////////////////////////////////////////////////////////////////////////////
+// 同期
+class Account {				// 現在の残高をカプセル化
+	private int balance = 0;
+	synchronized void deposit(int amount) {
+		balance += amount;	// 残高を増額
+	}
+	int getBalance() {		// 口座の残高を照会
+		return balance;
+	}
+}
+class Customer extends Thread {		// Threadクラスを拡張
+	Account account;
+	Customer(Account account) {	// コンストラクタ
+		this.account = account;	// 共有アカウントへの参照を保存
+	}
+	public void run() {		// ループを使って預け入れを100,000回実行
+		try {
+			for (int i = 0; i < 100000; i++) {
+				account.deposit(10);	// 一回の預金は10円
+			}
+		}
+		catch(Exception e) {
+			e.printStackTrace();
+		}
+	}
+}
+class BankDemo {
+	private final static int NUMCUSTOMERS = 10;		// 定数を宣言
+	public static void main(String args[]) {
+		Account account = new Account();		// 口座の作成
+		Customer customers[] = new Customer[NUMCUSTOMERS];// スレッドの作成と起動
+		for (int i = 0; i < NUMCUSTOMERS; i++) {
+			customers[i] = new Customer(account);
+			customers[i].start();
+		}
+		for (int i = 0; i < NUMCUSTOMERS; i++) {	// スレッドの完了を待機する
+			try {
+				customers[i].join();		// スレッドの官僚を待つ
+			}
+			catch(InterruptedException e) {
+				e.printStackTrace();
+			}
+		}
+		// 口座の残高を表示する
+		System.out.println(account.getBalance());
+	}
+}
+////////////////////////////////////////////////////////////////////////////////
+// デッドロック
+class A {
+	B b;						// bクラスを参照するインスタンスメンバ
+	synchronized void a1() {
+		System.out.println("Starting a1");
+		b.b2();					// bクラスメソッドを実行
+	}
+	synchronized void a2() {
+		System.out.println("Starting a2");
+	}
+}
+class B {
+	A a;						// aクラスを参照するインスタンスメンバ
+	synchronized void b1() {
+		System.out.println("Starting b1");
+		a.a2();					// aクラスメソッドを実行
+	}
+	synchronized void b2() {
+		System.out.println("Starting b2");
+	}
+}
+class Thread1 extends Thread {				// Threadクラスを拡張
+	A a;
+	Thread1(A a) {
+		this.a = a;
+	}
+	public void run() {
+		for (int i = 0; i < 100000; i++)
+			a.a1();				// a1()を100,000繰り返す
+	}
+}
+class Thread2 extends Thread {
+	B b;
+	Thread2(B b) {
+		this.b = b;
+	}
+	public void run() {
+		for (int i = 0; i < 100000; i++)
+			b.b1();				// b1()を100,000繰り返す
+	}
+}
+class DeadlockDemo {
+	public static void main(String args[]) {
+		A a = new A();				// オブジェクトの作成
+		B b = new B();
+		a.b = b;
+		b.a = a;
+		Thread1 t1 = new Thread1(a);		// スレッドの作成
+		Thread2 t2 = new Thread2(b);
+		t1.start();
+		t2.start();
+		try {					// スレッドの完了を待つ
+			t1.join();
+			t2.join();
+		}
+		catch(Exception e) {
+			e.printStackTrace();
+		}
+		System.out.println("Done!");		// メッセージの表示
+	}
+}
+////////////////////////////////////////////////////////////////////////////////
+class Producer extends Thread {			// Threadを拡張
+	Queue queue;
+	Producer(Queue queue) {			// コンストラクタ
+		this.queue = queue;		// queueオブジェクトへの参照を受け取って保存
+	}
+	public void run() {			// add()メソッドを呼び出して待ち行列に新しい
+		int i = 0;			// エントリを追加するループを無限実行
+		while(true) {
+			queue.add(i++);
+		}
+	}
+}
+class Consumer extends Thread {			// Threadを拡張
+	String str;
+	Queue queue;
+	Consumer(String str, Queue queue) {	// コンストラクタ
+		this.str = str;			// 文字列とqueueオブジェクトへの参照を受け取って保存
+		this.queue = queue;
+	}
+	public void run() {			// rmove()を呼び出して待ち行列からエントリを取り出す
+		while(true) {			// ループを無限に実行
+			System.out.println(str + ": " + queue.remove());
+		}
+	}
+}
+class Queue {
+	private final static int SIZE = 10;	// 定数として宣言
+	int array[] = new int[SIZE];
+	int r = 0;				// データの読みとり先
+	int w = 0;				// データの書き込み先
+	int count = 0;				// 配列内の未読エントリの数はcountに格納
+	synchronized void add(int i) {
+		while(count == SIZE) {			// 待ち行列がいっぱいの場合は待機する
+			try {
+				wait();
+			}
+			catch(InterruptedException ie) {
+				ie.printStackTrace();
+				System.exit(0);
+			}
+		}
+		array[w++] = i;				// 配列にデータを追加して書き込みポインタを更新する
+		if(w >= SIZE)
+			w = 0;
+		++count;				// countカウントを1つ増やす
+		notifyAll();				// 待機中のスレッドに通知する
+	}
+	synchronized int remove() {
+		while(count == 0) {			// 待ち行列が空の場合は待機する
+			try {
+				wait();
+			}
+			catch(InterruptedException ie) {
+				ie.printStackTrace();
+				System.exit(0);
+			}
+		}
+		int element = array[r++];		// 配列からデータを読み取って読み取りポインタを更新する
+		if(r >= SIZE)
+			r = 0;
+		--count;				// countを1つ減らす
+		notifyAll();				// 待機中のスレッドに通知する
+		return element;				// データを返す
+	}
+}
+class ProducerConsumers {
+	public static void main(String args[]) {
+		Queue queue = new Queue();
+		new Producer(queue).start();
+		new Consumer("ConsumerA", queue).start();
+		new Consumer("ConsumerB", queue).start();
+		new Consumer("ConsumerC", queue).start();
+	}
+}
+////////////////////////////////////////////////////////////////////////////////
+class K {
+	boolean flag;
+	synchronized void k1() {
+		if(flag == false) {
+			flag = true;
+			try {
+				System.out.println("Calling wait");
+				wait();
+			}
+			catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
+		else {
+			flag = false;
+			System.out.println("Calling notifyAll");
+			notifyAll();
+		}
+	}
+}
+class ThreadK extends Thread {
+	K k;
+	ThreadK(K k) {
+		this.k = k;
+	}
+	public void run() {
+		k.k1();
+		System.out.println("Done");
+	}
+}
+class WaitNotifyDemo {
+	public static void main(String args[]) {
+		K k = new K();
+		new ThreadK(k).start();
+		new ThreadK(k).start();
+	}
+}
+////////////////////////////////////////////////////////////////////////////////
+class NormPriorityThread extends Thread {
+	public void run() {
+		for (int i = 0; i < 100000000; i++) {
+		}
+	}
+}
+class LowPriorityThread extends Thread {
+	public void run() {
+		setPriority(MIN_PRIORITY);
+		try {
+			for (int i = 0; i < Integer.MAX_VALUE; i++)
+				System.out.println("Low priority thread: " + i);
+		}
+		catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+}
+class PriorityDemo {
+	public static void main(String args[]) {
+		// 優先順位の低いスレッドを作成して起動する
+		LowPriorityThread lpt = new LowPriorityThread();
+		lpt.start();
+		// 2000ミリ秒間待機する
+		try {
+			Thread.sleep(2000);
+		}
+		catch(Exception e) {
+			e.printStackTrace();
+		}
+		// 通常の優先順位のスレッドを作成して起動する
+		NormPriorityThread npt = new NormPriorityThread();
+		npt.start();
+	}
+}
+////////////////////////////////////////////////////////////////////////////////
+// Randomクラス
+import java.util.*;
+class RandomInts {
+	public static void main(String args[]) {
+						// 乱数ジェネレータを作成する
+		Random generator = new Random();
+						// 10個のint型の乱数を生成する
+		for (int i = 0; i < 10; i++)
+			System.out.println(generator.nextInt());
+	}
+}
+////////////////////////////////////////////////////////////////////////////////
+// Dateクラス
+import java.util.*;
+class DateDemo {
+	public static void main(String args[]) {
+		// Dateオブジェクトを現在の
+		// 日付/時刻で初期化する
+		Date currentDate = new Date();
+		// 現在の日付を表示する
+		System.out.println(currentDate);
+		// Dateオブジェクトを基準時
+		// （1970/1/1）に初期化する
+		Date epoch = new Date(0);
+		// 基準時を表示する
+		System.out.println(epoch);
+	}
+}
+////////////////////////////////////////////////////////////////////////////////
+// CalendarクラスとGregorianCalendarクラス
+import java.util.*;
+class CalendarDemo {
+	public static void main(String args[]) {
+		Calendar calendar = Calendar.getInstance();
+		System.out.println(calendar.get(Calendar.YEAR));
+		System.out.println(calendar.get(Calendar.HOUR));
+		System.out.println(calendar.get(
+			Calendar.HOUR_OF_DAY));
+		System.out.println(calendar.get(Calendar.MINUTE));
+	}
+}
+////////////////////////////////////////////////////////////////////////////////
+// VectorクラスとEnumerationクラス
+import java.util.*;
+class VectorDemo {
+	public static void main(String args[]) {
+		// ベクトルとその要素を作成する
+		Vector vector = new Vector();
+		vector.addElement(new Integer(5));
+		vector.addElement(new Float(-14.14f));
+		vector.addElement(new String("Hello"));
+		vector.addElement(new Long(120000000));
+		vector.addElement(new Double(-23.45e-11));
+		// ベクトルの要素を表示する
+		System.out.println(vector);
+		// ベクトルに要素を挿入する
+		String s = new String("String to be inserted");
+		vector.insertElementAt(s, 1);
+		System.out.println(vector);
+		// ベクトルから要素を削除する
+		vector.removeElementAt(3);
+		System.out.println(vector);
+	}
+}
+////////////////////////////////////////////////////////////////////////////////
+import java.util.*;
+class EnumerationDemo {
+	public static void main(String args[]) {
+		// ベクトルとその要素を作成する
+		Vector vector = new Vector();
+		vector.addElement(new Integer(5));
+		vector.addElement(new Float(-14.14f));
+		vector.addElement(new String("Hello"));
+		vector.addElement(new Long(120000000));
+		vector.addElement(new Double(-23.45e-11));
+		// ベクトルの要素を表示する
+		Enumeration e = vector.elements();
+		while(e.hasMoreElements()) {
+			Object obj = e.nextElement();
+			System.out.println(obj);
+		}
+	}
+}
+////////////////////////////////////////////////////////////////////////////////
+// Stackクラス
+import java.util.*;
+class PushPop {
+	public static void main(String args[]) {
+		// スタックを作成する
+		Stack stack = new Stack();
+		// 要素をスタックにプッシュする
+		for (int i = 0; i < args.length; i++)
+			stack.push(new Integer(args[i]));
+
+		// スタックから要素をポップして表示する
+		while(!stack.empty()) {
+			Object obj = stack.pop();
+			System.out.println(obj);
+		}
+	}
+}
+////////////////////////////////////////////////////////////////////////////////
+// Hashtableクラス
+import java.util.*;
+class HashtableDemo {
+	public static void main(String args[]) {
+		// ハッシュ表を作成し，情報を設定する
+		Hashtable hashtable = new Hashtable();
+		hashtable.put("apple", "red");
+		hashtable.put("strawberry", "red");
+		hashtable.put("lime", "green");
+		hashtable.put("banana", "yellow");
+		hashtable.put("orange", "orange");
+		// ハッシュ表の要素を表示する
+		Enumeration e = hashtable.keys();
+		while(e.hasMoreElements()) {
+			Object k = e.nextElement();
+			Object v = hashtable.get(k);
+			System.out.println("key = " + k + "; value = " + v);
+		}
+		// 'appleの値を表示する
+		System.out.print("\nThe color of an apple is: ");
+		Object v = hashtable.get("apple");
+		System.out.println(v);
+	}
+}
+////////////////////////////////////////////////////////////////////////////////
+// StringTokenizerクラス
+import java.util.*;
+class StringTokenizerDemo {
+	public static void main(String args[]) {
+		String str =
+			"123/45.6/-11.2/41/-90.1/100/99.99/-50/-20";
+		StringTokenizer st = new StringTokenizer(str, "/");
+		while(st.hasMoreTokens()) {
+			String s = st.nextToken();
+			System.out.println(s);
+		}
+	}
+}
+////////////////////////////////////////////////////////////////////////////////
+// ファイルとディレクトリ
+import java.io.*;
+class FileDemo {	// java FileDemo c:\autoexec.bat
+	public static void main(String args[]) {
+		try {
+			// 定数を表示する
+			System.out.println("pathSeparatorChar = " + File.pathSeparatorChar);
+			System.out.println("separatorChar = " + File.separatorChar);
+			// いくつかのメソッドをテストする
+			File file = new File(args[0]);
+			System.out.println("getName() = " + file.getName());
+			System.out.println("getParent() = " + file.getParent());
+			System.out.println("getAbsolutePath() = " + file.getAbsolutePath());
+			System.out.println("getCanonicalPath() = " + file.getCanonicalPath());
+			System.out.println("getPath() = " + file.getPath());
+			System.out.println("canRead() = " + file.canRead());
+			System.out.println("canWrite() = " + file.canWrite());
+		}
+		catch(Exception e) {
+			e.printStackTrace();
+		}
+	}
+}
+////////////////////////////////////////////////////////////////////////////////
+// 文字ストリーム　ファイルの書き込み
+import java.io.*;
+class FileWriterDemo {		// java FileWriteDemo c:\hoe.txt
+	public static void main(String args[]) {
+		try {
+			// FileWriterオブジェクトを作成する
+			FileWriter fw = new FileWriter(args[0]);
+			// ファイルに文字列を書き込む
+			for (int i = 0; i < 12; i++) {
+				fw.write("Line " + i + "\n");
+			}
+			// FileWriterオブジェクトをクローズする
+			fw.close();
+		}
+		catch (Exception e) {
+			System.out.println("Exception: " + e);
+		}
+	}
+}
+////////////////////////////////////////////////////////////////////////////////
+// 文字ストリーム　ファイルの読みとり
+import java.io.*;
+class FileReaderDemo {
+	public static void main(String args[]) {
+		try {
+			// FileReaderオブジェクトを作成する
+			FileReader fr = new FileReader(args[0]);
+			// 文字を読み取って，表示する
+			int i;
+			while((i = fr.read()) != -1) {
+				System.out.print((char)i);
+			}
+			// FileReaderオブジェクトをクローズする
+			fr.close();
+		}
+		catch(Exception e) {
+			System.out.println("Exception: " + e);
+		}
+	}
+}
+////////////////////////////////////////////////////////////////////////////////
+// バッファ付け文字ストリーム　ファイル書き込み
+import java.io.*;
+class BufferedWriterDemo {
+	public static void main(String args[]) {
+		try {
+			// FileWriterオブジェクトを作成する
+			FileWriter fw = new FileWriter(args[0]);
+			// BufferedWriterオブジェクトを作成する
+			BufferedWriter bw = new BufferedWriter(fw);
+			// ファイルに文字列を書き込む
+			for (int i = 0; i < 12; i++) {
+				bw.write("Line " + i + "\n");
+			}
+			// BufferedWriterオブジェクトをクローズする
+			bw.close();
+		}
+		catch (Exception e) {
+			System.out.println("Exception: " + e);
+		}
+	}
+}
+////////////////////////////////////////////////////////////////////////////////
+// バッファ付け文字ストリーム　ファイル読みとり
+import java.io.*;
+class BufferedReaderDemo {
+	public static void main(String args[]) {
+		try {
+			// FileReaderオブジェクトを作成する
+			FileReader fr = new FileReader(args[0]);
+			// BufferedReaderオブジェクトを作成する
+			BufferedReader br = new BufferedReader(fr);
+			// ファイルから行を読み取って，表示する
+			String s;
+			while((s = br.readLine()) != null)
+				System.out.println(s);
+			// FileReaderオブジェクトをクローズする
+			fr.close();
+		}
+		catch (Exception e) {
+			System.out.println("Exception: " + e);
+		}
+	}
+}
+////////////////////////////////////////////////////////////////////////////////
+// バッファ付け文字ストリーム　キーボードからの入力読みとり
+import java.io.*;
+class ReadConsole {
+	public static void main(String args[]) {
+		try {
+			// InputStreamReaderオブジェクトを作成する
+			InputStreamReader isr =
+				new InputStreamReader(System.in);
+			// BufferedReaderオブジェクトを作成する
+			BufferedReader br = new BufferedReader(isr);
+			// コンソールから行を読み取って，処理する
+			String s;
+			while((s = br.readLine()) != null) {
+				System.out.println(s.length());
+			}
+			// InputStreamReaderオブジェクトをクローズする
+			isr.close();
+		}
+		catch (Exception e) {
+			System.out.println("Exception: " + e);
+		}
+	}
+}
+////////////////////////////////////////////////////////////////////////////////
+// PrintWriterクラス
+import java.io.*;
+class PrintWriterDemo {
+	public static void main(String args[]) {
+		try {
+			// PrintWriterオブジェクトを作成する
+			PrintWriter pw = new PrintWriter(System.out);
+			// いくつかのメソッドを実行する
+			pw.println(true);
+			pw.println('A');
+			pw.println(500);
+			pw.println(40000L);
+			pw.println(45.67f);
+			pw.println(45.67);
+			pw.println("Hello");
+			pw.println(new Integer("99"));
+			// PrintWriterオブジェクトをクローズする
+			pw.close();
+		}
+		catch (Exception e) {
+			System.out.println("Exception: " + e);
+		}
+	}
+}
+////////////////////////////////////////////////////////////////////////////////
+// バイトストリーム
+import java.io.*;
+class FileOutputStreamDemo {
+	public static void main(String args[]) {
+		try {
+			// FileOutputStreamオブジェクトを作成する
+			FileOutputStream fos =
+				new FileOutputStream(args[0]);
+			// ファイルに12バイトを書き込む
+			for (int i = 0; i < 12; i++) {
+				fos.write(i);
+			}
+			// FileOutputStreamオブジェクトをクローズする
+			fos.close();
+		}
+		catch (Exception e) {
+			System.out.println("Exception: " + e);
+		}
+	}
+}
+////////////////////////////////////////////////////////////////////////////////
+// ファイルの作成および読みとり FileoutputStream FileInputStream
+import java.io.*;
+class FileInputStreamDemo {
+	public static void main(String args[]) {
+		try {
+			// FileInputStreamオブジェクトを作成する
+			FileInputStream fis =
+				new FileInputStream(args[0]);
+			// データを読み取って，表示する
+			int i;
+			while((i = fis.read()) != -1) {
+				System.out.println(i);
+			}
+			// FileInputStreamオブジェクトをクローズする
+			fis.close();
+		}
+		catch (Exception e) {
+			System.out.println("Exception: " + e);
+		}
+	}
+}
+////////////////////////////////////////////////////////////////////////////////
+// ファイルの作成および読みとり BufferedOutputStream
+import java.io.*;
+class BufferedOutputStreamDemo {
+	public static void main(String args[]) {
+		try {
+			// FileOutputStreamオブジェクトを作成する
+			FileOutputStream fos =
+				new FileOutputStream(args[0]);
+			// BufferedOutputStreamオブジェクトを作成する
+			BufferedOutputStream bos =
+				new BufferedOutputStream(fos);
+			// ファイルに12バイトを書き込む
+			for (int i = 0; i < 12; i++) {
+				bos.write(i);
+			}
+			// BufferedOutputStreamオブジェクトをクローズする
+			bos.close();
+		}
+		catch (Exception e) {
+			System.out.println("Exception: " + e);
+		}
+	}
+}
+////////////////////////////////////////////////////////////////////////////////
+// ファイルの作成および読みとり FileInputStream
+import java.io.*;
+class BufferedInputStreamDemo {
+	public static void main(String args[]) {
+		try {
+			// FileInputStreamを作成する
+			FileInputStream fis =
+				new FileInputStream(args[0]);
+			// BufferedInputStreamオブジェクトを作成する
+			BufferedInputStream bis =
+				new BufferedInputStream(fis);
+			// データを読み取って，表示する
+			int i;
+			while((i = bis.read()) != -1) {
+				System.out.println(i);
+			}
+			// FileInputStreamオブジェクトをクローズする
+			fis.close();
+		}
+		catch (Exception e) {
+			System.out.println("Exception: " + e);
+		}
+	}
+}
+////////////////////////////////////////////////////////////////////////////////
+// ファイルの作成および読みとり DataOutputStrem
+import java.io.*;
+class DataOutputStreamDemo {
+	public static void main(String args[]) {
+		try {
+			// FileOutputStreamオブジェクトを作成する
+			FileOutputStream fos =
+				new FileOutputStream(args[0]);
+			// DataOutputStreamオブジェクトを作成する
+			DataOutputStream dos =
+				new DataOutputStream(fos);
+			// 各種のデータ型を書き込む
+			dos.writeBoolean(false);
+			dos.writeByte(Byte.MAX_VALUE);
+			dos.writeChar('A');
+			dos.writeDouble(Double.MAX_VALUE);
+			dos.writeFloat(Float.MAX_VALUE);
+			dos.writeInt(Integer.MAX_VALUE);
+			dos.writeLong(Long.MAX_VALUE);
+			dos.writeShort(Short.MAX_VALUE);
+
+			// FileOutputStreamオブジェクトをクローズする
+			fos.close();
+		}
+		catch (Exception e) {
+			System.out.println("Exception: " + e);
+		}
+	}
+}
+////////////////////////////////////////////////////////////////////////////////
+// ファイルの作成および読みとり DataInputStream
+import java.io.*;
+class DataInputStreamDemo {
+	public static void main(String args[]) {
+		try {
+			// FileInputStreamオブジェクトを作成する
+			FileInputStream fis =
+				new FileInputStream(args[0]);
+			// DataInputStreamオブジェクトを作成する
+			DataInputStream dis =
+				new DataInputStream(fis);
+			// データを読み取り，表示する
+			System.out.println(dis.readBoolean());
+			System.out.println(dis.readByte());
+			System.out.println(dis.readChar());
+			System.out.println(dis.readDouble());
+			System.out.println(dis.readFloat());
+			System.out.println(dis.readInt());
+			System.out.println(dis.readLong());
+			System.out.println(dis.readShort());
+
+			// FileInputStreamオブジェクトをクローズする
+			fis.close();
+		}
+		catch (Exception e) {
+			System.out.println("Exception: " + e);
+		}
+	}
+}
+////////////////////////////////////////////////////////////////////////////////
+// ランダムアクセスファイル
+import java.io.*;
+class Tail {
+	public static void main(String args[]) {
+
+		try {
+			// RandomAccessFileオブジェクトを作成する
+			RandomAccessFile raf =
+				new RandomAccessFile(args[0], "r");
+			// ファイルの終わりに表示する
+			// バイト数を決める
+			long count = Long.valueOf(args[1]).longValue();
+
+			// ファイルの長さを決める
+			long position = raf.length();
+			// 現在の位置にシークする
+			position -= count;
+			if(position < 0)
+				position = 0;
+			raf.seek(position);
+
+			// バイトを読み取って，表示する
+			while(true) {
+
+				// バイトを読み取る
+				try {
+					byte b = raf.readByte();
+					// 文字として表示する
+					System.out.print((char)b);
+				}
+				catch (EOFException eofe) {
+					break;
+				}
+			}
+		}
+		catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+}
+////////////////////////////////////////////////////////////////////////////////
+// StreamTokenizerクラス
+import java.io.*;
+class StreamTokenizerDemo {
+	public static void main(String args[]) {
+		try {
+			// FileReaderオブジェクトを作成する
+			FileReader fr = new FileReader(args[0]);
+			// BufferedReaderオブジェクトを作成する
+			BufferedReader br = new BufferedReader(fr);
+			// StreamTokenizerオブジェクトを作成する
+			StreamTokenizer st = new StreamTokenizer(br);
+			// ピリオドを通常文字として定義する
+			st.ordinaryChar('.');
+			// アポストロフを単語文字として定義する
+			st.wordChars('\'', '\'');
+			// トークンを処理する
+			while(st.nextToken() != StreamTokenizer.TT_EOF) {
+				switch(st.ttype) {
+					case st.TT_WORD:
+						System.out.println(st.lineno() + ") " +
+							st.sval);
+						break;
+					case st.TT_NUMBER:
+						System.out.println(st.lineno() + ") " +
+							st.nval);
+						break;
+					default:
+						System.out.println(st.lineno() + ") " +
+							(char)st.ttype);
+				}
+			}
+			// FileReaderオブジェクトをクローズする
+			fr.close();
+		}
+		catch (Exception e) {
+			System.out.println("Exception: " + e);
+		}
+	}
+}
+////////////////////////////////////////////////////////////////////////////////
+import java.io.*;
+class StreamTokenizerDemo2 {
+	public static void main(String args[]) {
+		try {
+			// FileReaderオブジェクトを作成する
+			FileReader fr = new FileReader(args[0]);
+			// BufferedReaderオブジェクトを作成する
+			BufferedReader br = new BufferedReader(fr);
+			// StreamTokenizerオブジェクトを作成する
+			StreamTokenizer st = new StreamTokenizer(br);
+			// コンマを空白と見なす
+			st.whitespaceChars(',', ',');
+			// トークンを処理する
+			while(st.nextToken() != StreamTokenizer.TT_EOF) {
+				switch(st.ttype) {
+					case st.TT_WORD:
+						System.out.println(st.lineno() + ") " +
+							st.sval);
+						break;
+					case st.TT_NUMBER:
+						System.out.println(st.lineno() + ") " +
+							st.nval);
+						break;
+					default:
+						System.out.println(st.lineno() + ") " +
+							(char)st.ttype);
+				}
+			}
+			// FileReaderオブジェクトをクローズする
+			fr.close();
+		}
+		catch (Exception e) {
+			System.out.println("Exception: " + e);
+		}
+	}
+}
+////////////////////////////////////////////////////////////////////////////////
+// インターネットアドレス
+import java.net.*;				// java /MyIPAddress /  get WinIpCfg.exe
+class InetAddressDemo {				// java 211.10.33.216
+	public static void main(String args[]) {
+		try {
+			// アドレスを取得する
+			InetAddress ias[] = InetAddress.getAllByName(args[0]);
+			for (int i = 0; i < ias.length; i++) {
+				System.out.println(ias[i].getHostName());
+				System.out.println(ias[i].getHostAddress());
+				byte bytes[] = ias[i].getAddress();
+				for (int j = 0; j < bytes.length; j++) {
+					if(j > 0)
+						System.out.print(".");
+					if(bytes[j] >= 0)
+						System.out.print(bytes[j]);
+					else
+						System.out.print(bytes[j] + 256);
+				}
+				System.out.println("");
+			}
+		}
+		catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+}
+////////////////////////////////////////////////////////////////////////////////
+// サーバーソケットとソケット　サーバー用
+import java.io.*;
+import java.net.*;
+import java.util.*;			// java /IPAddress / 4321はソフトウェアポート(1000以上であればよいです）
+class ServerSocketDemo {		// java ServerSocketDemo 4321
+	public static void main(String args[]) {
+		try {
+			// ポートを取得する
+			int port = Integer.parseInt(args[0]);
+			// 乱数ジェネレータを作成する
+			Random random = new Random();
+			// サーバーソケットを作成する
+			ServerSocket ss = new ServerSocket(port);
+			// 無限ループを作成する
+			while(true) {
+				// クライアントからの要求を受け取る
+				Socket s = ss.accept();
+				// 結果をクライアントに書き込む
+				OutputStream os = s.getOutputStream();
+				DataOutputStream dos = new DataOutputStream(os);
+				dos.writeInt(random.nextInt());
+				// ソケットをクローズする
+				s.close();
+			}
+		}
+		catch (Exception e) {
+			System.out.println("Exception: " + e);
+		}
+	}
+}
+////////////////////////////////////////////////////////////////////////////////
+// サーバーソケットとソケット　クライアント用
+import java.io.*;
+import java.net.*;			// java /IPAddress / 4321はソフトウェアポート(1000以上であればよいです）
+class SocketDemo {			// java ServerSocket 211.10.33.216 4321
+	public static void main(String args[]) {
+		try {
+			// サーバーとポートを取得する
+			String server = args[0];
+			int port = Integer.parseInt(args[1]);
+			// ソケットを作成する
+			Socket s = new Socket(server, port);
+			// サーバーから乱数を読み取る
+			InputStream is = s.getInputStream();
+			DataInputStream dis = new DataInputStream(is);
+			int i = dis.readInt();
+			// 結果を表示する
+			System.out.println(i);
+			// ソケットをクローズする
+			s.close();
+		}
+		catch (Exception e) {
+			System.out.println("Exception: " + e);
+		}
+	}
+}
+////////////////////////////////////////////////////////////////////////////////
+// データグラムソケットとデータグラムパケット　受信側
+import java.net.*;			// 4321はソフトウェアポート(1000以上であればよいです）
+class DatagramReceiver {		// java DatagramReceiver 4321
+	private final static int BUFSIZE = 20;
+	public static void main(String args[]) {
+		try {
+			// ポートを取得する
+			int port = Integer.parseInt(args[0]);
+			// ポートのDatagramSocketオブジェクトを作成する
+			DatagramSocket ds = new DatagramSocket(port);
+			// 着信したデータを保持するバッファを作成する
+			byte buffer[] = new byte[BUFSIZE];
+			// 無限ループを作成する
+			while(true) {
+				// データグラムパケットを作成する
+				DatagramPacket dp =
+					new DatagramPacket(buffer, buffer.length);
+				// データを受け取る
+				ds.receive(dp);
+				// データグラムパケットからデータを得る
+				String str = new String(dp.getData());
+				// データを表示する
+				System.out.println(str);
+			}
+		}
+		catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+}
+////////////////////////////////////////////////////////////////////////////////
+// データグラムソケットとデータグラムパケット 送信側
+import java.net.*;			// java/ IPAddress / ソフトウェアポート / 好きな文字列
+class DatagramSender {			// java 210.10.33.216 4321 好きな文字列
+	public static void main(String args[]) {
+		try	{
+			// 宛先のインターネットアドレスを作成する
+			InetAddress ia =
+				InetAddress.getByName(args[0]);
+			// 宛先ポートを取得する
+			int port = Integer.parseInt(args[1]);
+			// データグラムソケットを作成する
+			DatagramSocket ds = new DatagramSocket();
+			// データグラムパケットを作成する
+			byte buffer[] = args[2].getBytes();
+			DatagramPacket dp =
+				new DatagramPacket(buffer, buffer.length,
+					ia, port);
+			// データグラムパケットを送信する
+			ds.send(dp);
+		}
+		catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+}
+////////////////////////////////////////////////////////////////////////////////
+// URL
+import java.io.*;
+import java.net.*;
+class URLDemo {			// java URLDemo http://www.kg-group.com
+	public static void main(String args[]) {
+		try {
+			// URLを取得する
+			URL url = new URL(args[0]);
+			// 入力ストリームを取得する
+			InputStream is = url.openStream();
+			// URLからデータを読み取り，表示する
+			byte buffer[] = new byte[1024];
+			int i;
+			while((i = is.read(buffer)) != -1) {
+				System.out.write(buffer, 0, i);
+			}
+		}
+		catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+}
+
+==============================================================================
+
+

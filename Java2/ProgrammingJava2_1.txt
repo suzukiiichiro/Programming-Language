@@ -1,0 +1,966 @@
+	
+
+
+============================================================================================
+
+            Programming Java2 Vol.1
+
+============================================================================================
+
+	Learn More About Java2 Professional Tutrial
+
+		Chapter 1 変数とオブジェクト
+		Chapter 2 お約束とコメント
+		Chapter 3 メソッドと基本制御
+		Chapter 4 コンストラクタと初期化
+			Chapter 5 クラスの再利用
+			Chapter 6 継承
+			Chapter 7 ポリモフィズム
+			Chapter 8 インターフェイスとインナークラス
+			Chapter 9 コレクション
+			Chapter10 エラーハンドリング
+			Chapter11 ファイル入出力
+			Chapter12 Creating Windows AWT
+			Chapter13 Creating Windows Swing
+			Chapter14 Multiple Threads
+			Chapter15 ネットワーク
+			Chapter16 アルゴリズムとデータ構造
+
+
+
+///////////////////////////////////////////////////////////////////////////////////////////
+//// 	Chapter 1 変数とオブジェクト
+
+//------------------------------------------------
+// c01 どれも結局同じ意味
+
+String s; s = "asdf" ;
+String s = "asdf";
+String s = new String("asdf");
+
+
+//------------------------------------------------
+// c01 どれも結局同じ意味
+
+char c = 'x';
+Character C = new Character(c);
+Character C = new Character('x');
+
+
+//------------------------------------------------
+// c01　スコープとは
+
+{
+    int x = 12;
+    /* only x available */
+    {
+    int q = 96;
+    /* both x & q available */
+    }
+    /* only x available */
+    /* q "out of scope" */
+}
+{
+    int x = 12;
+    {
+    int x = 96; /* illegal */
+    }
+}
+{
+    String s = new String("a string");
+} /* end of scope */
+
+
+//------------------------------------------------
+// c01　クラスオブジェクトのインスタンス
+
+// DataBase.java
+class DataOnly 
+{
+    int i;
+    float f;
+    boolean b;
+}
+public class DataBase //ファイルに１つだけの存在のpublicクラス
+{
+	public static void main(String[] args)
+	{
+		DataOnly d = new DataOnly();
+
+		d.i = 47;
+		d.f = 1.1f;
+		d.b = false;
+	}
+}
+
+
+//------------------------------------------------
+// c01　メソッドの戻り型
+
+returnType methodName( /* argument list */ ) 
+{
+    /* Method body */
+}
+
+int storage(String s)
+{
+    return s.length() * 2;
+}
+
+boolean flag() 
+{
+    return true; 
+}
+float naturalLogBase() 
+{
+    return 2.718f; 
+}
+void nothing() 
+{ 
+    return; 
+}
+void nothing2() {}
+
+//------------------------------------------------
+// c01　staticとは
+// StaticTest.java
+class StaticTest 
+{
+    static int i = 47;
+}
+
+public class StaticTestBase
+{
+	public static void main(String[] args)
+	{
+		StaticTest.i++;
+	}
+}
+//------------------------------------------------
+// c01 staticとは　応用
+
+// StaticFunBase.java
+class StaticTest 
+{
+    static int i = 47;
+}
+class StaticFun 
+{
+    static void incr() 
+    {
+        StaticTest.i++; 
+    }
+
+public class StaticFunBase
+{
+	public static void main(String[] args)
+	{
+		StaticFun sf = new StaticFun();
+		sf.incr();
+	}
+}
+
+
+
+///////////////////////////////////////////////////////////////////////////////////////////
+//// 	Chapter 2 お約束とコメント
+
+//------------------------------------------------
+// c02 Hello, world ?
+// HelloDate.java
+
+import java.util.*;
+
+public class HelloDate 
+{
+    public static void main(String[] args) 
+    {
+        System.out.println("Hello, it's: ");
+        System.out.println(new Date());
+    }
+}
+
+/**
+Hello, it's:
+Sat Feb 24 14:37:56 JST 2001
+**/
+
+
+//------------------------------------------------
+// c02 コメント
+
+/* This is a comment
+*    that continues
+*    across lines
+*/
+
+/* This is a comment that
+continues across lines */
+
+// this is a one-line comment
+
+/** A class comment */
+public class docTest 
+{
+    /** A variable comment */
+    public int i;
+    /** A method comment */
+    public void f() {}
+}
+
+
+
+///////////////////////////////////////////////////////////////////////////////////////////
+//// 	Chapter 3 メソッドと基本制御
+
+//------------------------------------------------
+// オブジェクトの = は　同じメモリアドレスを参照させる 決して値の代入ではない
+//: c03:Assignment.java
+
+class Number 
+{
+    int i;
+}
+public class Assignment 
+{
+    public static void main(String[] args) 
+    {
+        Number n1 = new Number();
+        Number n2 = new Number();
+
+        n1.i = 9;
+        n2.i = 47;
+
+        System.out.println("1: n1.i: " + n1.i +    ", n2.i: " + n2.i);
+		
+        n1 = n2;
+        
+		System.out.println("2: n1.i: " + n1.i +    ", n2.i: " + n2.i);
+        
+		n1.i = 27;
+        
+		System.out.println("3: n1.i: " + n1.i +    ", n2.i: " + n2.i);
+    }
+} 
+
+/**
+1: n1.i: 9, n2.i: 47
+2: n1.i: 47, n2.i: 47
+3: n1.i: 27, n2.i: 27
+**/
+
+
+//------------------------------------------------
+//: c03:PassObject.java　オブジェクトを渡す
+// 
+
+class Letter 
+{
+    char c;
+}
+public class PassObject 
+{
+    static void f(Letter x) 
+    {
+        x.c = 'z';
+    }
+    public static void main(String[] args) 
+    {
+        Letter x = new Letter();
+
+        x.c = 'a';
+
+        System.out.println("1: x.c: " + x.c);
+
+        f(x);
+
+        System.out.println("2: x.c: " + x.c);
+    }
+} 
+
+/**
+1: x.c: a
+2: x.c: z
+**/
+
+
+//------------------------------------------------
+//: c03:Equivalence.java　イコールの定義
+
+public class Equivalence 
+{
+    public static void main(String[] args) 
+    {
+        Integer n1 = new Integer(47);
+        Integer n2 = new Integer(47);
+
+        System.out.println(n1 == n2);// 値が格納されているメモリアドレスが等しいか比べる
+        System.out.println(n1 != n2);
+    }
+} 
+
+/**
+false
+true
+**/
+
+//------------------------------------------------
+//: c03:EqualsMethod.java　イコールの定義
+
+public class EqualsMethod 
+{
+    public static void main(String[] args) 
+    {
+        Integer n1 = new Integer(47);
+        Integer n2 = new Integer(47);
+
+        System.out.println(n1.equals(n2));//値を比べる
+    }
+} 
+
+/**
+true
+**/
+
+//------------------------------------------------
+//: c03:EqualsMethod2.java
+
+class Value 
+{
+    int i;
+}
+public class EqualsMethod2
+{
+    public static void main(String[] args) 
+    {
+        Value v1 = new Value();
+        Value v2 = new Value();
+
+        v1.i = v2.i = 100;
+
+        System.out.println( v1.i == v2.i );
+        System.out.println( v1.equals(v2));
+        // System.out.println( (v1.i).equals(v2.i) ) ;// Error !
+    }
+} 
+
+/**
+true
+false
+**/
+
+//------------------------------------------------
+//: c03:ShortCircuit.java  論理演算子 boolean
+
+public class ShortCircuit 
+{
+    static boolean test1(int val) 
+    {
+        System.out.println("test1(" + val + ")");
+        System.out.println("result: " + (val < 1));
+        return val < 1;
+    }
+    static boolean test2(int val) 
+    {
+        System.out.println("test2(" + val + ")");
+        System.out.println("result: " + (val < 2));
+        return val < 2;
+    }
+    static boolean test3(int val) 
+    {
+        System.out.println("test3(" + val + ")");
+        System.out.println("result: " + (val < 3));
+        return val < 3;
+    }
+    public static void main(String[] args) 
+    {
+        if(test1(0) && test2(2) && test3(2))// All true 
+        {
+            System.out.println("expression is true");
+        } else {
+            System.out.println("expression is false");
+        }
+    }
+} 
+
+/**
+test1(0)
+result: true
+test2(2)
+result: false
+test3(2)
+result: true
+expression is false
+**/
+
+
+//------------------------------------------------
+//: c03:IfElse.java if-else
+
+public class IfElse 
+{
+    static int test(int testval, int target) 
+    {
+        int result = 0;
+
+        if(testval > target)
+        {
+            result = +1;
+        } 
+        else if(testval < target)
+        {
+            result = -1;
+        }
+        else
+        {
+            result = 0; // Match
+        }
+        return result;
+    }
+    public static void main(String[] args) 
+    {
+        System.out.println(test(10, 5));
+        System.out.println(test(5, 10));
+        System.out.println(test(5, 5));
+    }
+} 
+
+/**
+1
+-1
+0
+**/
+
+
+//------------------------------------------------
+//: c03:WhileTest.java While
+
+public class WhileTest
+{
+    public static void main(String[] args) 
+    {
+        double r = 0;
+        while(r < 0.99d) 
+        {
+            r = Math.random();
+            System.out.println(r);
+        }
+    }
+} 
+
+/**
+0.4643098755141839
+0.46956833871910775
+0.3023014793430383
+0.9343842809456361
+0.9642984062528261
+0.594761574760128
+0.7540668421887108
+0.42473394514593177
+0.3312915948912968
+0.08084027534642113
+0.4218415025627196
+0.4687745399436214
+0.3829927758818946
+0.616095194457045
+0.011273102047402395
+0.4732251094198431
+0.33792380108740894
+0.5604475435957004
+0.5978686611004081
+0.35382757166521284
+0.5288154146512988
+0.3183120940316535
+0.99461348729767
+**/
+
+//------------------------------------------------
+//: c03:ListCharacters.java for loop
+
+public class ListCharacters 
+{
+    public static void main(String[] args) 
+    {
+        for( char c = 0; c < 128; c++)
+        {
+            if (c != 26 )// ANSI Clear screen
+            {
+                System.out.println("value: " + (int)c + "character: " + c );
+            }
+        }
+    }
+} 
+/**
+value: 0character: .....
+.
+.
+.
+value: 118character: v
+value: 119character: w
+value: 120character: x
+value: 121character: y
+value: 122character: z
+value: 123character: {
+value: 124character: |
+value: 125character: }
+value: 126character: ~
+value: 127character: 
+**/
+
+
+//------------------------------------------------
+//: c03:CommaOperator.java for loop
+
+public class CommaOperator 
+{
+    public static void main(String[] args) 
+    {
+        for(int i = 1, j = i + 10; i < 5;i++, j = i * 2) 
+        {
+            System.out.println("i= " + i + " j= " + j);
+        }
+    }
+} 
+
+/**
+Here's the output:
+i= 1 j= 11
+i= 2 j= 4
+i= 3 j= 6
+i= 4 j= 8
+**/
+
+
+//------------------------------------------------
+//: c03:BreakAndContinue.java break & continue
+
+public class BreakAndContinue 
+{
+    public static void main(String[] args) 
+    {
+        for(int i = 0; i < 100; i++) 
+        {
+            if(i == 74) 
+            {
+				break; // Out of for loop
+			}
+            if(i % 9 != 0) continue; // Next iteration
+            {
+	            System.out.println(i);
+		    }
+        }
+        int i = 0;
+        // An "infinite loop":
+        while(true) 
+        {
+            i++;
+            int j = i * 27;
+
+            if(j == 1269) 
+            {
+				break; // Out of loop
+   			}
+            if(i % 10 != 0) 
+            {
+				continue; // Top of loop
+			}
+            System.out.println(i);
+        }
+    }
+} 
+
+/**
+0
+9
+18
+27
+36
+45
+54
+63
+72
+10
+20
+30
+40
+**/
+
+
+//------------------------------------------------
+//: c03:VowelsAndConsonants.java switch
+
+public class VowelsAndConsonants 
+{
+    public static void main(String[] args) 
+    {
+        for(int i = 0; i < 20; i++) 
+        {
+            char c = (char)(Math.random() * 26 + 'a');
+            System.out.print(c + ": ");
+            switch(c) 
+            {
+                case 'a':
+                case 'e':
+                case 'i':
+                case 'o':
+                case 'u':	System.out.println("vowel");	break;
+                default:    System.out.println("consonant");
+            }
+        }
+    }
+} 
+
+/**
+c: consonant
+r: consonant
+d: consonant
+c: consonant
+j: consonant
+j: consonant
+k: consonant
+v: consonant
+w: consonant
+s: consonant
+a: vowel
+r: consonant
+v: consonant
+i: vowel
+q: consonant
+y: consonant
+t: consonant
+l: consonant
+x: consonant
+s: consonant
+**/
+
+
+
+///////////////////////////////////////////////////////////////////////////////////////////
+//// 	Chapter 4 コンストラクタと初期化
+
+//------------------------------------------------
+
+//: c04:SimpleConstructor.java　デフォルトコンストラクタ
+
+class Rock 
+{
+    Rock()// This is the constructor
+    { 
+        System.out.println("Creating Rock");
+    }
+}
+public class SimpleConstructor 
+{
+    public static void main(String[] args) 
+    {
+        for(int i = 0; i < 5; i++)
+        {
+            new Rock();
+        }
+    }
+} 
+
+/**
+Creating Rock
+Creating Rock
+Creating Rock
+Creating Rock
+Creating Rock
+**/
+
+
+//------------------------------------------------
+//: c04:SimpleConstructor2.java　コンストラクタへ値を渡す
+
+class Rock2 
+{
+    Rock2(int i) // This is the constructor
+    {
+        System.out.println("Creating Rock number " + i);
+    }
+}
+public class SimpleConstructor2 
+{
+    public static void main(String[] args) 
+    {
+        for(int i = 0; i < 5; i++)
+        {
+            new Rock2(i);
+        }
+    }
+} 
+
+/**
+Creating Rock number 0
+Creating Rock number 1
+Creating Rock number 2
+Creating Rock number 3
+Creating Rock number 4
+**/
+
+
+//------------------------------------------------
+//: c04:OverloadingOrder.java
+// パラメータの内容が異なればコンストラクタの名前は同一でも構わない
+
+public class OverloadingOrder 
+{
+    static void print(String s, int i) 
+    {
+        System.out.println("String: " + s +", int: " + i);
+    }
+    static void print(int i, String s) 
+    {
+        System.out.println("int: " + i + ", String: " + s);
+    }
+    public static void main(String[] args) 
+    {
+        print("String first", 11); // String, int
+        print(99, "Int first");    // int, String
+    }
+} 
+
+/**
+String: String first, int: 11
+int: 99, String: Int first
+**/
+
+
+//------------------------------------------------
+//: c04:DefaultConstructor.java
+// デフォルトコンストラクタは省略が可能　自動的に作成される
+
+class Bird 
+{
+}
+public class DefaultConstructor 
+{
+    public static void main(String[] args) 
+    {
+        Bird nc = new Bird(); // default!
+    }
+} 
+
+/**
+**/
+
+
+//------------------------------------------------
+//: c04:Cake.java
+
+class Pie 
+{
+    void f() 
+    {
+		System.out.println("Pie.f()"); 
+    }
+}
+class Cake 
+{
+    public static void main(String[] args) 
+    {
+    	Pie x = new Pie();
+    	x.f();
+    }
+} 
+
+/**
+ * Pie.f()
+ */
+
+
+//------------------------------------------------
+//: c04:Flower.java
+// thisはクラスのコンストラクタを意味する
+
+public class Flower 
+{
+    int petalCount = 0;
+    String s = new String("null");
+
+    Flower(int petals) 
+    {
+        petalCount = petals;
+        System.out.println("Constructor w/ int arg only, petalCount= "    + petalCount);
+    }
+    Flower(String s, int petals) 
+    {
+        this(petals);
+        this.s = s; // Another use of "this"
+        System.out.println("String & int args");
+    }
+    Flower() 
+    {
+        this("hi", 47);
+        System.out.println("default constructor (no args)");
+    }
+    void print() 
+    {
+        System.out.println("petalCount = " + petalCount + " s = "+ s);
+    }
+    public static void main(String[] args) 
+    {
+        Flower x = new Flower();
+        x.print();
+    }
+} 
+
+/**
+Constructor w/ int arg only, petalCount= 47
+String & int args
+default constructor (no args)
+petalCount = 47 s = hi
+**/
+
+
+//------------------------------------------------
+//: c04:OrderOfInitialization.java
+// インスタンスオブジェクトの生成の後、コンストラクタが実行される
+
+class Tag 
+{
+    Tag(int marker) 
+    {
+    	System.out.println("Tag(" + marker + ")");
+    }
+}
+class Card 
+{
+    Tag t1 = new Tag(1); // Before constructor
+    
+    Card() 
+    {
+	    // Indicate we're in the constructor:
+	    System.out.println("Card()");
+	    t3 = new Tag(33); // Reinitialize t3
+    }
+    
+    Tag t2 = new Tag(2); // After constructor
+    
+    void f() 
+    {
+    	System.out.println("f()");
+    }
+    
+    Tag t3 = new Tag(3); // At end
+}
+public class OrderOfInitialization 
+{
+    public static void main(String[] args) 
+    {
+	    Card t = new Card();
+	    t.f(); // Shows that construction is done
+    }
+} 
+
+/**
+Tag(1)
+Tag(2)
+Tag(3)
+Card()
+Tag(33)
+f()
+**/
+
+
+//------------------------------------------------
+//: c04:ExplicitStatic.java
+// static　はクラス変数
+
+class Cup 
+{
+    Cup(int marker) 
+    {
+	    System.out.println("Cup(" + marker + ")");
+    }
+    void f(int marker) 
+    {
+    	System.out.println("f(" + marker + ")");
+    }
+}
+class Cups 
+{
+    static Cup c1 = new Cup(1);
+    static Cup c2 = new Cup(2);
+
+    Cups() 
+    {
+    	System.out.println("Cups()");
+    }
+}
+public class ExplicitStatic 
+{
+    public static void main(String[] args) 
+    {
+	    System.out.println("Inside main()");
+	    Cups.c1.f(99);
+    }
+} 
+
+/**
+Inside main()
+Cup(1)
+Cup(2)
+f(99)
+**/
+
+
+//------------------------------------------------
+//: c04:IceCream.java
+
+class Sundae 
+{
+    private Sundae() 
+    {
+    }
+    static Sundae makeASundae() 
+    {
+	    return new Sundae(); 
+    }
+}
+public class IceCream 
+{
+    public static void main(String[] args) 
+    {
+	    //! Sundae x = new Sundae();
+	    Sundae x = Sundae.makeASundae();
+    }
+} 
+
+/**
+ * 
+ */
+
+
+//------------------------------------------------
+//: c04:Arrays.java
+// プリミティブ変数の配列
+
+public class Arrays 
+{
+    public static void main(String[] args) 
+    {
+	    int[] a1 = { 1, 2, 3, 4, 5 };
+	    int[] a2;
+	    a2 = a1;
+	    for(int i = 0; i < a2.length; i++)
+	    {
+	        a2[i]++;//increment
+	    }
+	    for(int i = 0; i < a1.length; i++)
+	    {
+	        System.out.println("a1[" + i + "] = " + a1[i]);
+	    }
+    }
+} 
+
+/**
+a1[0] = 2
+a1[1] = 3
+a1[2] = 4
+a1[3] = 5
+a1[4] = 6
+**/
+
+
+

@@ -1,0 +1,1241 @@
+	
+
+
+================================================================================
+
+	Programming Java Launguage   ---- Vol. 5
+
+================================================================================
+
+
+Index
+		Vol.1
+		1.Javaの基礎
+		2.クラスとメソッド
+		3.Javaの制御ステートメントの概要
+		4.制御ステートメントと演算子
+
+		Vol.2
+		1.クラスの作成
+		2.継承
+
+		Vol.3
+		1.インターフェイスとパッケージ
+		2.例外
+
+		Vol.4
+		1.マルチスレッド
+		2.Javaクラスライブラリの初歩
+		3.入出力
+		4.ネットワーク
+
+	Vol.5
+	1.アプレット
+	2.イベント処理
+	3.ツール
+
+
+
+////////////////////////////////////////////////////////////////////////////////
+// 最初のJavaアプレット
+import java.applet.Applet;
+import java.awt.Graphics;
+public class FirstApplet extends Applet {
+	public void paint(Graphics g) {
+		g.drawString("This is my first applet!", 20, 100);
+	}
+}
+////////////////////////////////////////////////////////////////////////////////
+// 罫線
+import java.applet.Applet;
+import java.awt.Graphics;
+public class DrawLine extends Applet {
+	public void paint(Graphics g) {
+		g.drawLine(10, 10, 180, 110);
+	}
+}
+////////////////////////////////////////////////////////////////////////////////
+// アプレットのライフサイクル
+import java.applet.Applet;
+import java.awt.Graphics;
+public class AppletLifecycle extends Applet {
+	String str = "";
+	public void init() {
+		str += "init; ";
+	}
+	public void start() {
+		str += "start; ";
+	}
+	public void stop() {
+		str += "stop; ";
+	}
+	public void destroy() {
+		System.out.println("destroy");
+	}
+	public void paint(Graphics g) {
+		g.drawString(str, 10, 25);
+	}
+}
+////////////////////////////////////////////////////////////////////////////////
+// 弧を描画
+import java.applet.Applet;
+import java.awt.Graphics;
+pulic class DrawArc extends Applet {
+	public void paint(Graphics g) {
+		g.drawArc(20, 20, 160, 160, 0, 135);
+	}
+}
+////////////////////////////////////////////////////////////////////////////////
+// 多角形を描画
+import java.applet.Applet;
+import java.awt.Graphics;
+public class DrawPolygon extends Applet {
+	public void paint(Graphics g) {
+		int n = 5;
+		int xdata[] = new int[n];
+		int ydata[] = new int[n];
+		xdata[0] = 10;
+		ydata[0] = 100;
+		xdata[1] = 60;
+		ydata[1] = 10;
+		xdata[2] = 70;
+		ydata[2] = 140;
+		xdata[3] = 140;
+		ydata[3] = 90;
+		xdata[4] = 190;
+		ydata[4] = 10;
+		g.drawPolygon(xdata, ydata, n);
+	}
+}
+////////////////////////////////////////////////////////////////////////////////
+// カラーの使用
+import java.applet.Applet;
+import java.awt.Color;
+import java.awt.Graphics;
+public class BlueString extends Applet {
+	public void paint(Graphics g) {
+		g.setColor(Color.blue);
+		g.drawString("Blue String", 100, 50);
+	}
+}
+////////////////////////////////////////////////////////////////////////////////
+import java.applet.Applet;
+import java.awt.*;
+public class ColorBars extends Applet {
+	Color colors[] = { Color.black, Color.blue, Color.cyan,
+		Color.darkGray, Color.gray, Color.green, Color.lightGray,
+		Color.magenta, Color.orange, Color.pink, Color.red, Color.white, Color.yellow
+	};
+	public void paint(Graphics g) {
+		int deltax = 260/colors.length;
+		for (int i = 0; i < colors.length; i++) {
+			g.setColor(colors[i]);
+			g.fillRect(i * deltax, 0, (i + 1) * deltax, 260);
+		}
+	}
+}
+////////////////////////////////////////////////////////////////////////////////
+import java.applet.Applet;
+import java.awt.*;
+public class ColoredTriangle extends Applet {
+	public void paint(Graphics g) {
+		int n = 3;
+		int xdata[] = new int[n];
+		int ydata[] = new int[n];
+		xdata[0] = 50;
+		ydata[0] = 150;
+		xdata[1] = 200;
+		ydata[1] = 50;
+		xdata[2] = 350;
+		ydata[2] = 150;
+		int rgb = Color.HSBtoRGB(1.0f, 1.0f, 1.0f);
+		g.setColor(new Color(rgb));
+		g.fillPolygon(xdata, ydata, n);
+	}
+}
+////////////////////////////////////////////////////////////////////////////////
+// テキストの表示
+import java.applet.Applet;
+import java.awt.*;
+public class FontDemo extends Applet {
+	public void paint(Graphics g) {
+		// ベースラインの描画
+		int baseline = 100;
+		g.setColor(Color.lightGray);
+		g.drawLine(0, baseline, 200, baseline);
+		// 文字列の描画
+		g.setFont(new Font("Serif", Font.BOLD, 36));
+		g.setColor(Color.black);
+		g.drawString("Wxyz", 5, baseline);
+	}
+}
+////////////////////////////////////////////////////////////////////////////////
+import java.applet.*;
+import java.awt.*;
+public class FontMetricsDemo extends Applet {
+	public void paint(Graphics g) {
+
+		// ベースラインの描画
+		int baseline = 100;
+		g.setColor(Color.lightGray);
+		g.drawLine(0, baseline, 300, baseline);
+		// 文字列の描画
+		Font font = new Font("Serif", Font.BOLD, 36);
+		g.setFont(font);
+		g.setColor(Color.black);
+		g.drawString("Wxyz", 5, baseline);
+		g.setColor(Color.lightGray);
+		// FontMetricsの取得
+		FontMetrics fm = g.getFontMetrics(font);
+		// ベースラインからアセントを引いた位置に線を描画する
+		int ascent = fm.getAscent();
+		int y = baseline - ascent;
+		g.drawLine(0, y, 300, y);
+		// ベースラインにディセントを足した位置に線を描画する
+		int descent = fm.getDescent();
+		y = baseline + descent;
+		g.drawLine(0, y, 300, y);
+		// ベースラインとディセントとレディングを足した位置に線を描画する
+		int leading = fm.getLeading();
+		y = baseline + descent + leading;
+		g.drawLine(0, y, 300, y);
+		// ベースラインと高さを足した位置に線を描画する
+		int height = fm.getHeight();
+		y = baseline + height;
+		g.drawLine(0, y, 300, y);
+		// 文字列の描画
+		g.setColor(Color.black);
+		g.drawString("\"'?/^{9}|[0]*@#", 5, y);
+		g.setColor(Color.lightGray);
+		// ベースラインとディセントと高さを足した位置に線を描画する
+		y = baseline + height + descent;
+		g.drawLine(0, y, 300, y);
+	}
+}
+////////////////////////////////////////////////////////////////////////////////
+// アプレットサイズの使用
+import java.applet.*;
+import java.awt.*;
+public class Circle extends Applet {
+	public void paint(Graphics g) {
+		Dimension d = getSize();
+		int xc = d.width/2;
+		int yc = d.height/2;
+		int radius = (int)((d.width < d.height) ?
+			0.4 * d.width : 0.4 * d.height);
+		g.drawOval(xc - radius, yc - radius, 2 * radius, 2 *
+			radius);
+	}
+}
+////////////////////////////////////////////////////////////////////////////////
+import java.applet.*;
+import java.awt.*;
+public class CenterString extends Applet {
+	public void paint(Graphics g) {
+		// 文字列の設定
+		String s = "Teach Yourself Java";
+		// フォントの作成と設定
+		Font f = new Font("SansSerif", Font.BOLD, 20);
+		g.setFont(f);
+		// フォントメトリックスの取得
+		FontMetrics fm = g.getFontMetrics();
+		// 文字列の先頭の位置を計算する
+		Dimension d = getSize();
+		int x = d.width/2 - fm.stringWidth(s)/2;
+		int y = d.height/2 + fm.getDescent();
+		// 文字列の描画
+		g.drawString(s, x, y);
+	}
+}
+////////////////////////////////////////////////////////////////////////////////
+// Appletクラス
+import java.applet.*;
+import java.awt.*;
+public class BackgroundForeground extends Applet {
+	public void paint(Graphics g) {
+		setBackground(Color.yellow);
+		setForeground(Color.blue);
+		g.drawLine(0, 0, 200, 200);
+		g.fillRect(100, 40, 50, 50);
+	}
+}
+////////////////////////////////////////////////////////////////////////////////
+//AppletContextクラス
+import java.applet.*;
+import java.awt.*;
+//	<applet code="AppletParameters" width=300 height=300>
+//	<param name="background" value="0xffffff">
+//	<param name="foreground" value="0x000000">
+//	<param name="message" value="Testing Applet Parameters">
+//	</applet>
+public class AppletParameters extends Applet {
+	public void paint(Graphics g) {
+		String background = getParameter("background");
+		String foreground = getParameter("foreground");
+		String message = getParameter("message");
+		setBackground(Color.decode(background));
+		setForeground(Color.decode(foreground));
+		Font font = getFont();
+		FontMetrics fm = getFontMetrics(font);
+		Dimension d = getSize();
+		int x = (d.width - fm.stringWidth(message))/2;
+		int y = d.height/2;
+		g.drawString(message, x, y);
+	}
+}
+////////////////////////////////////////////////////////////////////////////////
+import java.applet.*;
+import java.awt.*;
+import java.net.*;
+public class ShowDocument extends Applet {
+	public void init() {
+		AppletContext ac = getAppletContext();
+		try {
+			URL url = new URL("http://www.osborne.com");
+			ac.showDocument(url, "frame2");
+		}
+		catch(Exception e) {
+			showStatus("Exception: " + e);
+		 }
+	}
+	public void paint(Graphics g) {
+		g.drawString("ShowDocument Applet", 10, 25);
+	}
+}
+////////////////////////////////////////////////////////////////////////////////
+import java.applet.*;
+import java.awt.*;
+public class ShowDimension extends Applet {
+	public void paint(Graphics g) {
+		// サイズの取得
+		Dimension d = getSize();
+		// ステータス行に表示する
+		showStatus("width = " + d.width + "; height = " +
+			d.height);
+	 }
+}
+////////////////////////////////////////////////////////////////////////////////
+// イメージの使用
+import java.applet.*;
+import java.awt.*;
+//	<applet code="DrawImage" width=280 height=280>
+//	<param name="file" value="kids2.jpg">
+//	</applet>
+public class DrawImage extends Applet {
+	Image image;
+	public void init() {
+		image = getImage(getDocumentBase(),
+			getParameter("file"));
+	}
+	public void paint(Graphics g) {
+		g.drawImage(image, 0, 0, this);
+	}
+}
+////////////////////////////////////////////////////////////////////////////////
+// スレッドの使用
+import java.applet.*;
+import java.awt.*;
+public class Counter extends Applet
+implements Runnable {
+	int counter;
+	Thread t;
+	public void init() {
+		// カウンタを初期化する
+		counter = 0;
+		// スレッドを開始する
+		t = new Thread(this);
+		t.start();
+	}
+	public void run() {
+		try {
+			while(true) {
+				// 再描画を要求する
+				repaint();
+				// 次のカウンタを表示する前に休止する
+				Thread.sleep(1000);
+				// カウンタを1つ進める
+				++counter;
+			}
+		}
+		catch(Exception e) {
+		}
+	}
+	public void paint(Graphics g) {
+		// フォントを設定する
+		g.setFont(new Font("Serif", Font.BOLD, 36));
+		// フォントメトリックスを取得する
+		FontMetrics fm = g.getFontMetrics();
+
+		// カウンタを表示する
+		String str = "" + counter;
+		Dimension d = getSize();
+		int x = d.width/2 - fm.stringWidth(str)/2;
+		g.drawString(str, x, d.height/2);
+	}
+}
+////////////////////////////////////////////////////////////////////////////////
+import java.applet.*;
+import java.awt.*;
+public class Dots extends Applet
+implements Runnable {
+	Thread t;
+	public void init() {
+		// スレッドを開始する
+		t = new Thread(this);
+		t.start();
+	}
+	public void run() {
+		try {
+			while(true) {
+				// 再描画を要求する
+				repaint();
+				// 次の点を表示する前に休止する
+				Thread.sleep(200);
+			}
+		}
+		catch (Exception e) {
+		}
+	}
+	public void update(Graphics g) {
+		paint(g);
+	}
+	public void paint(Graphics g) {
+		// ウィンドウ内の無作為な場所を選択する
+		Dimension d = getSize();
+		int x = (int)(Math.random() * d.width);
+		int y = (int)(Math.random() * d.height);
+		// そこに点を描画する
+		g.fillRect(x, y, 2, 2);
+	}
+}
+////////////////////////////////////////////////////////////////////////////////
+// ちらつき
+import java.applet.*;
+import java.awt.*;
+public class NoDoubleBuffer extends Applet
+implements Runnable {
+	int x = 0;
+	Thread t;
+	public void init() {
+		// スレッドを開始する
+		t = new Thread(this);
+		t.start();
+	}
+	public void run() {
+		try {
+			while(true) {
+				// 再描画を要求する
+				repaint();
+				// ウィンドウを更新する前に休止する
+				Thread.sleep(100);
+			}
+		}
+		catch(Exception e) {
+		}
+	}
+	public void paint(Graphics g) {
+		// 塗りつぶした円を描画する
+		Dimension d = getSize();
+		g.fillOval(x, d.height/4, 50, 50);
+		// x座標を増やす
+		x += 5;
+		if(x + 50 > d.width)
+			x = 0;
+	}
+}
+////////////////////////////////////////////////////////////////////////////////
+// ダブルバッファ
+import java.applet.*;
+import java.awt.*;
+public class DoubleBuffer extends Applet
+implements Runnable {
+	int x = 0;
+	Thread t;
+	Image buffer;
+	Graphics bufferg;
+	public void init() {
+		// スレッドを開始する
+		t = new Thread(this);
+		t.start();
+		// バッファを作成する
+		Dimension d = getSize();
+		buffer = createImage(d.width, d.height);
+	}
+	public void run() {
+		try {
+			while(true) {
+				// 再描画を要求する
+				repaint();
+				// ウィンドウを更新する前に休止する
+				Thread.sleep(100);
+			}
+		}
+		catch(Exception e) {
+		}
+	}
+	public void update(Graphics g) {
+		paint(g);
+	}
+	public void paint(Graphics g) {
+		// バッファのグラフィックコンテキストを取得する
+		if(bufferg == null)
+			bufferg = buffer.getGraphics();
+		// バッファを描画する
+		Dimension d = getSize();
+		bufferg.setColor(Color.white);
+		bufferg.fillRect(0, 0, d.width, d.height);
+		bufferg.setColor(Color.black);
+		bufferg.fillOval(x, d.height/4, 50, 50);
+		// ウィンドウを更新する
+		g.drawImage(buffer, 0, 0, this);
+		// x座標を増やす
+		x += 5;
+		if(x + 50 > d.width)
+			x = 0;
+	}
+}
+////////////////////////////////////////////////////////////////////////////////
+// イベントリスナ
+import java.applet.*;
+import java.awt.*;
+import java.awt.event.*;
+public class MouseEvents extends Applet implements MouseListener {
+	public void init() {
+		addMouseListener(this);
+	}
+
+	public void mouseClicked(MouseEvent me) {
+		setBackground(Color.blue);
+		repaint();
+	}
+	public void mouseEntered(MouseEvent me) {
+		setBackground(Color.green);
+		repaint();
+	}
+	public void mouseExited(MouseEvent me) {
+		setBackground(Color.red);
+		repaint();
+	}
+
+	public void mousePressed(MouseEvent me) {
+		setBackground(Color.white);
+		repaint();
+	}
+	public void mouseReleased(MouseEvent me) {
+		setBackground(Color.yellow);
+		repaint();
+	}
+}
+////////////////////////////////////////////////////////////////////////////////
+import java.applet.*;
+import java.awt.*;
+import java.awt.event.*;
+public class MouseMotionEvents extends Applet implements MouseListener, MouseMotionListener {
+	Point p;
+	public void init() {
+		addMouseListener(this);
+		addMouseMotionListener(this);
+	}
+
+	public void mouseClicked(MouseEvent me) {
+	}
+	public void mouseEntered(MouseEvent me) {
+	}
+	public void mouseExited(MouseEvent me) {
+	}
+
+	public void mousePressed(MouseEvent me) {
+		p = me.getPoint();
+		repaint();
+	}
+	public void mouseReleased(MouseEvent me) {
+		p = null;
+		repaint();
+	}
+
+	public void mouseDragged(MouseEvent me) {
+		p = me.getPoint();
+		repaint();
+	}
+	public void mouseMoved(MouseEvent me) {
+	}
+	public void paint(Graphics g) {
+		if(p != null) {
+			Dimension d = getSize();
+			int xc = d.width/2;
+			int yc = d.height/2;
+			g.drawLine(xc, yc, p.x, p.y);
+		}
+	}
+}
+////////////////////////////////////////////////////////////////////////////////
+import java.applet.*;
+import java.awt.*;
+import java.awt.event.*;
+public class MouseAdapterDemo extends Applet {
+	public void init() {
+		setBackground(Color.green);
+		addMouseListener(new MyMouseAdapter(this));
+	}
+}
+class MyMouseAdapter extends MouseAdapter {
+	MouseAdapterDemo mad;
+	public MyMouseAdapter(MouseAdapterDemo mad) {
+		this.mad = mad;
+	}
+
+	public void mousePressed(MouseEvent me) {
+		mad.setBackground(Color.red);
+		mad.repaint();
+	}
+	public void mouseReleased(MouseEvent me) {
+		mad.setBackground(Color.green);
+		mad.repaint();
+	}
+}
+////////////////////////////////////////////////////////////////////////////////
+// インナークラス
+import java.applet.*;
+import java.awt.*;
+import java.awt.event.*;
+public class MouseInnerDemo extends Applet {
+	public void init() {
+		setBackground(Color.green);
+		addMouseListener(new MyMouseAdapter());
+	}
+	class MyMouseAdapter extends MouseAdapter {
+		public void mousePressed(MouseEvent me) {
+			setBackground(Color.red);
+			repaint();
+		}
+		public void mouseReleased(MouseEvent me) {
+			setBackground(Color.green);
+			repaint();
+		}
+	}
+}
+////////////////////////////////////////////////////////////////////////////////
+// 無名インナークラス
+import java.applet.*;
+import java.awt.*;
+import java.awt.event.*;
+public class MouseAnonymousDemo extends Applet {
+	public void init() {
+		setBackground(Color.green);
+		addMouseListener(new MouseAdapter() {
+			public void mousePressed(MouseEvent me) {
+				setBackground(Color.red);
+				repaint();
+			}
+			public void mouseReleased(MouseEvent me) {
+				setBackground(Color.green);
+				repaint();
+			}
+		});
+	}
+}
+////////////////////////////////////////////////////////////////////////////////
+// ラベル
+import java.applet.*;
+import java.awt.*;
+public class Labels extends Applet {
+	public void init() {
+		String s = "This is a very long label";
+		Label l1 = new Label(s, Label.LEFT);
+		add(l1);
+		Label l2 = new Label(s, Label.CENTER);
+		add(l2);
+		Label l3 = new Label(s, Label.RIGHT);
+		add(l3);
+	}
+}
+////////////////////////////////////////////////////////////////////////////////
+// ボタン
+import java.applet.*;
+import java.awt.*;
+import java.awt.event.*;
+public class ButtonEvents extends Applet
+implements ActionListener {
+	Label label;
+	public void init() {
+		Button b1 = new Button("Apple");
+		b1.addActionListener(this);
+		add(b1);
+		Button b2 = new Button("Banana");
+		b2.addActionListener(this);
+		add(b2);
+		Button b3 = new Button("Orange");
+		b3.addActionListener(this);
+		add(b3);
+		label = new Label("									");
+		add(label);
+	}
+	public void actionPerformed(ActionEvent ae) {
+		label.setText(ae.getActionCommand());
+	}
+}
+////////////////////////////////////////////////////////////////////////////////
+// キャンバス
+import java.applet.*;
+import java.awt.*;
+class MyCanvas extends Canvas {
+	public void paint(Graphics g) {
+		// 軸を描画する
+		g.setColor(Color.lightGray);
+		Dimension d = getSize();
+		g.drawRect(0, 0, d.width - 1, d.height - 1);
+		g.drawLine(0, d.height/2, d.width, d.height/2);
+		g.drawLine(d.width/2, 0, d.width/2, d.height - 1);
+		// 波形を描画する
+		g.setColor(Color.blue);
+		double dx = 4 * Math.PI / d.width;
+		double x = -2 * Math.PI;
+		int h = d.height;
+		for (int i = 0; i < d.width - 1; i++) {
+			int y1 = (int)((h - h * Math.sin(x)) / 2);
+			int y2 = (int)((h - h * Math.sin(x + dx)) / 2);
+			g.drawLine(i, y1, i + 1, y2);
+			x += dx;
+		}
+	}
+}
+public class CanvasDemo extends Applet {
+	public void init() {
+		MyCanvas myCanvas = new MyCanvas();
+		myCanvas.setSize(401, 150);
+		add(myCanvas);
+	}
+}
+////////////////////////////////////////////////////////////////////////////////
+// チェックボックス
+import java.applet.*;
+import java.awt.*;
+import java.awt.event.*;
+public class CheckboxEvents extends Applet
+implements ItemListener {
+	Label label;
+	public void init() {
+		Checkbox cb1 = new Checkbox("Apple");
+		cb1.addItemListener(this);
+		add(cb1);
+		Checkbox cb2 = new Checkbox("Banana");
+		cb2.addItemListener(this);
+		add(cb2);
+		Checkbox cb3 = new Checkbox("Orange");
+		cb3.addItemListener(this);
+		add(cb3);
+		label = new Label("									");
+		add(label);
+	}
+	public void itemStateChanged(ItemEvent ie) {
+		Checkbox cb = (Checkbox)ie.getItemSelectable();
+		label.setText(cb.getLabel() + " " + cb.getState());
+	}
+}
+////////////////////////////////////////////////////////////////////////////////
+// チェックボックスグループ
+import java.applet.*;
+import java.awt.*;
+import java.awt.event.*;
+public class CheckboxGroupEvents extends Applet
+implements ItemListener {
+	Label label;
+	public void init() {
+		CheckboxGroup cbg = new CheckboxGroup();
+		Checkbox cb1 = new Checkbox("Apple", cbg, true);
+		cb1.addItemListener(this);
+		add(cb1);
+		Checkbox cb2 = new Checkbox("Banana", cbg, false);
+		cb2.addItemListener(this);
+		add(cb2);
+		Checkbox cb3 = new Checkbox("Orange", cbg, false);
+		cb3.addItemListener(this);
+		add(cb3);
+		label = new Label("									");
+		add(label);
+	}
+	public void itemStateChanged(ItemEvent ie) {
+		Checkbox cb = (Checkbox)ie.getItemSelectable();
+		label.setText(cb.getLabel() + " " + cb.getState());
+	}
+}
+////////////////////////////////////////////////////////////////////////////////
+// チョイス
+import java.applet.*;
+import java.awt.*;
+import java.awt.event.*;
+public class ChoiceEvents extends Applet
+implements ItemListener {
+	Label label;
+	public void init() {
+		Choice c1 = new Choice();
+		c1.addItem("Red");
+		c1.addItem("Orange");
+		c1.addItem("Yellow");
+		c1.addItem("Green");
+		c1.addItem("Blue");
+		c1.addItem("Indigo");
+		c1.addItem("Violet");
+		c1.addItemListener(this);
+		add(c1);
+		Choice c2 = new Choice();
+		c2.addItem("North");
+		c2.addItem("South");
+		c2.addItem("East");
+		c2.addItem("West");
+		c2.addItemListener(this);
+		add(c2);
+		label = new Label("							");
+		add(label);
+	}
+	public void itemStateChanged(ItemEvent ie) {
+		Choice c = (Choice)ie.getItemSelectable();
+		label.setText(c.getSelectedItem());
+	}
+}
+////////////////////////////////////////////////////////////////////////////////
+// テキストフィールドとテキストエリア
+import java.applet.*;
+import java.awt.*;
+import java.awt.event.*;
+public class TextFieldEvents extends Applet
+implements ActionListener, TextListener {
+	TextArea ta;
+	TextField tf;
+	public void init() {
+		tf = new TextField(20);
+		tf.addActionListener(this);
+		tf.addTextListener(this);
+		ta = new TextArea(10, 20);
+		add(tf);
+		add(ta);
+	}
+	public void actionPerformed(ActionEvent ae) {
+		ta.append("ActionEvent: " +
+			ae.getActionCommand() + "\n");
+		tf.setText("");
+	}
+	public void textValueChanged(TextEvent te) {
+		ta.append("TextEvent: " +
+			tf.getText() + "\n");
+	}
+}
+////////////////////////////////////////////////////////////////////////////////
+// リスト
+import java.applet.*;
+import java.awt.*;
+import java.awt.event.*;
+public class ListEvents extends Applet
+implements ActionListener, ItemListener {
+	TextArea ta;
+	public void init() {
+		List list = new List();
+		list.add("Hydrogen");
+		list.add("Helium");
+		list.add("Carbon");
+		list.add("Oxygen");
+		list.add("Potassium");
+		list.add("Phosphorus");
+		list.addActionListener(this);
+		list.addItemListener(this);
+		add(list);
+		ta = new TextArea(10, 20);
+		add(ta);
+	}
+	public void actionPerformed(ActionEvent ae) {
+		ta.append("ActionEvent: " +
+			ae.getActionCommand() + "\n");
+	}
+	public void itemStateChanged(ItemEvent ie) {
+		List list = (List)ie.getItemSelectable();
+		ta.append("ItemEvent: " +
+			list.getSelectedItem() + "\n");
+	}
+}
+////////////////////////////////////////////////////////////////////////////////
+// スクロールバー
+import java.applet.*;
+import java.awt.*;
+import java.awt.event.*;
+public class ScrollbarEvents extends Applet
+implements AdjustmentListener {
+	TextArea ta;
+	public void init() {
+		Scrollbar sb =
+			new Scrollbar(Scrollbar.HORIZONTAL, 50, 5, 0, 100);
+		sb.addAdjustmentListener(this);
+		add(sb);
+		ta = new TextArea(10, 20);
+		add(ta);
+	}
+	public void adjustmentValueChanged(AdjustmentEvent ae)
+{
+		Scrollbar sb = (Scrollbar)ae.getAdjustable();
+		ta.append("AdjustmentEvent: " + sb.getValue() + "\n");
+	}
+}
+////////////////////////////////////////////////////////////////////////////////
+// レイアウトマネージャー
+import java.applet.*;
+import java.awt.*;
+public class FlowLayoutApplet extends Applet {
+	public void init() {
+		setLayout(new FlowLayout(FlowLayout.LEFT, 5, 5));
+		for (int i = 0; i < 20; i++) {
+			add(new Button("Button" + i));
+		}
+	}
+}
+////////////////////////////////////////////////////////////////////////////////
+// ボーダーレイアウト
+import java.applet.*;
+import java.awt.*;
+public class BorderLayoutApplet extends Applet {
+	public void init() {
+		setLayout(new BorderLayout(5, 5));
+		Button b1 = new Button("North");
+		Button b2 = new Button("South");
+		Button b3 = new Button("East");
+		Button b4 = new Button("West");
+		Button b5 = new Button("Center");
+		add(b1, "North");
+		add(b2, "South");
+		add(b3, "East");
+		add(b4, "West");
+		add(b5, "Center");
+	}
+}
+////////////////////////////////////////////////////////////////////////////////
+// グリッドレイアウト
+import java.applet.*;
+import java.awt.*;
+public class GridLayoutApplet extends Applet {
+	public void init() {
+		setLayout(new GridLayout(3, 2));
+		Button b1 = new Button("A");
+		Button b2 = new Button("B");
+		Button b3 = new Button("C");
+		Button b4 = new Button("D");
+		Button b5 = new Button("E");
+		Button b6 = new Button("F");
+		add(b1);
+		add(b2);
+		add(b3);
+		add(b4);
+		add(b5);
+		add(b6);
+	}
+	public Insets getInsets() {
+		return new Insets(10, 10, 10, 10);
+	}
+}
+////////////////////////////////////////////////////////////////////////////////
+// パネルデモ
+import java.applet.*;
+import java.awt.*;
+public class PanelDemo extends Applet {
+	public void init() {
+		// レイアウトマネージャを設定する
+		setLayout(new BorderLayout());
+		// "North"のパネルを作成する
+		Panel pn = new Panel();
+		Checkbox cb1 = new Checkbox("Red", true);
+		pn.add(cb1);
+		Checkbox cb2 = new Checkbox("Green", false);
+		pn.add(cb2);
+		Checkbox cb3 = new Checkbox("Blue", false);
+		pn.add(cb3);
+		add(pn, "North");
+		// "Center"のパネルを作成する
+		Panel pc = new Panel();
+		pc.setLayout(new GridLayout(3, 2));
+		for (int i = 0; i < 6; i++)
+			pc.add(new Button("Button " + i));
+		add(pc, "Center");
+		// "South"のパネルを作成する
+		Panel ps = new Panel();
+		Label label = new Label("This is the South Panel");
+		ps.add(label);
+		add(ps, "South");
+	}
+}
+////////////////////////////////////////////////////////////////////////////////
+// ウインドウとフレーム
+import java.awt.*;
+import java.awt.event.*;
+class Frame1 extends Frame {
+	Frame1(String title) {
+		super(title);
+		addWindowListener(new WindowAdapter() {
+			public void windowClosing(WindowEvent we) {
+				System.exit(0);
+			}
+		});
+	}
+}
+public class FrameApplication {
+	public static void main(String args[])	{
+		Frame1 f1 = new Frame1("Frame1");
+		f1.show();
+		f1.setSize(200, 200);
+	}
+}
+////////////////////////////////////////////////////////////////////////////////
+import java.applet.*;
+import java.awt.*;
+import java.awt.event.*;
+class Frame2 extends Frame {
+	Frame2(String title) {
+		super(title);
+		addWindowListener(new WindowAdapter() {
+			public void windowClosing(WindowEvent we) {
+				dispose();
+			}
+		});
+	}
+}
+public class FrameApplet extends Applet
+implements ActionListener {
+	public void init() {
+		Button b = new Button("Create Frame");
+		b.addActionListener(this);
+		add(b);
+	}
+	public void actionPerformed(ActionEvent ae) {
+		Frame2 f2 = new Frame2("Frame2");
+		f2.show();
+		f2.setSize(200, 200);
+	}
+}
+////////////////////////////////////////////////////////////////////////////////
+// メニューフレーム
+import java.applet.*;
+import java.awt.*;
+import java.awt.event.*;
+class MenuFrame extends Frame
+implements ActionListener, ItemListener, WindowListener {
+	MenuItemEvents menuItemEvents;
+	MenuFrame(String title, MenuItemEvents menuItemEvents) {
+		super(title);
+		this.menuItemEvents = menuItemEvents;
+		addWindowListener(this);
+		// メニューバーを作成し，設定する
+		MenuBar mb = new MenuBar();
+		setMenuBar(mb);
+		// メニューAを作成する
+		Menu a = new Menu("A");
+		mb.add(a);
+		MenuItem a1 = new MenuItem("A1");
+		a1.addActionListener(this);
+		a.add(a1);
+		MenuItem a2 = new MenuItem("A2");
+		a2.addActionListener(this);
+		a.add(a2);
+		MenuItem a3 = new MenuItem("A3");
+		a3.addActionListener(this);
+		a.add(a3);
+		// メニューBを作成する
+		Menu b = new Menu("B");
+		mb.add(b);
+		MenuItem b1 = new MenuItem("B1");
+		b1.addActionListener(this);
+		b.add(b1);
+		MenuItem b2 = new MenuItem("B2");
+		b2.addActionListener(this);
+		b.add(b2);
+		// B3のサブメニューを作成する
+		Menu b3 = new Menu("B3");
+		b.add(b3);
+		MenuItem b31 = new MenuItem("B31");
+		b31.addActionListener(this);
+		b3.add(b31);
+		MenuItem b32 = new MenuItem("B32");
+		b32.addActionListener(this);
+		b3.add(b32);
+		MenuItem b33 = new MenuItem("B33");
+		b33.addActionListener(this);
+		b3.add(b33);
+		// メニューCを作成する
+		Menu c = new Menu("C");
+		mb.add(c);
+		MenuItem c1 = new MenuItem("C1");
+		c1.addActionListener(this);
+		c.add(c1);
+		MenuItem c2 = new MenuItem("C2");
+		c2.addActionListener(this);
+		c.add(c2);
+		// メニューDを作成する
+		Menu d = new Menu("D");
+		mb.add(d);
+		CheckboxMenuItem d1 = new CheckboxMenuItem("D1");
+		d1.addItemListener(this);
+		d.add(d1);
+		CheckboxMenuItem d2 = new CheckboxMenuItem("D2");
+		d2.addItemListener(this);
+		d.add(d2);
+	}
+	public void actionPerformed(ActionEvent ae) {
+		menuItemEvents.ta.append("ActionEvent: " +
+			ae.getActionCommand() + "\n");
+	}
+	public void itemStateChanged(ItemEvent ie) {
+		CheckboxMenuItem cbmi = (CheckboxMenuItem)ie.getSource();
+		menuItemEvents.ta.append("ItemEvent: " +
+			cbmi.getLabel() + "\n");
+	}
+
+	public void windowActivated(WindowEvent we) {
+	}
+	public void windowClosed(WindowEvent we) {
+	}
+	public void windowClosing(WindowEvent we) {
+		dispose();
+	}
+	public void windowDeactivated(WindowEvent we) {
+	}
+	public void windowDeiconified(WindowEvent we) {
+	}
+	public void windowIconified(WindowEvent we) {
+	}
+	public void windowOpened(WindowEvent we) {
+	}
+}
+public class MenuItemEvents extends Applet {
+	TextArea ta;
+	public void init() {
+		MenuFrame mf = new MenuFrame("MyFrame", this);
+		mf.show();
+		mf.setSize(200, 200);
+		ta = new TextArea(10, 20);
+		add(ta);
+	}
+}
+////////////////////////////////////////////////////////////////////////////////
+// ダイアログとファイルダイアログ
+import java.awt.*;
+import java.awt.event.*;
+public class MessageDialogDemo extends Frame
+implements ActionListener {
+	Button b;
+	public static void main(String args[]) {
+		MessageDialogDemo mdd = new MessageDialogDemo();
+		mdd.setVisible(true);
+		mdd.setSize(200, 100);
+	}
+	MessageDialogDemo() {
+		super("Messager Dialog Demo");
+		// レイアウトマネージャを設定する
+		setLayout(new FlowLayout());
+		// ボタンを作成する
+		b = new Button("Message Dialog");
+		b.addActionListener(this);
+		add(b);
+		// 無名インナクラスがウィンドウイベントを処理する
+		addWindowListener(new WindowAdapter() {
+			public void windowClosing(WindowEvent we) {
+				System.exit(0);
+			}
+		});
+	}
+	public void actionPerformed(ActionEvent ae) {
+		String message = "This is the message";
+		MessageDialog md =
+			new MessageDialog(this, "Message Dialog", true, message);
+		md.show();
+	}
+}
+class MessageDialog extends Dialog
+implements ActionListener {
+	Button ok;
+	MessageDialog(Frame parent, String title,
+	boolean mode, String message) {
+		super(parent, title, mode);
+
+		// "Center"パネルを作成し，追加する
+		Panel pc = new Panel();
+		Label label = new Label(message);
+		pc.add(label);
+		add(pc, "Center");
+		// "South"パネルを作成し，追加する
+		Panel ps = new Panel();
+		ok = new Button("OK");
+		ok.addActionListener(this);
+		ps.add(ok);
+		add(ps, "South");
+		// コンポーネントをレイアウトして，このダイアログボックスの
+		// 初期サイズを設定する
+		pack();
+		// 無名インナクラスがウィンドウイベントを処理する
+		addWindowListener(new WindowAdapter() {
+			public void windowClosing(WindowEvent we) {
+				System.exit(0);
+			}
+		});
+	}
+	public Insets getInsets() {
+		return new Insets(40, 20, 20, 20);
+	}
+	public void actionPerformed(ActionEvent ae) {
+		dispose();
+	}
+}
+
+////////////////////////////////////////////////////////////////////////////////
+import java.awt.*;
+import java.awt.event.*;
+public class DialogApplication extends Frame
+implements ActionListener, WindowListener {
+	Button l, s;
+	TextField tf;
+	public static void main(String args[]) {
+		DialogApplication da = new DialogApplication();
+		da.setVisible(true);
+		da.setSize(400, 100);
+	}
+	DialogApplication() {
+		super("Dialog Application");
+		setLayout(new FlowLayout());
+		l = new Button("Load");
+		l.addActionListener(this);
+		add(l);
+		s = new Button("Save");
+		s.addActionListener(this);
+		add(s);
+		tf = new TextField(20);
+		add(tf);
+		addWindowListener(this);
+	}
+	public void actionPerformed(ActionEvent ae) {
+		FileDialog fd;
+		if(ae.getSource() == l) {
+			fd = new FileDialog(this, "File Dialog", FileDialog.LOAD);
+		}
+		else {
+			fd = new FileDialog(this, "File Dialog", FileDialog.SAVE);
+		}
+		fd.show();
+		String filename = fd.getFile();
+		if(filename != null) {
+			tf.setText(filename);
+		}
+	}
+	public void windowActivated(WindowEvent we) {
+	}
+	public void windowClosed(WindowEvent we) {
+	}
+	public void windowClosing(WindowEvent we) {
+		System.exit(0);
+	}
+	public void windowDeactivated(WindowEvent we) {
+	}
+	public void windowDeiconified(WindowEvent we) {
+	}
+	public void windowIconified(WindowEvent we) {
+	}
+	public void windowOpened(WindowEvent we) {
+	}
+}
+
+==============================================================================
+
+

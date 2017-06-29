@@ -1,0 +1,1102 @@
+	
+
+
+================================================================================
+
+	Programming Java Launguage   ---- Vol. 2
+
+================================================================================
+
+
+Index
+	 	Vol.1
+		1.Javaの基礎
+		2.クラスとメソッド
+		3.Javaの制御ステートメントの概要
+		4.制御ステートメントと演算子
+
+	Vol.2
+	1.クラスの作成
+	2.継承
+
+		Vol.3
+		1.インターフェイスとパッケージ
+		2.例外
+
+		Vol.4
+		1.マルチスレッド
+		2.Javaクラスライブラリの初歩
+		3.入出力
+		4.ネットワーク
+
+		Vol.5
+		1.アプレット
+		2.イベント処理
+		3.ツール
+
+
+
+
+
+////////////////////////////////////////////////////////////////////////////////
+// 簡単なクラスの作成
+class Point3D {
+	double x;	// インスタンスメンバ
+	double y;
+	double z;
+}
+class Point3DExample {
+	public static void main(String args[]) {
+		Point3D p = new Point3D();	// インスタンスオブジェクトの作成
+		p.x = 1.1;
+		p.y = 3.4;
+		p.z = -2.8;
+		System.out.println("p.x = " + p.x);
+		System.out.println("p.y = " + p.y);
+		System.out.println("p.z = " + p.z);
+	}
+}
+////////////////////////////////////////////////////////////////////////////////
+class Point3D {
+	 double x;				// インスタンスメンバ
+	 double y;
+	 double z;
+}
+class TwoPoint3DExample {
+	public static void main(String args[]) {
+		Point3D p1 = new Point3D();	// インスタンスオブジェクトの作成
+		Point3D p2 = new Point3D();	// インスタンスオブジェクトの作成
+		p1.x = 1.1;			// p1の座標
+		p1.y = 3.4;
+		p1.z = -2.8;
+		p2.x = 100.1;			// p2の座標
+		p2.y = 103.4;
+		p2.z = -202.8;
+		System.out.println("p1.x = " + p1.x);
+		System.out.println("p1.y = " + p1.y);
+		System.out.println("p1.z = " + p1.z);
+		System.out.println("p2.x = " + p2.x);
+		System.out.println("p2.y = " + p2.y);
+		System.out.println("p2.z = " + p2.z);
+	}
+}
+////////////////////////////////////////////////////////////////////////////////
+class Circle {
+	 double x;					// インスタンスメンバ
+	 double y;
+	 double radius;
+}
+class CircleExample {
+	public static void main(String args[]) {
+		Circle c = new Circle();		// インスタンスオブジェクト
+		c.x = 12.1;
+		c.y = 24.5;
+		c.radius = 4;
+		System.out.println("c.x = " + c.x);
+		System.out.println("c.y = " + c.y);
+		System.out.println("c.radius = " + c.radius);
+	}
+}
+////////////////////////////////////////////////////////////////////////////////
+// コンストラクタ
+class Point3D {
+	double x;					// インスタンスメンバ
+	double y;
+	double z;
+	Point3D(double ax, double ay, double az) { 	// コンストラクタ
+		x = ax;
+		y = ay;
+		z = az;
+	}
+}
+class Point3DConstructor {
+	public static void main(String args[]) {
+		Point3D p = new Point3D(1.1, 3.4, -2.8);// インスタンスオブジェクト
+		System.out.println("p.x = " + p.x);
+		System.out.println("p.y = " + p.y);
+		System.out.println("p.z = " + p.z);
+	}
+}
+////////////////////////////////////////////////////////////////////////////////
+class Circle {
+	double x;					// インスタンスメンバ
+	double y;
+	double radius;
+	Circle(double ax, double ay, double aradius) {	// コンストラクタ
+		x = ax;
+		y = ay;
+		radius = aradius;
+	}
+}
+class CircleConstructor {
+	public static void main(String args[]) {
+		Circle c = new Circle(17.5, 18.4, 6);	// インスタンスオブジェクト
+		System.out.println("c.x = " + c.x);
+		System.out.println("c.y = " + c.y);
+		System.out.println("c.radius = " + c.radius);
+	}
+}
+////////////////////////////////////////////////////////////////////////////////
+// コンストラクタのオーバーロード
+// 目的に最も適したコンストラクタが自動的に選択される
+class Point3D {
+	double x;					// インスタンスメンバ
+	double y;
+	double z;
+	Point3D(double ax) {				// コンストラクタ
+		x = ax;
+		y = 1;
+		z = 1;
+	}
+	Point3D(double ax, double ay) {			// コンストラクタ
+		x = ax;
+		y = ay;
+		z = 1;
+	}
+	Point3D(double ax, double ay, double az) {	// コンストラクタ
+		x = ax;
+		y = ay;
+		z = az;
+	}
+}
+class Point3DOverloadConstructors {
+	public static void main(String args[]) {
+		Point3D p1 = new Point3D(1.1);		// インスタンスオブジェクト
+		System.out.println("p1.x = " + p1.x);
+		System.out.println("p1.y = " + p1.y);
+		System.out.println("p1.z = " + p1.z);
+		Point3D p2 = new Point3D(1.1, 3.4);	// インスタンスオブジェクト
+		System.out.println("p2.x = " + p2.x);
+		System.out.println("p2.y = " + p2.y);
+		System.out.println("p2.z = " + p2.z);
+		Point3D p3 = new Point3D(1.1, 3.4, -2.8);// インスタンスオブジェクト
+		System.out.println("p3.x = " + p3.x);
+		System.out.println("p3.y = " + p3.y);
+		System.out.println("p3.z = " + p3.z);
+	}
+}
+////////////////////////////////////////////////////////////////////////////////
+class Widget {
+	double w;					// インスタンスメンバ
+	Widget(String s) {				// コンストラクタ
+		w = Double.valueOf(s).doubleValue();
+	}
+	Widget(StringBuffer sb) {			// コンストラクタ
+		String s = sb.toString();
+		w = Double.valueOf(s).doubleValue();
+	}
+	Widget(double d) {				// コンストラクタ
+		w = d;
+	}
+}
+class WidgetConstructors {
+	public static void main(String args[])	{
+		Widget w1 = new Widget("5.5");		// インスタンスオブジェクト
+		System.out.println(w1.w);
+		StringBuffer sb = new StringBuffer("-17.8");	// StringBufferクラスの
+		Widget w2 = new Widget(sb);			// インスタンスオブジェクト
+		System.out.println(w2.w);
+		Widget w3 = new Widget(2.5e-17);	// インスタンスオブジェクト
+		System.out.println(w3.w);
+	}
+}
+////////////////////////////////////////////////////////////////////////////////
+// thisキーワード
+class Point3D {
+	double x;					// インスタンスメンバ
+	double y;
+	double z;
+	Point3D(double x, double y, double z) {		// コンストラクタ
+		this.x = x;				//インスタンスメンバを参照
+		this.y = y;
+		this.z = z;
+	}
+}
+class ThisKeywordDemo {
+	public static void main(String args[]) {
+		Point3D p = new Point3D(1.1, 3.4, -2.8);// インスタンスオブジェクト
+		System.out.println("p.x = " + p.x);
+		System.out.println("p.y = " + p.y);
+		System.out.println("p.z = " + p.z);
+	}
+}
+////////////////////////////////////////////////////////////////////////////////
+class Circle {
+	double x;					// インスタンスメンバ
+	double y;
+	double radius;
+	Circle(double x) {				// コンストラクタ
+		this(x, 0, 1);				// 2,3つ目の引数がなければ0,1を代入
+	}
+	Circle(double x, double y) {			// コンストラクタ
+		this(x, y, 1);				// 3つ目の引数がなければ１を代入
+	}
+	Circle(double x, double y, double radius) {	// コンストラクタ
+		this.x = x;
+		this.y = y;
+		this.radius = radius;
+	}
+}
+class CircleThis {
+	public static void main(String args[]) {
+		Circle c = new Circle(1.1, 3.4, 10);	// インスタンスオブジェクト
+		System.out.println("c.x = " + c.x);
+		System.out.println("c.y = " + c.y);
+		System.out.println("c.radius = " + c.radius);
+	}
+}
+////////////////////////////////////////////////////////////////////////////////
+// インスタンス変数とインスタンスメソッド
+class Bag {
+	boolean flag;
+	int i, j = 2, k = 3, l, m;
+	double array[] = { -3.4, 8.8e100, -9.2e-100 };
+	String s1, s2 = new String("Hello");
+}
+class BagTest {
+	public static void main(String args[]) {
+		Bag bag = new Bag();
+		System.out.println(bag.flag);
+		System.out.println(bag.i);
+		System.out.println(bag.j);
+		System.out.println(bag.k);
+		System.out.println(bag.l);
+		System.out.println(bag.m);
+		for (int i = 0; i < bag.array.length; i++)
+			System.out.println(bag.array[i]);
+		System.out.println(bag.s1);
+		System.out.println(bag.s2);
+	}
+}
+////////////////////////////////////////////////////////////////////////////////
+class Point3D {
+	double x;					// インスタンスメンバ
+	double y;
+	double z;
+	Point3D(double x) {				// コンストラクタ
+		this(x, 0, 0);
+	}
+	Point3D(double x, double y) {			// コンストラクタ
+		this(x, y, 0);
+	}
+	Point3D(double x, double y, double z) {		// コンストラクタ
+		this.x = x;
+		this.y = y;
+		this.z = z;
+	}
+	void move(double x, double y, double z) {　	// インスタンスメソッド
+		this.x = x;
+		this.y = y;
+		this.z = z;
+	}
+}
+class Point3DMethod {
+	public static void main(String args[]) {
+		Point3D p = new Point3D(1.1, 3.4, -2.8);// インスタンスオブジェクト
+		System.out.println("p.x = " + p.x);
+		System.out.println("p.y = " + p.y);
+		System.out.println("p.z = " + p.z);
+		p.move(5, 5, 5);			// インスタンスメソッドへ代入
+		System.out.println("p.x = " + p.x);
+		System.out.println("p.y = " + p.y);
+		System.out.println("p.z = " + p.z);
+	}
+}
+////////////////////////////////////////////////////////////////////////////////
+class Point3D {
+	double x;					// インスタンスメンバ
+	double y;
+	double z;
+	Point3D(double x) {				// コンストラクタ
+		this(x, 0, 0);
+	}
+	Point3D(double x, double y) {			// コンストラクタ
+		this(x, y, 0);
+	}
+	Point3D(double x, double y, double z) {		// コンストラクタ
+		this.x = x;
+		this.y = y;
+		this.z = z;
+	}
+	void move(double x, double y, double z) {	// インスタンスメソッド
+		this.x = x;
+		this.y = y;
+		this.z = z;
+	}
+}
+class TwoPoints {
+	public static void main(String args[]) {
+		Point3D p = new Point3D(1.1, 3.4, -2.8);// インスタンスオブジェクト
+		Point3D p2 = new Point3D(9.6, 8.8, 100.2);
+		System.out.println("p.x = " + p.x);
+		System.out.println("p.y = " + p.y);
+		System.out.println("p.z = " + p.z);
+		System.out.println("p2.x = " + p2.x);
+		System.out.println("p2.y = " + p2.y);
+		System.out.println("p2.z = " + p2.z);
+		p.move(5, 5, 5);			// インスタンスメソッドへ代入
+		System.out.println("p.x = " + p.x);
+		System.out.println("p.y = " + p.y);
+		System.out.println("p.z = " + p.z);
+		System.out.println("p2.x = " + p2.x);
+		System.out.println("p2.y = " + p2.y);
+		System.out.println("p2.z = " + p2.z);
+	}
+}
+////////////////////////////////////////////////////////////////////////////////
+class Circle {
+	double x;					// インスタンスメンバ
+	double y;
+	double radius;
+	Circle(double radius) {				// コンストラクタ
+		this.radius = radius;
+	}
+	Circle(double x, double y, double radius) {	// コンストラクタ
+		this.x = x;
+		this.y = y;
+		this.radius = radius;
+	}
+	void move(double x, double y) {			// インスタンスメソッド
+		this.x = x;
+		this.y = y;
+	}
+	void scale(double a) {				// インスタンスメソッド
+		radius *= a;
+	}
+}
+class CircleMethods {
+	public static void main(String args[]) {
+		Circle c = new Circle(4);		// インスタンスオブジェクト
+		c.move(2, 2);				// インスタンスメソッドへ代入
+		c.scale(0.5);				// インスタンスメソッドへ代入
+		System.out.println("c.x = " + c.x);
+		System.out.println("c.y = " + c.y);
+		System.out.println("c.radius = " + c.radius);
+	}
+}
+////////////////////////////////////////////////////////////////////////////////
+// 静的メンバ static でメンバ(変数)の値を維持する
+// クラスがメモリにロードされる時に規定値で初期化されます
+class StaticBag {
+	static boolean flag;
+	static int i, j = 2, k = 3, l, m;
+	static double array[] = { -3.4, 8.8e100, -9.2e-100 };
+	static String s1, s2 = new String("Hello");
+}
+class StaticBagTest {
+	public static void main(String args[]) {
+		System.out.println(StaticBag.flag);
+		System.out.println(StaticBag.i);
+		System.out.println(StaticBag.j);
+		System.out.println(StaticBag.k);
+		System.out.println(StaticBag.l);
+		System.out.println(StaticBag.m);
+		for (int i = 0; i < StaticBag.array.length; i++)
+			System.out.println(StaticBag.array[i]);
+		System.out.println(StaticBag.s1);
+		System.out.println(StaticBag.s2);
+	}
+}
+////////////////////////////////////////////////////////////////////////////////
+class Thing {
+	static int count;			// staticメンバでメンバの値を維持する
+	String name;				// インスタンスメンバ
+	Thing(String name) {			// コンストラクタ
+		this.name = name;
+		++count;
+	}
+}
+class StaticVariable {
+	public static void main(String args[]) {
+		Thing t1 = new Thing("Bowling Ball");	// インスタンスオブジェクト
+		System.out.println(t1.name + " " + t1.count);
+		Thing t2 = new Thing("Ping Pong Ball");	// インスタンスオブジェクト
+		System.out.println(t2.name + " " + t2.count);
+		Thing t3 = new Thing("Football");	// インスタンスオブジェクト
+		System.out.println(t3.name + " " + t3.count);
+	}
+}
+////////////////////////////////////////////////////////////////////////////////
+// 静的メソッド　staticでメソッド内の値を維持する
+class X {
+	static int array[];				// staticメンバ
+	static {					// staticメソッド
+		array = new int[6];
+		for (int i = 0; i < 6; i++)
+			array[i] = i;
+	}
+}
+class StaticInitializationBlock {
+	public static void main(String args[]) {
+		for (int i = 0; i < 6; i++)
+			System.out.println(X.array[i]);
+	}
+}
+////////////////////////////////////////////////////////////////////////////////
+class LinearEquation {
+	static double solve(double a, double b) {	// staticメソッド
+		return -b/a;
+	}
+}
+class StaticMethod {
+	public static void main(String args[]) {
+		System.out.println(LinearEquation.solve(2, 2));
+	}
+}
+////////////////////////////////////////////////////////////////////////////////
+// ローカル変数と変数のスコープ
+class MyObject {
+	static short s = 400;				// staticメンバ
+	int i = 200;					// インスタンスメンバ
+	void f() {					// インスタンスメソッド
+		System.out.println("s = " + s);
+		System.out.println("i = " + i);
+		short s = 300;			 	// ローカル変数
+		int i = 100;				// ローカル変数
+		double d = 1E100;			// ローカル変数
+		System.out.println("s = " + s);
+		System.out.println("i = " + i);
+		System.out.println("d = " + d);
+	}
+}
+class LocalVariables {
+	public static void main(String args[]) {
+		MyObject myObject = new MyObject();	// インスタンスオブジェクト
+		myObject.f();
+	}
+}
+////////////////////////////////////////////////////////////////////////////////
+class X {
+	void f() { 					// インスタンスメソッド
+		for (int j = 0; j < 5; j++) {
+			int k = 100;
+			System.out.println("j = " + j + "; k = " + k);
+		}
+	}
+}
+class VariableScope {
+	public static void main(String args[]) {
+		X x = new X();				// インスタンスオブジェクト
+		x.f();					// インスタンスメソッド実行
+	}
+}
+////////////////////////////////////////////////////////////////////////////////
+class Class1 {
+	int i = 1000;					// インスタンスメンバ
+	void f() {					// インスタンスメソッド
+		int i = 100;
+		System.out.println(i);
+		g();
+	}
+	void g() {					// インスタンスメソッド
+		System.out.println(i);
+	}
+}
+class VariableHidingDemo1 {
+	public static void main(String args[]) {
+		Class1 class1 = new Class1();		// インスタンスオブジェクト
+		class1.f();				// インスタンスメソッド実行
+	}
+}
+////////////////////////////////////////////////////////////////////////////////
+class Class2 {
+	int i = 1000;
+	void f() {
+		System.out.println(i);
+		for (int i = 0; i < 5; i++) {
+			System.out.print(i + " ");
+		}
+		System.out.println("");
+		System.out.println(i);
+	}
+}
+class VariableHidingDemo2 {
+	public static void main(String args[]) {
+		Class2 class2 = new Class2();
+		class2.f();
+	}
+}
+////////////////////////////////////////////////////////////////////////////////
+// メソッドのオーバーロード
+class Point3D {
+	double x;					// インスタンスメンバ
+	double y;
+	double z;
+	Point3D(double x) {				// コンストラクタ
+		this(x, 0, 0);
+	}
+	Point3D(double x, double y) {
+		this(x, y, 0);
+	}
+	Point3D(double x, double y, double z) {
+		this.x = x;
+		this.y = y;
+		this.z = z;
+	}
+	void move(double x) {				// インスタンスメソッド
+		this.x = x;
+	}
+	void move(double x, double y) {
+		this.x = x;
+		this.y = y;
+	}
+	void move(double x, double y, double z) {
+		this.x = x;
+		this.y = y;
+		this.z = z;
+	}
+}
+class Point3DOverloadMethods {
+	public static void main(String args[]) {
+		Point3D p = new Point3D(1.1, 3.4, -2.8);// インスタンスオブジェクト
+		p.move(5);				// インスタンスメソッド代入
+		System.out.println("p.x = " + p.x);
+		System.out.println("p.y = " + p.y);
+		System.out.println("p.z = " + p.z);
+		p.move(6, 6);				// インスタンスメソッド代入
+		System.out.println("p.x = " + p.x);
+		System.out.println("p.y = " + p.y);
+		System.out.println("p.z = " + p.z);
+		p.move(7, 7, 7);			// インスタンスメソッド代入
+		System.out.println("p.x = " + p.x);
+		System.out.println("p.y = " + p.y);
+		System.out.println("p.z = " + p.z);
+	}
+}
+////////////////////////////////////////////////////////////////////////////////
+class Circle {
+	double x;					// インスタンスメンバ
+	double y;
+	double radius;
+	Circle(double radius) {				// コンストラクタ
+		this.radius = radius;
+	}
+	Circle(double x, double y, double radius) {
+		this.x = x;
+		this.y = y;
+		this.radius = radius;
+	}
+	void move(double x) {				// インスタンスメソッド
+		this.x = x;
+	}
+	void move(double x, double y) {
+		this.x = x;
+		this.y = y;
+	}
+	void scale(double a) {				// インスタンスメソッド
+		radius *= a;
+	}
+}
+class CircleOverloadMethod {
+	public static void main(String args[]) {
+		Circle c = new Circle(4);		// インスタンスオブジェクト
+		c.move(2);				// インスタンスメソッド代入
+		c.scale(0.5);				// インスタンスメソッド代入
+		System.out.println("c.x = " + c.x);
+		System.out.println("c.y = " + c.y);
+		System.out.println("c.radius = " + c.radius);
+		c.move(-2, -2);				// インスタンスメソッド代入
+		c.scale(2);				// インスタンスメソッド代入
+		System.out.println("c.x = " + c.x);
+		System.out.println("c.y = " + c.y);
+		System.out.println("c.radius = " + c.radius);
+	}
+}
+////////////////////////////////////////////////////////////////////////////////
+// 引数の引き渡し（配列とオブジェクトを使用すると値を変更できる)
+class CallByValue {
+	static void display(int i, int j[], StringBuffer sb) {
+		System.out.println(i);
+		for (int index = 0; index < j.length; index++)
+			System.out.print(j[index] + " ");
+		System.out.println("");
+		System.out.println(sb);
+	}
+	static void a(int i, int j[], StringBuffer sb) {
+		i = 7;					// ここで値を変更
+		j[0] = 11;				// ここで値を変更
+		sb.append("fghij");			// ここで値を変更
+	}
+	public static void main(String args[]) {
+		int i = 5;
+		int j[]	= { 1, 2, 3, 4 };
+		StringBuffer sb = new StringBuffer("abcde");
+		display(i, j, sb);			// 変数を表示する
+		a(i, j, sb);				// メソッドを呼び出す
+		display(i, j, sb);			// もう一度変数を表示する
+	}
+}
+////////////////////////////////////////////////////////////////////////////////
+// 配列を使用してもmain()メソッド内でなければ値は変更できない
+class ArrayArgument {
+	public static void display(int x[]) {
+		for (int i = 0; i < x.length; i++)
+			System.out.print(x[i] + " ");
+		System.out.println("");
+	}
+	public static void change(int x[]) {
+		int y[] = { 21, 22, 23, 24, 25 };
+		x = y;
+	}
+	public static void main(String args[]) {
+		int x[] = { 11, 12, 13, 14, 15 };	// 変数を初期化する
+		display(x);				// 変数を表示する
+		change(x);				// メソッドを呼び出す
+		display(x);				// もう一度変数を表示する
+	}
+}
+////////////////////////////////////////////////////////////////////////////////
+class CallByValue2 {
+	public static void main(String args[]) {
+		// 変数を初期化する
+		StringBuffer sb = new StringBuffer("abcde");
+		// 変数を表示する
+		System.out.println(sb);
+		// メソッドを呼び出す
+		a(sb);
+		// もう一度変数を表示する
+		System.out.println(sb);
+	}
+	public static void a(StringBuffer sb) {
+		sb = new StringBuffer("wxyz");
+	}
+}
+////////////////////////////////////////////////////////////////////////////////
+class Arguments {
+	public static void main(String args[]) {
+		StringBuffer sba = new StringBuffer("aaaaa");
+		StringBuffer sbb = new StringBuffer("bbbbb");
+		System.out.println("sba = " + sba);
+		System.out.println("sbb = " + sbb);
+		f(sba, sbb);
+		System.out.println("sba = " + sba);
+		System.out.println("sbb = " + sbb);
+	}
+	public static void f(StringBuffer sb1, StringBuffer sb2) {
+		sb1 = new StringBuffer("ccccc");
+		sb2.append("ddddd");
+	}
+}
+////////////////////////////////////////////////////////////////////////////////
+class AnotherObject {
+	int i;
+	String s;
+	double d;
+	AnotherObject(int i, String s, double d) {
+		this.i = i;
+		this.s = s;
+		this.d = d;
+	}
+	void display() {
+		System.out.println("i = " + i + "; s = " + s + "; d = " + d);
+	}
+}
+class Test {
+	public static void main(String args[]) {
+		AnotherObject ao1 = new AnotherObject(5, "Hello",
+			 3.4E100);
+		AnotherObject ao2 = ao1;
+		ao1.i = 3;
+		ao1.s = "New string";
+		ao1.d = 6.02E23;
+		ao2.display();
+	}
+}
+////////////////////////////////////////////////////////////////////////////////
+// サブクラス
+class X {
+}
+class X1 extends X {				// extendsでxを継承
+}
+class X2 extends X {				// extendsでxを継承
+}
+class X11 extends X1 {				// extendsでx1を継承
+}
+class X12 extends X1 {				// extendsでx1を継承
+}
+class X21 extends X2 {				// extendsでx2を継承
+}
+class X22 extends X2 {				// extendsでx2を継承
+}
+class InheritanceHierarchy {
+	public static void main(String args[]) {
+		X x;
+		System.out.println("Instantiating X");
+		x = new X();
+		System.out.println("Instantiating X1");
+		x = new X1();
+		System.out.println("Instantiating X11");
+		x = new X11();
+		System.out.println("Instantiating X12");
+		x = new X12();
+		System.out.println("Instantiating X2");
+		x = new X2();
+		System.out.println("Instantiating X21");
+		x = new X21();
+		System.out.println("Instantiating X22");
+		x = new X22();
+	}
+}
+////////////////////////////////////////////////////////////////////////////////
+// 継承と変数
+class W {
+	float f;
+}
+class X extends W {				// extendsでWを継承
+	StringBuffer sb;
+}
+class Y extends X {				// extendsでXを継承
+	String s;
+}
+class Z extends Y {				// extendsでYを継承
+	Integer i;
+}
+class Wxyz {
+	public static void main(String args[]) {
+		Z z = new Z();
+		z.f = 4.567f;
+		z.sb = new StringBuffer("abcde");
+		z.s = "Teach Yourself Java";
+		z.i = new Integer(41);
+		System.out.println("z.f = " + z.f);
+		System.out.println("z.sb = " + z.sb);
+		System.out.println("z.s = " + z.s);
+		System.out.println("z.i = " + z.i);
+	}
+}
+////////////////////////////////////////////////////////////////////////////////
+// Fクラスのx宣言がEクラスのx宣言を隠します
+class E {
+	int x;
+}
+class F extends E {				// extendsでEを継承
+	String x;				// Eクラスのxを隠す
+}
+class Ef {
+	public static void main(String args[]) {
+		F f = new F();
+		f.x = "This is a string";
+		System.out.println("f.x = " + f.x);
+		E e = new E();
+		e.x = 45;
+		System.out.println("e.x = " + e.x);
+	}
+}
+////////////////////////////////////////////////////////////////////////////////
+// Fクラスの staticメンバx宣言がEクラスのstaticメンバx宣言を隠します
+class P {
+	static int x;
+}
+class Q extends P {
+	static String x;			// extendsでPを継承
+}						// Pクラスのstaticメンバxを隠す
+class Pq {
+	public static void main(String args[]) {
+		P p = new P();
+		p.x = 55;
+		System.out.println("p.x = " + p.x);
+		Q q = new Q();
+		q.x = "This is a string";
+		System.out.println("q.x = " + q.x);
+	}
+}
+////////////////////////////////////////////////////////////////////////////////
+// superキーワード　隠されたメンバにアクセスする
+class M100 {
+	int i = 100;				// M200クラスに隠されている
+}
+class M200 extends M100 {
+	int i = 200;
+	void display() {
+		System.out.println("i = " + i);
+		System.out.println("super.i = " + super.i);
+	}					// superクラス変数(M100)へアクセス
+}
+class SuperKeyword {
+	public static void main(String args[]) {
+		M200 m200 = new M200();
+		m200.display();
+	}
+}
+////////////////////////////////////////////////////////////////////////////////
+// メソッドのオーバーライド
+class A1 {
+	void hello() {
+		System.out.println("Hello from A1");
+	}
+}
+class B1 extends A1 {
+	void hello() {
+		System.out.println("Hello from B1");
+	}
+}
+class C1 extends B1 {
+	void hello() {
+		System.out.println("Hello from C1");
+	}
+}
+class MethodOverriding1 {
+	public static void main(String args[]) {
+		C1 obj = new C1();		// クラスC1を使ってC1オブジェクトを作成
+		obj.hello();
+	}
+}
+////////////////////////////////////////////////////////////////////////////////
+class A2 {
+	void hello() {
+		System.out.println("Hello from A2");
+	}
+}
+class B2 extends A2 {
+	void hello() {
+		System.out.println("Hello from B2");
+	}
+}
+class C2 extends B2 {
+	void hello() {
+		System.out.println("Hello from C2");
+	}
+}
+class MethodOverriding2 {
+	public static void main(String args[]) {
+		A2 obj = new C2();		// クラスA2を使ってC2オブジェクトを作成
+		obj.hello();
+	}
+}
+////////////////////////////////////////////////////////////////////////////////
+class A3 {
+	void hello() {
+		System.out.println("Hello from A3");
+	}
+	void hello(int i) {
+		System.out.println("Hello from A3 " + i);
+	}
+}
+class B3 extends A3 {
+	void hello() {
+		System.out.println("Hello from B3");
+	}
+}
+class C3 extends B3 {
+	void hello(String s) {
+		System.out.println("Hello from C3 " + s);
+	}
+}
+class MethodOverriding3 {
+	public static void main(String args[]) {
+		A3 obj = new C3();
+		obj.hello();
+	}
+}
+////////////////////////////////////////////////////////////////////////////////
+// 継承とメソッド
+class I1 {
+	void hello(String s) {
+		System.out.println("I1: " + s);
+	}
+}
+class J1 extends I1 {
+	void hello(String s) {
+		super.hello(s);			// superキーワードでsuperクラスI1へアクセス
+		System.out.println("J1: " + s);
+	}
+}
+class K1 extends J1 {
+	void hello(String s) {
+		super.hello(s);			// superキーワードでsuperクラスJ1へアクセス
+		System.out.println("K1: " + s);
+	}
+}
+class SuperForMethods1 {
+	public static void main(String args[]) {
+		System.out.println("Instantiating I1");
+		I1 obj = new I1();
+		obj.hello("Good morning");
+		System.out.println("Instantiating J1");
+		obj = new J1();
+		obj.hello("Good afternoon");
+		System.out.println("Instantiating K1");
+		obj = new K1();
+		obj.hello("Good evening");
+	}
+}
+////////////////////////////////////////////////////////////////////////////////
+// 継承とコンストラクタ
+// superクラスのコンストラクタがサブクラスのコンストラクタよりも先に実行される
+class S1 {
+	int s1;						// インスタンスメンバ
+	S1() {						// コンストラクタ
+		System.out.println("S1 Constructor");
+		s1 = 1;
+	}
+}
+class T1 extends S1 {
+	int t1;						// インスタンスメンバ
+	T1() {						// コンストラクタ
+		System.out.println("T1 Constructor");
+		t1 = 2;
+	}
+}
+class U1 extends T1 {
+	int u1;						// インスタンスメンバ
+	U1() {						// コンストラクタ
+		System.out.println("U1 Constructor");
+		u1 = 3;
+	}
+}
+class InheritanceAndConstructors1 {
+	public static void main(String args[]) {
+		U1 u1 = new U1();			// インスタンスオブジェクト作成
+		System.out.println("u1.s1 = " + u1.s1);
+		System.out.println("u1.t1 = " + u1.t1);
+		System.out.println("u1.u1 = " + u1.u1);
+	}
+}
+////////////////////////////////////////////////////////////////////////////////
+class S2 {						// superクラス
+	int s2;						// インスタンスメンバ
+	S2(int s2) {					// コンストラクタ
+		this.s2 = s2;
+	}
+}
+class T2 extends S2 {					// S2のサブクラス
+	int t2;						// インスタンスメンバ
+	T2(int s2, int t2) {				// コンストラクタ
+		super(s2);
+		this.t2 = t2;
+	}
+}
+class U2 extends T2 {					// T2のサブクラス
+	int u2;						// インスタンスメンバ
+	U2(int s2, int t2, int u2) {			// コンストラクタ
+		super(s2, t2);
+		this.u2 = u2;
+	}
+}
+class InheritanceAndConstructors2 {
+	public static void main(String args[]) {
+		U2 u2 = new U2(1, 2, 3);
+		System.out.println("u2.s2 = " + u2.s2);
+		System.out.println("u2.t2 = " + u2.t2);
+		System.out.println("u2.u2 = " + u2.u2);
+	}
+}
+////////////////////////////////////////////////////////////////////////////////
+// クラスの修飾子 abstract (クラス内では実装しない）
+// Javaの動的メソッドディスパッチ機能によって正しいdisplay()が呼び出される
+abstract class Shape {				// abstractクラスの宣言
+	void display() {			// displayに処理は無し
+	}
+}
+class Circle extends Shape {			// Shapeをextends
+	void display() {			// インスタンスメソッド
+		System.out.println("Circle");
+	}
+}
+class Rectangle extends Shape {			// Shapeをextends
+	void display() {			// インスタンスメソッド
+		System.out.println("Rectangle");
+	}
+}
+class Triangle extends Shape {			// Shapeをextends
+	void display() {			// インスタンスメソッド
+		System.out.println("Triangle");
+	}
+}
+class AbstractClassDemo {
+	public static void main(String args[]) {
+		Shape s = new Circle();		// Shapeクラスの変数sをCircle()で宣言
+		s.display();			// Circle()のdisplay()を呼び出す
+		s = new Rectangle();		// Shapeクラスの変数sをRectangle()で宣言
+		s.display();			// Rectangle()のdisplay()を呼び出す
+		s = new Triangle();		// Shapeクラスの変数sをTriangle()で宣言
+		s.display();			// Triangle()のdisplay()を呼び出す
+	}
+}
+////////////////////////////////////////////////////////////////////////////////
+// 変数の修飾子
+class L {
+	static final int x = 5;			// finalは定数として使用
+}
+class FinalVariable {
+	public static void main(String args[]) {
+		System.out.println(L.x);
+	}
+}
+////////////////////////////////////////////////////////////////////////////////
+// コンストラクタの修飾子
+class Person {
+	String name;					// インスタンスメンバ
+	int age;
+	public Person(String name, int age) {		// publicコンストラクタ
+		this.name = name;
+		this.age = age;
+	}
+	private Person() {				// privateコンストラクタ
+	}
+}
+class PrivateConstructor {
+	public static void main(String args[]) {
+		Person p1 = new Person("John", 30);	// publicコンストラクタは呼び出せる
+		System.out.println(p1.name);
+		System.out.println(p1.age);
+		// privateコンストラクタは呼び出せない
+		// Person p2 = new Person();
+	}
+}
+////////////////////////////////////////////////////////////////////////////////
+// メソッドの修飾子
+abstract class JetPlane {				// このクラス内では実装しないnumEngines()
+	abstract int numEngines();
+}
+class DC8 extends JetPlane {				// JetPlaneのサブクラス
+	int numEngines() {				// インスタンスメソッド
+		return 4;				// 戻り値は４
+	}
+}
+class DC10 extends JetPlane	{			// JetPlaneのサブクラス
+	int numEngines() {				// インスタンスメソッド
+		return 3;				// 戻り値は４
+	}
+}
+class JetPlanes {
+	public static void main(String args[]) {
+		System.out.println(new DC8().numEngines());
+		System.out.println(new DC10().numEngines());
+	}
+}
+////////////////////////////////////////////////////////////////////////////////
+// s1とs2が同じオブジェクトを参照している
+class Singleton {
+	static Singleton singleton;			// staticメンバ
+	private Singleton() {				// privateコンストラクタ
+	}						// 外部からの呼び出しは不可能
+	public static Singleton getInstance() {
+		if(singleton == null)
+			singleton = new Singleton();
+		return singleton;
+	}
+}
+class SingletonDemo {
+	public static void main(String args[]) {
+		Singleton s1 = Singleton.getInstance();
+		Singleton s2 = Singleton.getInstance();
+		if (s1 == s2)
+			System.out.println("Equal");
+		else
+			System.out.println("Not equal");
+	}
+}
+////////////////////////////////////////////////////////////////////////////////
+// ObjectクラスとClassクラス
+class ClassDemo {
+	public static void main(String args[]) {
+		Integer obj = new Integer(8);
+		Class cls = obj.getClass();
+		System.out.println(cls);
+	}
+}
+
+==============================================================================
+
+

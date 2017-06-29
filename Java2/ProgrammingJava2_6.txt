@@ -1,0 +1,1811 @@
+	
+
+
+============================================================================================
+
+            Programming Java2 Vol.6
+
+============================================================================================
+
+	Learn More About Java2 Professional Tutrial
+
+			Chapter 1 変数とオブジェクト
+			Chapter 2 お約束とコメント
+			Chapter 3 メソッドと基本制御
+			Chapter 4 コンストラクタと初期化
+			Chapter 5 クラスの再利用
+			Chapter 6 継承
+			Chapter 7 ポリモフィズム
+			Chapter 8 インターフェイスとインナークラス
+			Chapter 9 コレクション
+			Chapter10 エラーハンドリング
+			Chapter11 ファイル入出力
+			Chapter12 Creating Windows AWT
+		Chapter13 Creating Windows Swing
+			Chapter14 Multiple Threads
+			Chapter15 ネットワーク
+			Chapter16 アルゴリズムとデータ構造
+
+
+
+
+
+///////////////////////////////////////////////////////////////////////////////////////////
+//// 	Chapter 13: Creating Windows Swing
+
+//: c13:Applet1.java
+// Very simple applet.
+import javax.swing.*;
+import java.awt.*;
+
+public class Applet1 extends JApplet 
+{
+    public void init() 
+    {
+    	getContentPane().add(new JLabel("Applet!"));
+    }
+} 
+
+//------------------------------------------------
+//:! c13:Applet1.html
+<html><head><title>Applet1</title></head><hr>
+<OBJECT 
+    classid="clsid:8AD9C840-044E-11D1-B3E9-00805F499D93"
+    width="100" height="50" align="baseline"    codebase="http://java.sun.com/products/plugin/1.2.2/jinstall-1_2_2-win.cab#Version=1,2,2,0">
+<PARAM NAME="code" VALUE="Applet1.class">
+<PARAM NAME="codebase" VALUE=".">
+<PARAM NAME="type" VALUE="application/x-java-applet;version=1.2.2">
+<COMMENT>
+    <EMBED type=
+    "application/x-java-applet;version=1.2.2" 
+    width="200" height="200" align="baseline"
+    code="Applet1.class" codebase="."
+pluginspage="http://java.sun.com/products/plugin/1.2/plugin-install.html">
+    <NOEMBED>
+</COMMENT>
+     No Java 2 support for APPLET!!
+    </NOEMBED>
+</EMBED>
+</OBJECT>
+<hr></body></html>
+
+//------------------------------------------------
+//: c13:Button1.java
+// Putting buttons on an applet.
+// <applet code=Button1 width=200 height=50>
+// </applet>
+import javax.swing.*;
+import java.awt.*;
+public class Button1 extends JApplet 
+{
+    JButton b1 = new JButton("Button 1"), 
+	    b2 = new JButton("Button 2");
+    public void init() 
+    {
+	    Container cp = getContentPane();
+	    cp.setLayout(new FlowLayout());
+	    cp.add(b1);
+	    cp.add(b2);
+    }
+} 
+
+
+//------------------------------------------------
+//: c13:Button2.java
+// Responding to button presses.
+// <applet code=Button2 width=200 height=75>
+// </applet>
+import javax.swing.*;
+import java.awt.event.*;
+import java.awt.*;
+public class Button2 extends JApplet 
+{
+    JButton b1 = new JButton("Button 1"), 
+	    b2 = new JButton("Button 2");
+    JTextField txt = new JTextField(10);
+    BL al = new BL();
+    public void init() 
+    {
+	    b1.addActionListener(al);
+	    b2.addActionListener(al);
+	    Container cp = getContentPane();
+	    cp.setLayout(new FlowLayout());
+	    cp.add(b1);
+	    cp.add(b2);
+	    cp.add(txt);
+    }
+    class BL implements ActionListener 
+    {
+    	public void actionPerformed(ActionEvent e)
+    	{
+	        String name = ((JButton)e.getSource()).getText();
+	        txt.setText(name);
+	}
+    }
+} 
+
+//------------------------------------------------
+//: c13:Button2b.java
+// Using anonymous inner classes.
+// <applet code=Button2b width=200 height=75>
+// </applet>
+import javax.swing.*;
+import java.awt.event.*;
+import java.awt.*;
+public class Button2b extends JApplet 
+{
+    JButton b1 = new JButton("Button 1"), 
+	    b2 = new JButton("Button 2");
+    JTextField txt = new JTextField(10);
+    public void init() 
+    {
+	    b1.addActionListener(al);
+	    b2.addActionListener(al);
+	    Container cp = getContentPane();
+	    cp.setLayout(new FlowLayout());
+	    cp.add(b1);
+	    cp.add(b2);
+	    cp.add(txt);
+    }
+    ActionListener al = new ActionListener() 
+    {
+	    public void actionPerformed(ActionEvent e)
+	    {
+	        String name = ((JButton)e.getSource()).getText();
+	        txt.setText(name);
+	    }
+    };
+} 
+
+//------------------------------------------------
+//: c13:TextArea.java
+// Using the JTextArea control.
+// <applet code=TextArea width=475 height=425>
+// </applet>
+import javax.swing.*;
+import java.awt.event.*;
+import java.awt.*;
+import java.util.*;
+public class TextArea extends JApplet {
+    JButton b = new JButton("Add Data"),
+	    c = new JButton("Clear Data");
+    JTextArea t = new JTextArea(20, 40);
+    public void init() 
+    {
+	    Container cp = getContentPane();
+	    cp.setLayout(new FlowLayout());
+	    cp.add(new JScrollPane(t));
+	    cp.add(b);
+	    cp.add(c);
+	    b.addActionListener(new ActionListener() 
+	    {
+	        public void actionPerformed(ActionEvent e)
+	        {
+			t.setText("Add Data") ;
+	        }
+	    });
+	    c.addActionListener(new ActionListener() {
+	        public void actionPerformed(ActionEvent e){
+	        t.setText("");
+	        }
+	    });
+    }
+} 
+
+
+//------------------------------------------------
+//: c13:BorderLayout1.java
+// Demonstrates BorderLayout.
+// <applet code=BorderLayout1 
+// width=300 height=250> </applet>
+import javax.swing.*;
+import java.awt.*;
+public class BorderLayout1 extends JApplet 
+{
+    public void init() 
+    {
+	    Container cp = getContentPane();
+	    cp.add(BorderLayout.NORTH, new JButton("North"));
+	    cp.add(BorderLayout.SOUTH, new JButton("South"));
+	    cp.add(BorderLayout.EAST,  new JButton("East"));
+	    cp.add(BorderLayout.WEST,  new JButton("West"));
+	    cp.add(BorderLayout.CENTER, new JButton("Center"));
+    }
+} 
+
+
+//------------------------------------------------
+//: c13:FlowLayout1.java
+// Demonstrates FlowLayout.
+// <applet code=FlowLayout1 
+// width=300 height=250> </applet>
+import javax.swing.*;
+import java.awt.*;
+public class FlowLayout1 extends JApplet 
+{
+    public void init() 
+    {
+	    Container cp = getContentPane();
+	    cp.setLayout(new FlowLayout());
+	    for(int i = 0; i < 20; i++)
+	        cp.add(new JButton("Button " + i));
+    }
+} 
+
+
+//------------------------------------------------
+//: c13:GridLayout1.java
+// Demonstrates GridLayout.
+// <applet code=GridLayout1 
+// width=300 height=250> </applet>
+import javax.swing.*;
+import java.awt.*;
+public class GridLayout1 extends JApplet 
+{
+    public void init() 
+    {
+	    Container cp = getContentPane();
+	    cp.setLayout(new GridLayout(7,3));
+	    for(int i = 0; i < 20; i++)
+	        cp.add(new JButton("Button " + i));
+    }
+} 
+
+//------------------------------------------------
+//: c13:BoxLayout1.java
+// Vertical and horizontal BoxLayouts.
+// <applet code=BoxLayout1 
+// width=450 height=200> </applet>
+import javax.swing.*;
+import java.awt.*;
+public class BoxLayout1 extends JApplet 
+{
+    public void init() 
+    {
+	    JPanel jpv = new JPanel();
+	    jpv.setLayout( new BoxLayout(jpv, BoxLayout.Y_AXIS));
+	    for(int i = 0; i < 5; i++)
+	        jpv.add(new JButton("" + i));
+	    JPanel jph = new JPanel();
+	    jph.setLayout( new BoxLayout(jph, BoxLayout.X_AXIS));
+	    for(int i = 0; i < 5; i++)
+	        jph.add(new JButton("" + i));
+	    Container cp = getContentPane();
+	    cp.add(BorderLayout.EAST, jpv);
+	    cp.add(BorderLayout.SOUTH, jph);
+    }
+} 
+
+
+//------------------------------------------------
+//: c13:Box1.java
+// Vertical and horizontal BoxLayouts.
+// <applet code=Box1 
+// width=450 height=200> </applet>
+import javax.swing.*;
+import java.awt.*;
+public class Box1 extends JApplet 
+{
+    public void init() 
+    {
+	    Box bv = Box.createVerticalBox();
+	    for(int i = 0; i < 5; i++)
+	        bv.add(new JButton("" + i));
+	    Box bh = Box.createHorizontalBox();
+	    for(int i = 0; i < 5; i++)
+	        bh.add(new JButton("" + i));
+	    Container cp = getContentPane();
+	    cp.add(BorderLayout.EAST, bv);
+	    cp.add(BorderLayout.SOUTH, bh);
+    }
+} 
+
+
+//------------------------------------------------
+//: c13:Box2.java
+// Adding struts.
+// <applet code=Box2 
+// width=450 height=300> </applet>
+import javax.swing.*;
+import java.awt.*;
+public class Box2 extends JApplet 
+{
+    public void init() 
+    {
+	    Box bv = Box.createVerticalBox();
+	    for(int i = 0; i < 5; i++) 
+	    {
+	        bv.add(new JButton("" + i));
+	        bv.add(Box.createVerticalStrut(i*10));
+	    }
+	    Box bh = Box.createHorizontalBox();
+	    for(int i = 0; i < 5; i++) 
+	    {
+	        bh.add(new JButton("" + i));
+	        bh.add(Box.createHorizontalStrut(i*10));
+	    }
+	    Container cp = getContentPane();
+	    cp.add(BorderLayout.EAST, bv);
+	    cp.add(BorderLayout.SOUTH, bh);
+	    }
+    }
+} 
+
+
+//------------------------------------------------
+//: c13:Box3.java
+// Using Glue.
+// <applet code=Box3 
+// width=450 height=300> </applet>
+import javax.swing.*;
+import java.awt.*;
+public class Box3 extends JApplet 
+{
+    public void init() 
+    {
+	    Box bv = Box.createVerticalBox();
+	    bv.add(new JLabel("Hello"));
+	    bv.add(Box.createVerticalGlue());
+	    bv.add(new JLabel("Applet"));
+	    bv.add(Box.createVerticalGlue());
+	    bv.add(new JLabel("World"));
+	    Box bh = Box.createHorizontalBox();
+	    bh.add(new JLabel("Hello"));
+	    bh.add(Box.createHorizontalGlue());
+	    bh.add(new JLabel("Applet"));
+	    bh.add(Box.createHorizontalGlue());
+	    bh.add(new JLabel("World"));
+	    bv.add(Box.createVerticalGlue());
+	    bv.add(bh);
+	    bv.add(Box.createVerticalGlue());
+	    getContentPane().add(bv);
+    }
+} 
+
+//------------------------------------------------
+//: c13:Box4.java
+// Rigid Areas are like pairs of struts.
+// <applet code=Box4 
+// width=450 height=300> </applet>
+import javax.swing.*;
+import java.awt.*;
+public class Box4 extends JApplet 
+{
+    public void init() 
+    {
+	    Box bv = Box.createVerticalBox();
+	    bv.add(new JButton("Top"));
+	    bv.add(Box.createRigidArea(new Dimension(120, 90)));
+	    bv.add(new JButton("Bottom"));
+	    Box bh = Box.createHorizontalBox();
+	    bh.add(new JButton("Left"));
+	    bh.add(Box.createRigidArea( new Dimension(160, 80)));
+	    bh.add(new JButton("Right"));
+	    bv.add(bh);
+	    getContentPane().add(bv);
+    }
+} 
+
+
+//------------------------------------------------
+//: c13:TrackEvent.java
+// Show events as they happen.
+// <applet code=TrackEvent
+//    width=700 height=500></applet>
+import javax.swing.*;
+import java.awt.*;
+import java.awt.event.*;
+import java.util.*;
+public class TrackEvent extends JApplet 
+{
+    HashMap h = new HashMap();
+    String[] event = {
+    "focusGained", "focusLost", "keyPressed",
+    "keyReleased", "keyTyped", "mouseClicked",
+    "mouseEntered", "mouseExited","mousePressed",
+    "mouseReleased", "mouseDragged", "mouseMoved"
+    };
+    MyButton
+	    b1 = new MyButton(Color.blue, "test1"),
+	    b2 = new MyButton(Color.red, "test2");
+    class MyButton extends JButton 
+    {
+	    void report(String field, String msg) 
+	    {
+	        ((JTextField)h.get(field)).setText(msg);
+	    }
+	    FocusListener fl = new FocusListener() 
+	    {
+	        public void focusGained(FocusEvent e) 
+	        {
+	        	report("focusGained", e.paramString());
+	        }
+	        public void focusLost(FocusEvent e) 
+	        {
+	        	report("focusLost", e.paramString());
+	        }
+	    };
+	    KeyListener kl = new KeyListener() 
+	    {
+	        public void keyPressed(KeyEvent e) 
+	        {
+	        	report("keyPressed", e.paramString());
+	        }
+	        public void keyReleased(KeyEvent e) 
+	        {
+	        	report("keyReleased", e.paramString());
+	        }
+	        public void keyTyped(KeyEvent e) 
+	        {
+	        	report("keyTyped", e.paramString());
+	        }
+	    };
+	    MouseListener ml = new MouseListener() 
+	    {
+	        public void mouseClicked(MouseEvent e) 
+	        {
+	        	report("mouseClicked", e.paramString());
+	        }
+	        public void mouseEntered(MouseEvent e) 
+	        {
+	        	report("mouseEntered", e.paramString());
+	        }
+	        public void mouseExited(MouseEvent e) 
+	        {
+	        	report("mouseExited", e.paramString());
+	        }
+	        public void mousePressed(MouseEvent e) 
+	        {
+	        	report("mousePressed", e.paramString());
+	        }
+	        public void mouseReleased(MouseEvent e) 
+	        {
+	        	report("mouseReleased", e.paramString());
+	        }
+	    };
+	    MouseMotionListener mml = new MouseMotionListener() 
+	    {
+	        public void mouseDragged(MouseEvent e) 
+	        {
+	        	report("mouseDragged", e.paramString());
+	        }
+	        public void mouseMoved(MouseEvent e) 
+	        {
+	        	report("mouseMoved", e.paramString());
+	        }
+	    };
+	    public MyButton(Color color, String label) 
+	    {
+	        super(label);
+	        setBackground(color);
+	        addFocusListener(fl);
+	        addKeyListener(kl);
+	        addMouseListener(ml);
+	        addMouseMotionListener(mml);
+	    }
+    }
+    public void init() 
+    {
+	    Container c = getContentPane();
+	    c.setLayout(new GridLayout(event.length+1,2));
+	    for(int i = 0; i < event.length; i++) 
+	    {
+	        JTextField t = new JTextField();
+	        t.setEditable(false);
+	        c.add(new JLabel(event[i], JLabel.RIGHT));
+	        c.add(t);
+	        h.put(event[i], t);
+	    }
+	    c.add(b1);
+	    c.add(b2);
+    }
+} 
+
+//------------------------------------------------
+//: c13:Buttons.java
+// Various Swing buttons.
+// <applet code=Buttons
+//    width=350 height=100></applet>
+import javax.swing.*;
+import java.awt.*;
+import java.awt.event.*;
+import javax.swing.plaf.basic.*;
+import javax.swing.border.*;
+public class Buttons extends JApplet 
+{
+    JButton jb = new JButton("JButton");
+    BasicArrowButton    up = new BasicArrowButton(BasicArrowButton.NORTH),
+			down = new BasicArrowButton(BasicArrowButton.SOUTH),
+			right = new BasicArrowButton(BasicArrowButton.EAST),
+			left = new BasicArrowButton(BasicArrowButton.WEST);
+    public void init() 
+    {
+	    Container cp = getContentPane();
+	    cp.setLayout(new FlowLayout());
+	    cp.add(jb);
+	    cp.add(new JToggleButton("JToggleButton"));
+	    cp.add(new JCheckBox("JCheckBox"));
+	    cp.add(new JRadioButton("JRadioButton"));
+	    JPanel jp = new JPanel();
+	    jp.setBorder(new TitledBorder("Directions"));
+	    jp.add(up);
+	    jp.add(down);
+	    jp.add(left);
+	    jp.add(right);
+	    cp.add(jp);
+    }
+} 
+
+//------------------------------------------------
+//: c13:ButtonGroups.java
+// Uses reflection to create groups 
+// of different types of AbstractButton.
+// <applet code=ButtonGroups
+//    width=500 height=300></applet>
+import javax.swing.*;
+import java.awt.*;
+import java.awt.event.*;
+import javax.swing.border.*;
+import java.lang.reflect.*;
+public class ButtonGroups extends JApplet 
+{
+    static String[] ids = { 
+    "June", "Ward", "Beaver", 
+    "Wally", "Eddie", "Lumpy",
+    };
+    static JPanel makeBPanel(Class bClass, String[] ids) 
+    {
+	    ButtonGroup bg = new ButtonGroup();
+	    JPanel jp = new JPanel();
+	    String title = bClass.getName();
+	    title = title.substring(
+	        title.lastIndexOf('.') + 1);
+	    jp.setBorder(new TitledBorder(title));
+	    for(int i = 0; i < ids.length; i++) 
+	    {
+	        AbstractButton ab = new JButton("failed");
+	        try {
+		        // Get the dynamic constructor method
+		        // that takes a String argument:
+		        Constructor ctor = bClass.getConstructor(
+		            new Class[] { String.class });
+		        // Create a new object:
+		        ab = (AbstractButton)ctor.newInstance(
+		            new Object[]{ids[i]});
+	        } catch(Exception ex) {
+		        System.err.println("can't create " + 
+		            bClass);
+	        }
+	        bg.add(ab);
+	        jp.add(ab);
+	    }
+	    return jp;
+    }
+    public void init() 
+    {
+	    Container cp = getContentPane();
+	    cp.setLayout(new FlowLayout());
+	    cp.add(makeBPanel(JButton.class, ids));
+	    cp.add(makeBPanel(JToggleButton.class, ids));
+	    cp.add(makeBPanel(JCheckBox.class, ids));
+	    cp.add(makeBPanel(JRadioButton.class, ids));
+    }
+} 
+
+
+//------------------------------------------------
+//: c13:TextFields.java
+// Text fields and Java events.
+// <applet code=TextFields width=375
+// height=125></applet>
+import javax.swing.*;
+import javax.swing.event.*;
+import javax.swing.text.*;
+import java.awt.*;
+import java.awt.event.*;
+public class TextFields extends JApplet 
+{
+    JButton	b1 = new JButton("Get Text"),
+		b2 = new JButton("Set Text");
+    JTextField  t1 = new JTextField(30),
+	        t2 = new JTextField(30),
+    	        t3 = new JTextField(30);
+    String s = new String();
+    UpperCaseDocument
+    ucd = new UpperCaseDocument();
+    public void init() 
+    {
+	    t1.setDocument(ucd);
+	    ucd.addDocumentListener(new T1());
+	    b1.addActionListener(new B1());
+	    b2.addActionListener(new B2());
+	    DocumentListener dl = new T1();
+	    t1.addActionListener(new T1A());
+	    Container cp = getContentPane();
+	    cp.setLayout(new FlowLayout());
+	    cp.add(b1);
+	    cp.add(b2);
+	    cp.add(t1);
+	    cp.add(t2);
+	    cp.add(t3);
+    }
+    class T1 implements DocumentListener 
+    {
+	    public void changedUpdate(DocumentEvent e){}
+	    public void insertUpdate(DocumentEvent e)
+	    {
+	        t2.setText(t1.getText());
+	        t3.setText("Text: "+ t1.getText());
+    	    }
+	    public void removeUpdate(DocumentEvent e)
+	    {
+	        t2.setText(t1.getText());
+	    }
+    }
+    class T1A implements ActionListener 
+    {
+	    private int count = 0;
+	    public void actionPerformed(ActionEvent e) 
+	    {
+	        t3.setText("t1 Action Event " + count++);
+	    }
+    }
+    class B1 implements ActionListener 
+    {
+	    public void actionPerformed(ActionEvent e) 
+	    {
+	        if(t1.getSelectedText() == null)
+	        s = t1.getText();
+	        else
+	        s = t1.getSelectedText();
+	        t1.setEditable(true);
+	    }
+    }
+    class B2 implements ActionListener 
+    {
+	    public void actionPerformed(ActionEvent e) 
+	    {
+	        ucd.setUpperCase(false);
+	        t1.setText("Inserted by Button 2: " + s);
+	        ucd.setUpperCase(true);
+	        t1.setEditable(false);
+	    }
+    }
+}
+class UpperCaseDocument extends PlainDocument 
+{
+    boolean upperCase = true;
+    public void setUpperCase(boolean flag) 
+    {
+    	upperCase = flag;
+    }
+    public void insertString(int offset, String string, AttributeSet attributeSet)
+	    throws BadLocationException 
+    {
+        if(upperCase)
+	        string = string.toUpperCase();
+        super.insertString(offset, 
+        string, attributeSet);
+    }
+} 
+
+
+//------------------------------------------------
+//: c13:Borders.java
+// Different Swing borders.
+// <applet code=Borders
+//    width=500 height=300></applet>
+import javax.swing.*;
+import java.awt.*;
+import java.awt.event.*;
+import javax.swing.border.*;
+public class Borders extends JApplet 
+{
+    static JPanel showBorder(Border b) 
+    {
+	    JPanel jp = new JPanel();
+	    jp.setLayout(new BorderLayout());
+	    String nm = b.getClass().toString();
+	    nm = nm.substring(nm.lastIndexOf('.') + 1);
+	    jp.add(new JLabel(nm, JLabel.CENTER), BorderLayout.CENTER);
+	    jp.setBorder(b);
+	    return jp;
+    }
+    public void init() 
+    {
+	    Container cp = getContentPane();
+	    cp.setLayout(new FlowLayout());
+	    cp.setLayout(new GridLayout(2,4));
+	    cp.add(showBorder(new TitledBorder("Title")));
+	    cp.add(showBorder(new EtchedBorder()));
+	    cp.add(showBorder(new LineBorder(Color.blue)));
+	    cp.add(showBorder(new MatteBorder(5,5,30,30,Color.green)));
+	    cp.add(showBorder(new BevelBorder(BevelBorder.RAISED)));
+	    cp.add(showBorder(new SoftBevelBorder(BevelBorder.LOWERED)));
+	    cp.add(showBorder(new CompoundBorder(new EtchedBorder(), new LineBorder(Color.red))));
+    }
+} 
+
+//------------------------------------------------
+//: c13:JScrollPanes.java
+// Controlling the scrollbars in a JScrollPane.
+// <applet code=JScrollPanes width=300 height=725>
+// </applet>
+import javax.swing.*;
+import java.awt.*;
+import java.awt.event.*;
+import javax.swing.border.*;
+public class JScrollPanes extends JApplet 
+{
+    JButton 
+	    b1 = new JButton("Text Area 1"),
+	    b2 = new JButton("Text Area 2"),
+	    b3 = new JButton("Replace Text"),
+	    b4 = new JButton("Insert Text");
+    JTextArea 
+	    t1 = new JTextArea("t1", 1, 20),
+	    t2 = new JTextArea("t2", 4, 20),
+	    t3 = new JTextArea("t3", 1, 20),
+	    t4 = new JTextArea("t4", 10, 10),
+	    t5 = new JTextArea("t5", 4, 20),
+	    t6 = new JTextArea("t6", 10, 10);
+    JScrollPane 
+	    sp3 = new JScrollPane(t3,JScrollPane.VERTICAL_SCROLLBAR_NEVER,JScrollPane.HORIZONTAL_SCROLLBAR_NEVER),
+	    sp4 = new JScrollPane(t4,JScrollPane.VERTICAL_SCROLLBAR_ALWAYS,JScrollPane.HORIZONTAL_SCROLLBAR_NEVER),
+	    sp5 = new JScrollPane(t5,JScrollPane.VERTICAL_SCROLLBAR_NEVER,JScrollPane.HORIZONTAL_SCROLLBAR_ALWAYS),
+	    sp6 = new JScrollPane(t6,JScrollPane.VERTICAL_SCROLLBAR_ALWAYS,JScrollPane.HORIZONTAL_SCROLLBAR_ALWAYS);
+    class B1L implements ActionListener 
+    {
+	    public void actionPerformed(ActionEvent e) 
+	    {
+	        t5.append(t1.getText() + "\n");
+	    }
+    }
+    class B2L implements ActionListener 
+    {
+	    public void actionPerformed(ActionEvent e) 
+	    {
+	        t2.setText("Inserted by Button 2");
+	        t2.append(": " + t1.getText());
+	        t5.append(t2.getText() + "\n");
+	    }
+    }
+    class B3L implements ActionListener 
+    {
+	    public void actionPerformed(ActionEvent e) 
+	    {
+	        String s = " Replacement ";
+	        t2.replaceRange(s, 3, 3 + s.length());
+	    }
+    }
+    class B4L implements ActionListener 
+    {
+	    public void actionPerformed(ActionEvent e) 
+	    {
+	        t2.insert(" Inserted ", 10);
+	    }
+    }
+    public void init() 
+    {
+	    Container cp = getContentPane();
+	    cp.setLayout(new FlowLayout());
+	    // Create Borders for components:
+	    Border brd = BorderFactory.createMatteBorder(1, 1, 1, 1, Color.black);
+	    t1.setBorder(brd);
+	    t2.setBorder(brd);
+	    sp3.setBorder(brd);
+	    sp4.setBorder(brd);
+	    sp5.setBorder(brd);
+	    sp6.setBorder(brd);
+	    // Initialize listeners and add components:
+	    b1.addActionListener(new B1L());
+	    cp.add(b1);
+	    cp.add(t1);
+	    b2.addActionListener(new B2L());
+	    cp.add(b2);
+	    cp.add(t2);
+	    b3.addActionListener(new B3L());
+	    cp.add(b3);
+	    b4.addActionListener(new B4L());
+	    cp.add(b4);
+	    cp.add(sp3); 
+	    cp.add(sp4); 
+	    cp.add(sp5);
+	    cp.add(sp6);
+    }
+} 
+
+
+//------------------------------------------------
+//: c13:CheckBoxes.java
+// Using JCheckBoxes.
+// <applet code=CheckBoxes width=200 height=200>
+// </applet>
+import javax.swing.*;
+import java.awt.event.*;
+import java.awt.*;
+public class CheckBoxes extends JApplet 
+{
+    JTextArea t = new JTextArea(6, 15);
+    JCheckBox 
+	    cb1 = new JCheckBox("Check Box 1"),
+	    cb2 = new JCheckBox("Check Box 2"),
+	    cb3 = new JCheckBox("Check Box 3");
+    public void init() 
+    {
+	    cb1.addActionListener(new ActionListener() {
+	        public void actionPerformed(ActionEvent e){
+	        trace("1", cb1);
+	        }
+	    });
+	    cb2.addActionListener(new ActionListener() {
+	        public void actionPerformed(ActionEvent e){
+	        trace("2", cb2);
+	        }
+	    });
+	    cb3.addActionListener(new ActionListener() {
+	        public void actionPerformed(ActionEvent e){
+	        trace("3", cb3);
+	        }
+	    });
+	    Container cp = getContentPane();
+	    cp.setLayout(new FlowLayout());
+	    cp.add(new JScrollPane(t));
+	    cp.add(cb1); 
+	    cp.add(cb2); 
+	    cp.add(cb3);
+	    }
+	    void trace(String b, JCheckBox cb) {
+	    if(cb.isSelected())
+	        t.append("Box " + b + " Set\n");
+	    else
+	        t.append("Box " + b + " Cleared\n");
+    }
+} 
+
+
+//------------------------------------------------
+//: c13:RadioButtons.java
+// Using JRadioButtons.
+// <applet code=RadioButtons 
+// width=200 height=100> </applet>
+import javax.swing.*;
+import java.awt.event.*;
+import java.awt.*;
+public class RadioButtons extends JApplet 
+{
+    JTextField t = new JTextField(15);
+    ButtonGroup g = new ButtonGroup();
+    JRadioButton 
+	    rb1 = new JRadioButton("one", false),
+	    rb2 = new JRadioButton("two", false),
+	    rb3 = new JRadioButton("three", false);
+    ActionListener al = new ActionListener() {
+	    public void actionPerformed(ActionEvent e) {
+	        t.setText("Radio button " + 
+	        ((JRadioButton)e.getSource()).getText());
+	    }
+    };
+    public void init() 
+    {
+	    rb1.addActionListener(al);
+	    rb2.addActionListener(al);
+	    rb3.addActionListener(al);
+	    g.add(rb1); g.add(rb2); g.add(rb3);
+	    t.setEditable(false);
+	    Container cp = getContentPane();
+	    cp.setLayout(new FlowLayout());
+	    cp.add(t); 
+	    cp.add(rb1); 
+	    cp.add(rb2); 
+	    cp.add(rb3); 
+    }
+} 
+
+
+//------------------------------------------------
+//: c13:ComboBoxes.java
+// Using drop-down lists.
+// <applet code=ComboBoxes
+// width=200 height=100> </applet>
+import javax.swing.*;
+import java.awt.event.*;
+import java.awt.*;
+public class ComboBoxes extends JApplet 
+{
+    String[] description = { 
+    "Ebullient", "Obtuse",
+    "Recalcitrant", "Brilliant", "Somnescent",
+    "Timorous", "Florid", "Putrescent" };
+    JTextField t = new JTextField(15);
+    JComboBox c = new JComboBox();
+    JButton b = new JButton("Add items");
+    int count = 0;
+    public void init() 
+    {
+	    for(int i = 0; i < 4; i++)
+	        c.addItem(description[count++]);
+	    t.setEditable(false);
+	    b.addActionListener(new ActionListener() {
+	        public void actionPerformed(ActionEvent e){
+	        if(count < description.length)
+	            c.addItem(description[count++]);
+	        }
+	    });
+	    c.addActionListener(new ActionListener() {
+	        public void actionPerformed(ActionEvent e){
+	        t.setText("index: "+ c.getSelectedIndex()
+	            + "     " + ((JComboBox)e.getSource())
+	            .getSelectedItem());
+	        }
+	    });
+	    Container cp = getContentPane();
+	    cp.setLayout(new FlowLayout());
+	    cp.add(t);
+	    cp.add(c);
+	    cp.add(b);
+    }
+} 
+
+
+//------------------------------------------------
+//: c13:List.java
+// <applet code=List width=250
+// height=375> </applet>
+import javax.swing.*;
+import javax.swing.event.*;
+import java.awt.*;
+import java.awt.event.*;
+import javax.swing.border.*;
+public class List extends JApplet 
+{
+    String[] flavors = { 
+    "Chocolate", "Strawberry",
+    "Vanilla Fudge Swirl", "Mint Chip",
+    "Mocha Almond Fudge", "Rum Raisin",
+    "Praline Cream", "Mud Pie" };
+    DefaultListModel lItems=new DefaultListModel();
+    JList lst = new JList(lItems);
+    JTextArea t = new JTextArea(flavors.length,20);
+    JButton b = new JButton("Add Item");
+    ActionListener bl = new ActionListener() {
+	    public void actionPerformed(ActionEvent e) {
+	        if(count < flavors.length) {
+	        lItems.add(0, flavors[count++]);
+	        } else {
+	        // Disable, since there are no more
+	        // flavors left to be added to the List
+	        b.setEnabled(false);
+	        }
+	    }
+    };
+    ListSelectionListener ll = new ListSelectionListener() {
+        public void valueChanged(
+        ListSelectionEvent e) {
+            t.setText("");
+            Object[] items=lst.getSelectedValues();
+            for(int i = 0; i < items.length; i++)
+            t.append(items[i] + "\n");
+        }
+    };
+    int count = 0;
+    public void init() 
+    {
+	    Container cp = getContentPane();
+	    t.setEditable(false);
+	    cp.setLayout(new FlowLayout());
+	    // Create Borders for components:
+	    Border brd = BorderFactory.createMatteBorder(1, 1, 2, 2, Color.black);
+	    lst.setBorder(brd);
+	    t.setBorder(brd);
+	    // Add the first four items to the List
+	    for(int i = 0; i < 4; i++)
+	        lItems.addElement(flavors[count++]);
+	    // Add items to the Content Pane for Display
+	    cp.add(t);
+	    cp.add(lst);
+	    cp.add(b);
+	    // Register event listeners
+	    lst.addListSelectionListener(ll);
+	    b.addActionListener(bl);
+    }
+} 
+
+
+//------------------------------------------------
+//: c13:TabbedPane1.java
+// Demonstrates the Tabbed Pane.
+// <applet code=TabbedPane1 
+// width=350 height=200> </applet>
+import javax.swing.*;
+import javax.swing.event.*;
+import java.awt.*;
+public class TabbedPane1 extends JApplet 
+{
+    String[] flavors = { 
+    "Chocolate", "Strawberry",
+    "Vanilla Fudge Swirl", "Mint Chip", 
+    "Mocha Almond Fudge", "Rum Raisin", 
+    "Praline Cream", "Mud Pie" };
+    JTabbedPane tabs = new JTabbedPane();
+    JTextField txt = new JTextField(20);
+    public void init() 
+    {
+	    for(int i = 0; i < flavors.length; i++)
+	        tabs.addTab(flavors[i], new JButton("Tabbed pane " + i));
+	    tabs.addChangeListener(new ChangeListener(){
+	        public void stateChanged(ChangeEvent e) {
+	        txt.setText("Tab selected: " + 
+	            tabs.getSelectedIndex());
+	        }
+	    });
+	    Container cp = getContentPane();
+	    cp.add(BorderLayout.SOUTH, txt);
+	    cp.add(tabs);
+    }
+} 
+
+
+//------------------------------------------------
+//: c13:MessageBoxes.java
+// Demonstrates JoptionPane.
+// <applet code=MessageBoxes 
+// width=200 height=150> </applet>
+import javax.swing.*;
+import java.awt.event.*;
+import java.awt.*;
+public class MessageBoxes extends JApplet 
+{
+    JButton[] b = { 
+	    new JButton("Alert"), 
+	    new JButton("Yes/No"), new JButton("Color"),
+	    new JButton("Input"), new JButton("3 Vals")
+    };
+    JTextField txt = new JTextField(15);
+    ActionListener al = new ActionListener() 
+    {
+	    public void actionPerformed(ActionEvent e){
+	        String id = ((JButton)e.getSource()).getText();
+	        if(id.equals("Alert"))
+		        JOptionPane.showMessageDialog(null, "There's a bug on you!", "Hey!", JOptionPane.ERROR_MESSAGE);
+	        else if(id.equals("Yes/No"))
+		        JOptionPane.showConfirmDialog(null, 
+		            "or no", "choose yes", 
+	        	    JOptionPane.YES_NO_OPTION);
+	        else if(id.equals("Color")) 
+	        {
+		        Object[] options = { "Red", "Green" };
+		        int sel = JOptionPane.showOptionDialog(
+		            null, "Choose a Color!", "Warning", 
+		            JOptionPane.DEFAULT_OPTION, 
+		            JOptionPane.WARNING_MESSAGE, null, 
+		            options, options[0]);
+		            if(sel != JOptionPane.CLOSED_OPTION)
+			            txt.setText("Color Selected: " + options[sel]);
+	        } 
+	        else if(id.equals("Input")) 
+	        {
+		        String val = JOptionPane.showInputDialog("How many fingers do you see?"); 
+		        txt.setText(val);
+	        }
+	        else if(id.equals("3 Vals")) 
+	        {
+		        Object[] selections = {
+		            "First", "Second", "Third" };
+		        Object val = JOptionPane.showInputDialog(
+		            null, "Choose one", "Input",
+		            JOptionPane.INFORMATION_MESSAGE, 
+		            null, selections, selections[0]);
+		        if(val != null)
+		            txt.setText(val.toString());
+	        }
+	    }
+    };
+    public void init() 
+    {
+	    Container cp = getContentPane();
+	    cp.setLayout(new FlowLayout());
+	    for(int i = 0; i < b.length; i++) 
+	    {
+	        b[i].addActionListener(al);
+	        cp.add(b[i]);
+	    }
+	    cp.add(txt);
+    }
+} 
+
+
+//------------------------------------------------
+//: c13:SimpleMenus.java
+// <applet code=SimpleMenus 
+// width=200 height=75> </applet>
+import javax.swing.*;
+import java.awt.event.*;
+import java.awt.*;
+public class SimpleMenus extends JApplet 
+{
+    JTextField t = new JTextField(15);
+    ActionListener al = new ActionListener() {
+	    public void actionPerformed(ActionEvent e){
+	        t.setText(
+	        ((JMenuItem)e.getSource()).getText());
+	    }
+    };
+    JMenu[] menus = { new JMenu("Winken"), 
+	    new JMenu("Blinken"), new JMenu("Nod") };
+    JMenuItem[] items = {
+	    new JMenuItem("Fee"), new JMenuItem("Fi"),
+	    new JMenuItem("Fo"),    new JMenuItem("Zip"),
+	    new JMenuItem("Zap"), new JMenuItem("Zot"), 
+	    new JMenuItem("Olly"), new JMenuItem("Oxen"),
+	    new JMenuItem("Free") };
+    public void init() 
+    {
+	    for(int i = 0; i < items.length; i++) 
+	    {
+	        items[i].addActionListener(al);
+	        menus[i%3].add(items[i]);
+	    }
+	    JMenuBar mb = new JMenuBar();
+	    for(int i = 0; i < menus.length; i++)
+	        mb.add(menus[i]);
+	    setJMenuBar(mb);
+	    Container cp = getContentPane();
+	    cp.setLayout(new FlowLayout());
+	    cp.add(t); 
+    }
+} 
+
+
+//------------------------------------------------
+//: c13:SineWave.java
+// Drawing with Swing, using a JSlider.
+// <applet code=SineWave
+//    width=700 height=400></applet>
+import javax.swing.*;
+import javax.swing.event.*;
+import java.awt.*;
+class SineDraw extends JPanel 
+{
+    static final int SCALEFACTOR = 200;
+    int cycles;
+    int points;
+    double[] sines;
+    int[] pts;
+    SineDraw() { setCycles(5); }
+    public void setCycles(int newCycles) 
+    {
+	    cycles = newCycles;
+	    points = SCALEFACTOR * cycles * 2;
+	    sines = new double[points];
+	    pts = new int[points];
+	    for(int i = 0; i < points; i++) 
+	    {
+	        double radians = (Math.PI/SCALEFACTOR) * i;
+	        sines[i] = Math.sin(radians);
+	    }
+	    repaint();
+    }    
+    public void paintComponent(Graphics g) 
+    {
+	    super.paintComponent(g);
+	    int maxWidth = getWidth();
+	    double hstep = (double)maxWidth/(double)points;
+	    int maxHeight = getHeight();
+	    for(int i = 0; i < points; i++)
+	        pts[i] = (int)(sines[i] * maxHeight/2 * .95 + maxHeight/2);
+	    g.setColor(Color.red);
+	    for(int i = 1; i < points; i++) 
+	    {
+	        int x1 = (int)((i - 1) * hstep);
+	        int x2 = (int)(i * hstep);
+	        int y1 = pts[i-1];
+	        int y2 = pts[i];
+	        g.drawLine(x1, y1, x2, y2);
+	    }
+    }
+}
+public class SineWave extends JApplet 
+{
+    SineDraw sines = new SineDraw();
+    JSlider cycles = new JSlider(1, 30, 5);
+    public void init() 
+    {
+	    Container cp = getContentPane();
+	    cp.add(sines);
+	    cycles.addChangeListener(new ChangeListener(){
+	        public void stateChanged(ChangeEvent e) {
+	        sines.setCycles(
+	            ((JSlider)e.getSource()).getValue());
+	        }
+	    });
+	    cp.add(BorderLayout.SOUTH, cycles);
+    }
+} 
+
+//------------------------------------------------
+//: c13:Dialogs.java
+// Creating and using Dialog Boxes.
+// <applet code=Dialogs width=125 height=75>
+// </applet>
+import javax.swing.*;
+import java.awt.event.*;
+import java.awt.*;
+class MyDialog extends JDialog 
+{
+    public MyDialog(JFrame parent) 
+    {
+	    super(parent, "My dialog", true);
+	    Container cp = getContentPane();
+	    cp.setLayout(new FlowLayout());
+	    cp.add(new JLabel("Here is my dialog"));
+	    JButton ok = new JButton("OK");
+	    ok.addActionListener(new ActionListener() {
+	        public void actionPerformed(ActionEvent e){
+	        dispose(); // Closes the dialog
+	        }
+	    });
+	    cp.add(ok);
+	    setSize(150,125);
+    }
+}
+public class Dialogs extends JApplet 
+{
+    JButton b1 = new JButton("Dialog Box");
+    MyDialog dlg = new MyDialog(null);
+    public void init() 
+    {
+	    b1.addActionListener(new ActionListener() {
+	        public void actionPerformed(ActionEvent e){
+	        dlg.show();
+	        }
+	    });
+	    getContentPane().add(b1);
+    }
+} 
+
+
+//------------------------------------------------
+//: c13:TicTacToe.java
+// Demonstration of dialog boxes
+// and creating your own components.
+// <applet code=TicTacToe
+//    width=200 height=100></applet>
+import javax.swing.*;
+import java.awt.*;
+import java.awt.event.*;
+public class TicTacToe extends JApplet 
+{
+    JTextField 
+	    rows = new JTextField("3"),
+	    cols = new JTextField("3");
+    static final int BLANK = 0, XX = 1, OO = 2;
+    class ToeDialog extends JDialog 
+    {
+	    int turn = XX; // Start with x's turn
+	    // w = number of cells wide
+	    // h = number of cells high
+	    public ToeDialog(int w, int h) 
+	    {
+	        setTitle("The game itself");
+	        Container cp = getContentPane();
+	        cp.setLayout(new GridLayout(w, h));
+	        for(int i = 0; i < w * h; i++)
+	    	    cp.add(new ToeButton());
+	        setSize(w * 50, h * 50);
+	        // JDK 1.3 close dialog:
+	        //#setDefaultCloseOperation(
+	        //#    DISPOSE_ON_CLOSE);
+	        // JDK 1.2 close dialog:
+	        addWindowListener(new WindowAdapter() {
+		        public void windowClosing(WindowEvent e){
+		            dispose();
+		        }
+	        });    
+	    }
+	    class ToeButton extends JPanel 
+	    {
+	        int state = BLANK;
+	        public ToeButton() 
+	        {
+		        addMouseListener(new ML());
+	        }
+	        public void paintComponent(Graphics g) 
+	        {
+		        super.paintComponent(g);
+		        int x1 = 0;
+		        int y1 = 0;
+		        int x2 = getSize().width - 1;
+		        int y2 = getSize().height - 1;
+		        g.drawRect(x1, y1, x2, y2);
+		        x1 = x2/4;
+		        y1 = y2/4;
+		        int wide = x2/2;
+		        int high = y2/2;
+		        if(state == XX) 
+		        {
+		            g.drawLine(x1, y1, 
+		            x1 + wide, y1 + high);
+		            g.drawLine(x1, y1 + high, 
+		            x1 + wide, y1);
+		        }
+		        if(state == OO) 
+		        {
+		            g.drawOval(x1, y1, 
+		            x1 + wide/2, y1 + high/2);
+		        }
+		   }
+		   class ML extends MouseAdapter 
+		   {
+		        public void mousePressed(MouseEvent e) 
+		        {
+		            if(state == BLANK) 
+		            {
+			            state = turn;
+			            turn = (turn == XX ? OO : XX);
+		            } 
+		            else
+			            state = (state == XX ? OO : XX);
+		            repaint();
+		        }
+	           }
+	    }
+	}
+	class BL implements ActionListener 
+	{
+	    public void actionPerformed(ActionEvent e) 
+	    {
+	        JDialog d = new ToeDialog(Integer.parseInt(rows.getText()),
+	                Integer.parseInt(cols.getText()));
+	        d.setVisible(true);
+	    }
+	}
+	public void init() 
+	{
+	    JPanel p = new JPanel();
+	    p.setLayout(new GridLayout(2,2));
+	    p.add(new JLabel("Rows", JLabel.CENTER));
+	    p.add(rows);
+	    p.add(new JLabel("Columns", JLabel.CENTER));
+	    p.add(cols);
+	    Container cp = getContentPane();
+	    cp.add(p, BorderLayout.NORTH);
+	    JButton b = new JButton("go");
+	    b.addActionListener(new BL());
+	    cp.add(b, BorderLayout.SOUTH);
+	}
+}
+
+
+//------------------------------------------------
+//: c13:FileChooserTest.java
+// Demonstration of File dialog boxes.
+import javax.swing.*;
+import java.awt.*;
+import java.awt.event.*;
+public class FileChooserTest extends JFrame 
+{
+    JTextField 
+	    filename = new JTextField(),
+	    dir = new JTextField();
+    JButton 
+	    open = new JButton("Open"),
+	    save = new JButton("Save");
+    public FileChooserTest() 
+    {
+	    JPanel p = new JPanel();
+	    open.addActionListener(new OpenL());
+	    p.add(open);
+	    save.addActionListener(new SaveL());
+	    p.add(save);
+	    Container cp = getContentPane();
+	    cp.add(p, BorderLayout.SOUTH);
+	    dir.setEditable(false);
+	    filename.setEditable(false);
+	    p = new JPanel();
+	    p.setLayout(new GridLayout(2,1));
+	    p.add(filename);
+	    p.add(dir);
+	    cp.add(p, BorderLayout.NORTH);
+    }
+    class OpenL implements ActionListener {
+	    public void actionPerformed(ActionEvent e) {
+	        JFileChooser c = new JFileChooser();
+	        // Demonstrate "Open" dialog:
+	        int rVal = c.showOpenDialog(FileChooserTest.this);
+	        if(rVal == JFileChooser.APPROVE_OPTION) 
+	        {
+	        filename.setText(c.getSelectedFile().getName());
+	            dir.setText(c.getCurrentDirectory().toString());
+	        }
+	        if(rVal == JFileChooser.CANCEL_OPTION) 
+	        {
+		        filename.setText("You pressed cancel");
+		        dir.setText("");
+	        }
+	    }
+    }
+    class SaveL implements ActionListener 
+    {
+	    public void actionPerformed(ActionEvent e) 
+	    {
+	        JFileChooser c = new JFileChooser();
+	        // Demonstrate "Save" dialog:
+	        int rVal = c.showSaveDialog(FileChooserTest.this);
+	        if(rVal == JFileChooser.APPROVE_OPTION) 
+	        {
+		        filename.setText(c.getSelectedFile().getName());
+		            dir.setText(c.getCurrentDirectory().toString());
+	        }
+	        if(rVal == JFileChooser.CANCEL_OPTION) 
+	        {
+		        filename.setText("You pressed cancel");
+		        dir.setText("");
+	        }
+	    }
+    }
+    public static void main(String[] args) {
+    	FileChooserTest fs = new FileChooserTest() ;
+    	fs.setBounds(250, 110, 300, 300);
+    	fs.setVisible(true) ;
+    }
+} 
+
+
+//------------------------------------------------
+//: c13:HTMLButton.java
+// Putting HTML text on Swing components.
+// <applet code=HTMLButton width=200 height=500>
+// </applet>
+import javax.swing.*;
+import java.awt.event.*;
+import java.awt.*;
+public class HTMLButton extends JApplet 
+{
+    JButton b = new JButton("<html><b><font size=+2>" + "<center>Hello!<br><i>Press me now!");
+    public void init() 
+    {
+	    b.addActionListener(new ActionListener() {
+	        public void actionPerformed(ActionEvent e){
+	        getContentPane().add(new JLabel("<html>"+
+	            "<i><font size=+4>Kapow!"));
+	        // Force a re-layout to
+	        // include the new label:
+	        validate();
+	        }
+	    });
+	    Container cp = getContentPane();
+	    cp.setLayout(new FlowLayout());
+	    cp.add(b);
+    }
+} 
+
+
+//------------------------------------------------
+//: c13:Progress.java
+// Using progress bars and sliders.
+// <applet code=Progress
+//    width=300 height=200></applet>
+import javax.swing.*;
+import java.awt.*;
+import java.awt.event.*;
+import javax.swing.event.*;
+import javax.swing.border.*;
+public class Progress extends JApplet 
+{
+    JProgressBar pb = new JProgressBar();
+    JSlider sb = new JSlider(JSlider.HORIZONTAL, 0, 100, 60);
+    public void init() 
+    {
+	    Container cp = getContentPane();
+	    cp.setLayout(new GridLayout(2,1));
+	    cp.add(pb);
+	    sb.setValue(0);
+	    sb.setPaintTicks(true);
+	    sb.setMajorTickSpacing(20);
+	    sb.setMinorTickSpacing(5);
+	    sb.setBorder(new TitledBorder("Slide Me"));
+	    pb.setModel(sb.getModel()); // Share model
+	    cp.add(sb);
+    }
+} 
+
+
+//------------------------------------------------
+//: c13:Trees.java
+// Simple Swing tree example. Trees can 
+// be made vastly more complex than this.
+// <applet code=Trees
+//    width=250 height=250></applet>
+import javax.swing.*;
+import java.awt.*;
+import java.awt.event.*;
+import javax.swing.tree.*;
+// Takes an array of Strings and makes the first
+// element a node and the rest leaves:
+class Branch 
+{
+    DefaultMutableTreeNode r;
+    public Branch(String[] data) 
+    {
+	    r = new DefaultMutableTreeNode(data[0]);
+	    for(int i = 1; i < data.length; i++)
+	        r.add(new DefaultMutableTreeNode(data[i]));
+    }
+    public DefaultMutableTreeNode node() 
+    {
+	    return r; 
+    }
+}    
+public class Trees extends JApplet 
+{
+    String[][] data = {
+	    { "Colors", "Red", "Blue", "Green" },
+	    { "Flavors", "Tart", "Sweet", "Bland" },
+	    { "Length", "Short", "Medium", "Long" },
+	    { "Volume", "High", "Medium", "Low" },
+	    { "Temperature", "High", "Medium", "Low" },
+	    { "Intensity", "High", "Medium", "Low" },
+    };
+    static int i = 0;
+    DefaultMutableTreeNode root, child, chosen;
+    JTree tree;
+    DefaultTreeModel model;
+    public void init() 
+    {
+	    Container cp = getContentPane();
+	    root = new DefaultMutableTreeNode("root");
+	    tree = new JTree(root);
+	    // Add it and make it take care of scrolling:
+	    cp.add(new JScrollPane(tree), 
+	        BorderLayout.CENTER);
+	    // Capture the tree's model:
+	    model =(DefaultTreeModel)tree.getModel();
+	    JButton test = new JButton("Press me");
+	    test.addActionListener(new ActionListener() {
+	        public void actionPerformed(ActionEvent e){
+		        if(i < data.length) 
+		        {
+		            child = new Branch(data[i++]).node();
+		            // What's the last one you clicked?
+		            chosen = (DefaultMutableTreeNode)
+		            tree.getLastSelectedPathComponent();
+		            if(chosen == null) chosen = root;
+		            // The model will create the 
+		            // appropriate event. In response, the
+		            // tree will update itself:
+		            model.insertNodeInto(child, chosen, 0);
+		            // This puts the new node on the 
+		            // currently chosen node.
+		        }
+	        }
+	    });
+	    // Change the button's colors:
+	    test.setBackground(Color.blue);
+	    test.setForeground(Color.white);
+	    JPanel p = new JPanel();
+	    p.add(test);
+	    cp.add(p, BorderLayout.SOUTH);
+    }
+} 
+
+
+//------------------------------------------------
+//: c13:Table.java
+// Simple demonstration of JTable.
+// <applet code=Table
+//    width=350 height=200></applet>
+import javax.swing.*;
+import java.awt.*;
+import java.awt.event.*;
+import javax.swing.table.*;
+import javax.swing.event.*;
+public class Table extends JApplet 
+{
+    JTextArea txt = new JTextArea(4, 20);
+    // The TableModel controls all the data:
+    class DataModel extends AbstractTableModel 
+    {
+	    Object[][] data = {
+	        {"one", "two", "three", "four"},
+	        {"five", "six", "seven", "eight"},
+	        {"nine", "ten", "eleven", "twelve"},
+	    };
+	    // Prints data when table changes:
+	    class TML implements TableModelListener 
+	    {
+	        public void tableChanged(TableModelEvent e)
+	        {
+		        txt.setText(""); // Clear it
+		        for(int i = 0; i < data.length; i++) 
+		        {
+		            for(int j = 0; j < data[0].length; j++)
+			            txt.append(data[i][j] + " ");
+		            txt.append("\n");
+		        }
+	        }
+	    }
+	    public DataModel() 
+	    {
+	        addTableModelListener(new TML());
+	    }
+	    public int getColumnCount() 
+	    { 
+	        return data[0].length; 
+	    }
+	    public int getRowCount() 
+	    { 
+	        return data.length;
+	    }
+	    public Object getValueAt(int row, int col) 
+	    {
+	        return data[row][col]; 
+	    }
+	    public void setValueAt(Object val, int row, int col) 
+	    {
+	        data[row][col] = val;
+	        // Indicate the change has happened:
+	        fireTableDataChanged();
+	    }
+	    public boolean isCellEditable(int row, int col) 
+	    { 
+	        return true; 
+	    }
+    }
+    public void init() 
+    {
+	    Container cp = getContentPane();
+	    JTable table = new JTable(new DataModel());
+	    cp.add(new JScrollPane(table));
+	    cp.add(BorderLayout.SOUTH, txt);
+    }
+}
+
+
+//------------------------------------------------
+//: c13:CutAndPaste.java
+// Using the clipboard.
+import javax.swing.*;
+import java.awt.*;
+import java.awt.event.*;
+import java.awt.datatransfer.*;
+public class CutAndPaste extends JFrame    
+{
+    JMenuBar mb = new JMenuBar();
+    JMenu edit = new JMenu("Edit");
+    JMenuItem
+    cut = new JMenuItem("Cut"),
+    copy = new JMenuItem("Copy"),
+    paste = new JMenuItem("Paste");
+    JTextArea text = new JTextArea(20, 20);
+    Clipboard clipbd = getToolkit().getSystemClipboard();
+    public CutAndPaste()    
+    {
+	    cut.addActionListener(new CutL());
+	    copy.addActionListener(new CopyL());
+	    paste.addActionListener(new PasteL());
+	    edit.add(cut);
+	    edit.add(copy);
+	    edit.add(paste);
+	    mb.add(edit);
+	    setJMenuBar(mb);
+	    getContentPane().add(text);
+    }
+    class CopyL implements ActionListener {
+	    public void actionPerformed(ActionEvent e) {
+	        String selection = text.getSelectedText();
+	        if (selection == null)
+	        return;
+	        StringSelection clipString =
+	        new StringSelection(selection);
+	        clipbd.setContents(clipString,clipString);
+	    }
+    }
+    class CutL implements ActionListener {
+	    public void actionPerformed(ActionEvent e) {
+	        String selection = text.getSelectedText();
+	        if (selection == null)
+	        return;
+	        StringSelection clipString =
+	        new StringSelection(selection);
+	        clipbd.setContents(clipString, clipString);
+	        text.replaceRange("",
+	        text.getSelectionStart(),
+	        text.getSelectionEnd());
+	    }
+    }
+    class PasteL implements ActionListener {
+	    public void actionPerformed(ActionEvent e) {
+	        Transferable clipData =
+	        clipbd.getContents(CutAndPaste.this);
+	        try {
+	        String clipString =
+	            (String)clipData.
+	            getTransferData(
+	                DataFlavor.stringFlavor);
+	        text.replaceRange(clipString,
+	            text.getSelectionStart(),
+	            text.getSelectionEnd());
+	        } catch(Exception ex) {
+	        System.err.println("Not String flavor");
+	        }
+	    }
+    }
+    public static void main(String[] args) 
+    {
+    	CutAndPaste cap = new CutAndPaste() ;
+    	cap.setBounds(200, 200,  300, 200);
+    	cap.setVisible(true) ;
+    }
+} 
+
+
+//------------------------------------------------
+//: c13:DynamicEvents.java
+// You can change event behavior dynamically.
+// Also shows multiple actions for an event.
+// <applet code=DynamicEvents
+//    width=250 height=400></applet>
+import javax.swing.*;
+import java.awt.*;
+import java.awt.event.*;
+import java.util.*;
+public class DynamicEvents extends JApplet 
+{
+    ArrayList v = new ArrayList();
+    int i = 0;
+    JButton
+    b1 = new JButton("Button1"),
+    b2 = new JButton("Button2");
+    JTextArea txt = new JTextArea();
+    class B implements ActionListener 
+    {
+	    public void actionPerformed(ActionEvent e) {
+	        txt.append("A button was pressed\n");
+	    }
+    }
+    class CountListener implements ActionListener 
+    {
+	    int index;
+	    public CountListener(int i) { index = i; }
+	    public void actionPerformed(ActionEvent e) {
+	        txt.append("Counted Listener "+index+"\n");
+	    }
+    }
+    class B1 implements ActionListener 
+    {
+	    public void actionPerformed(ActionEvent e) {
+	        txt.append("Button 1 pressed\n");
+	        ActionListener a = new CountListener(i++);
+	        v.add(a);
+	        b2.addActionListener(a);
+	    }
+    }
+    class B2 implements ActionListener 
+    {
+	    public void actionPerformed(ActionEvent e) {
+	        txt.append("Button2 pressed\n");
+	        int end = v.size() - 1;
+	        if(end >= 0) {
+	        b2.removeActionListener(
+	            (ActionListener)v.get(end));
+	        v.remove(end);
+	        }
+	    }
+    }
+    public void init() 
+    {
+	    Container cp = getContentPane();
+	    b1.addActionListener(new B());
+	    b1.addActionListener(new B1());
+	    b2.addActionListener(new B());
+	    b2.addActionListener(new B2());
+	    JPanel p = new JPanel();
+	    p.add(b1);
+	    p.add(b2);
+	    cp.add(BorderLayout.NORTH, p);
+	    cp.add(new JScrollPane(txt));
+    }
+} 
+
+

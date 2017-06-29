@@ -1,0 +1,476 @@
+	
+
+
+============================================================================================
+
+             Programming Java2 Vol.7
+
+============================================================================================
+
+	Learn More About Java2 Professional Tutrial
+
+			Chapter 1 変数とオブジェクト
+			Chapter 2 お約束とコメント
+			Chapter 3 メソッドと基本制御
+			Chapter 4 コンストラクタと初期化
+			Chapter 5 クラスの再利用
+			Chapter 6 継承
+			Chapter 7 ポリモフィズム
+			Chapter 8 インターフェイスとインナークラス
+			Chapter 9 コレクション
+			Chapter10 エラーハンドリング
+			Chapter11 ファイル入出力
+			Chapter12 Creating Windows AWT
+			Chapter13 Creating Windows Swing
+		  Chapter14 Multiple Threads
+			Chapter15 ネットワーク
+			Chapter16 アルゴリズムとデータ構造
+
+
+///////////////////////////////////////////////////////////////////////////////////////////
+//// 	Chapter 14: Multiple Threads
+
+
+//------------------------------------------------
+//: c14:SimpleThread.java
+// Very simple Threading example.
+
+public class SimpleThread extends Thread {
+    private int countDown = 5;
+    private static int threadCount = 0;
+    private int threadNumber = ++threadCount;
+    public SimpleThread() {
+    System.out.println("Making " + threadNumber);
+    }
+    public void run() {
+    while(true) {
+        System.out.println("Thread " + 
+        threadNumber + "(" + countDown + ")");
+        if(--countDown == 0) return;
+    }
+    }
+    public static void main(String[] args) {
+    for(int i = 0; i < 5; i++)
+        new SimpleThread().start();
+    System.out.println("All Threads Started");
+    }
+} 
+
+/**
+Making 1
+Making 2
+Making 3
+Making 4
+Making 5
+Thread 1(5)
+Thread 1(4)
+Thread 1(3)
+Thread 1(2)
+Thread 2(5)
+Thread 2(4)
+Thread 2(3)
+Thread 2(2)
+Thread 2(1)
+Thread 1(1)
+All Threads Started
+Thread 3(5)
+Thread 4(5)
+Thread 4(4)
+Thread 4(3)
+Thread 4(2)
+Thread 4(1)
+Thread 5(5)
+Thread 5(4)
+Thread 5(3)
+Thread 5(2)
+Thread 5(1)
+Thread 3(4)
+Thread 3(3)
+Thread 3(2)
+Thread 3(1)
+*/
+
+
+//------------------------------------------------
+//: c14:Counter.java
+// A responsive user interface with threads.
+// <applet code=Counter width=300 height=100>
+// </applet>
+import javax.swing.*;
+import java.awt.*;
+import java.awt.event.*;
+public class Counter extends JApplet 
+{
+    private class SeparateSubTask extends Thread 
+    {
+	    private int count = 0;
+	    private boolean runFlag = true;
+	    SeparateSubTask() { start(); }
+	    void invertFlag() { runFlag = !runFlag; }
+	    public void run() 
+	    {
+	        while (true) 
+	        {
+	         try {
+	        	sleep(100);
+	        } catch(InterruptedException e) {
+		        System.err.println("Interrupted");
+	        }
+	         if(runFlag) 
+		         t.setText(Integer.toString(count++));
+	        }
+	    }
+    } 
+    private SeparateSubTask sp = null;
+    private JTextField t = new JTextField(10);
+    private JButton 
+    start = new JButton("Start"),
+    onOff = new JButton("Toggle");
+    class StartL implements ActionListener {
+	    public void actionPerformed(ActionEvent e) {
+	        if(sp == null)
+	        sp = new SeparateSubTask();
+	    }
+    }
+    class OnOffL implements ActionListener {
+	    public void actionPerformed(ActionEvent e) {
+	        if(sp != null)
+	        sp.invertFlag();
+	    }
+    }
+    public void init() 
+    {
+	    Container cp = getContentPane();
+	    cp.setLayout(new FlowLayout());
+	    cp.add(t);
+	    start.addActionListener(new StartL());
+	    cp.add(start);
+	    onOff.addActionListener(new OnOffL());
+	    cp.add(onOff);
+    }
+
+} 
+
+
+//------------------------------------------------
+//: c14:Counter2.java
+// Using the Runnable interface to turn the 
+// main class into a thread.
+// <applet code=Counter2 width=300 height=100>
+// </applet>
+import javax.swing.*;
+import java.awt.*;
+import java.awt.event.*;
+public class Counter2 extends JApplet implements Runnable 
+{
+    private int count = 0;
+    private boolean runFlag = true;
+    private Thread selfThread = null;
+    private JButton 
+    start = new JButton("Start"),
+    onOff = new JButton("Toggle");
+    private JTextField t = new JTextField(10);
+    public void run() 
+    {
+	    while (true) 
+	    {
+	        try {
+	    	    selfThread.sleep(100);
+	        } catch(InterruptedException e) {
+	        	System.err.println("Interrupted");
+	        }
+	        if(runFlag) 
+		        t.setText(Integer.toString(count++));
+	    }
+    }
+    class StartL implements ActionListener {
+	    public void actionPerformed(ActionEvent e) {
+	        if(selfThread == null) 
+	        {
+		        selfThread = new Thread(Counter3.this);
+		        selfThread.start();
+	        }
+	    }
+    }
+    class OnOffL implements ActionListener {
+	    public void actionPerformed(ActionEvent e) {
+	        runFlag = !runFlag;
+	    }
+    }
+    public void init() 
+    {
+	    Container cp = getContentPane();
+	    cp.setLayout(new FlowLayout());
+	    cp.add(t);
+	    start.addActionListener(new StartL());
+	    cp.add(start);
+	    onOff.addActionListener(new OnOffL());
+	    cp.add(onOff);
+    }
+} 
+
+
+//------------------------------------------------
+//: c14:Counter4.java
+// By keeping your thread as a distinct class,
+// you can have as many threads as you want. 
+// <applet code=Counter4 width=200 height=600>
+// <param name=size value="12"></applet>
+import javax.swing.*;
+import java.awt.*;
+import java.awt.event.*;
+public class Counter4 extends JApplet 
+{
+    private JButton start = new JButton("Start");
+    private boolean started = false;
+    private Ticker[] s;
+    private int size = 12;
+    class Ticker extends Thread 
+    {
+	    private JButton b = new JButton("Toggle");
+	    private JTextField t = new JTextField(10);
+	    private int count = 0;
+	    private boolean runFlag = true;
+	    public Ticker() 
+	    {
+	        b.addActionListener(new ToggleL());
+	        JPanel p = new JPanel();
+	        p.add(t);
+	        p.add(b);
+	        // Calls JApplet.getContentPane().add():
+	        getContentPane().add(p); 
+	    }
+	    class ToggleL implements ActionListener {
+	        public void actionPerformed(ActionEvent e) {
+	        runFlag = !runFlag;
+	        }
+	    }
+	    public void run() 
+	    {
+	        while (true) 
+	        {
+		        if (runFlag)
+		            t.setText(Integer.toString(count++));
+		        try {
+		            sleep(100);
+		        } catch(InterruptedException e) {
+		            System.err.println("Interrupted");
+		        }
+	        }
+	    }
+    }
+    class StartL implements ActionListener {
+	    public void actionPerformed(ActionEvent e) {
+	        if(!started) 
+	        {
+	        	started = true;
+		        for (int i = 0; i < s.length; i++)
+		            s[i].start();
+	        }
+	    }
+    }
+    public void init() 
+    {
+	    Container cp = getContentPane();
+	    cp.setLayout(new FlowLayout());
+	    // Get parameter "size" from Web page:
+	        String sz = getParameter("size");
+	        if(sz != null)
+		        size = Integer.parseInt(sz);
+	    s = new Ticker[size];
+	    for (int i = 0; i < s.length; i++)
+	        s[i] = new Ticker();
+	    start.addActionListener(new StartL());
+	    cp.add(start);
+    }
+}
+
+
+//------------------------------------------------
+//: c14:Daemons.java
+// Daemonic behavior.
+import java.io.*;
+class Daemon extends Thread 
+{
+    private static final int SIZE = 10;
+    private Thread[] t = new Thread[SIZE];
+    public Daemon() 
+    { 
+	    setDaemon(true);
+	    start();
+    }
+    public void run() 
+    {
+	    for(int i = 0; i < SIZE; i++)
+	        t[i] = new DaemonSpawn(i);
+	    for(int i = 0; i < SIZE; i++)
+	        System.out.println("t[" + i + "].isDaemon() = " + t[i].isDaemon());
+	    while(true) 
+	        yield();
+    }
+}
+class DaemonSpawn extends Thread 
+{
+    public DaemonSpawn(int i) 
+    {
+	    System.out.println("DaemonSpawn " + i + " started");
+	    start();
+    }
+    public void run() 
+    {
+	    while(true) 
+	        yield();
+    }
+}
+public class Daemons 
+{
+    public static void main(String[] args) throws IOException 
+    {
+	    Thread d = new Daemon();
+	    System.out.println("d.isDaemon() = " + d.isDaemon());
+	    System.out.println("Press any key");
+	    System.in.read();
+    }
+} 
+
+/**
+d.isDaemon() = true
+Press any key
+DaemonSpawn 0 started
+DaemonSpawn 1 started
+DaemonSpawn 2 started
+DaemonSpawn 3 started
+DaemonSpawn 4 started
+DaemonSpawn 5 started
+DaemonSpawn 6 started
+DaemonSpawn 7 started
+DaemonSpawn 8 started
+DaemonSpawn 9 started
+t[0].isDaemon() = true
+t[1].isDaemon() = true
+t[2].isDaemon() = true
+t[3].isDaemon() = true
+t[4].isDaemon() = true
+t[5].isDaemon() = true
+t[6].isDaemon() = true
+t[7].isDaemon() = true
+t[8].isDaemon() = true
+t[9].isDaemon() = true
+*/
+
+
+//------------------------------------------------
+//: c14:Interrupt.java
+// The alternative approach to using 
+// stop() when a thread is blocked.
+// <applet code=Interrupt width=200 height=100>
+// </applet>
+import javax.swing.*;
+import java.awt.*;
+import java.awt.event.*;
+class Blocked extends Thread 
+{
+    public synchronized void run() 
+    {
+	    try {
+	        wait(); // Blocks
+	    } catch(InterruptedException e) {
+	        System.err.println("Interrupted");
+	    }
+	    System.out.println("Exiting run()");
+    }
+}
+public class Interrupt extends JApplet 
+{
+    private JButton 
+    interrupt = new JButton("Interrupt");
+    private Blocked blocked = new Blocked();
+    public void init() 
+    {
+	    Container cp = getContentPane();
+	    cp.setLayout(new FlowLayout());
+	    cp.add(interrupt);
+	    interrupt.addActionListener(new ActionListener() {
+	        public void actionPerformed(ActionEvent e) {
+	            System.out.println("Button pressed");
+	            if(blocked == null) return;
+	            Thread remove = blocked;
+	            blocked = null; // to release it
+	            remove.interrupt();
+	        }
+	    });
+	    blocked.start();
+    }
+} 
+
+
+//------------------------------------------------
+//: c14:Suspend.java
+// The alternative approach to using suspend()
+// and resume(), which are deprecated in Java 2.
+// <applet code=Suspend width=300 height=100>
+// </applet>
+import javax.swing.*;
+import java.awt.*;
+import java.awt.event.*;
+public class Suspend extends JApplet 
+{
+    private JTextField t = new JTextField(10);
+    private JButton 
+    suspend = new JButton("Suspend"),
+    resume = new JButton("Resume");
+    private Suspendable ss = new Suspendable();
+    class Suspendable extends Thread 
+    {
+	    private int count = 0;
+	    private boolean suspended = false;
+	    public Suspendable() { start(); }
+	    public void fauxSuspend()
+	    { 
+	        suspended = true;
+	    }
+	    public synchronized void fauxResume() {
+	        suspended = false;
+	        notify();
+	    }
+	    public void run() 
+	    {
+	        while (true) 
+	        {
+		        try {
+		            sleep(100);
+		            synchronized(this) 
+		            {
+			            while(suspended)
+			                wait();
+		            }
+		        } catch(InterruptedException e) {
+		            System.err.println("Interrupted");
+		        }
+		        t.setText(Integer.toString(count++));
+	        }
+	    }
+    }
+    public void init() 
+    {
+	    Container cp = getContentPane();
+	    cp.setLayout(new FlowLayout());
+	    cp.add(t);
+	    suspend.addActionListener(new ActionListener() 
+	    {
+	        public void actionPerformed(ActionEvent e) {
+	            ss.fauxSuspend();
+	        }
+	    });
+	    cp.add(suspend);
+	    resume.addActionListener(new ActionListener() {
+	        public void actionPerformed(ActionEvent e) {
+	            ss.fauxResume();
+	        }
+	    });
+	    cp.add(resume);
+    }
+}
+
+
+

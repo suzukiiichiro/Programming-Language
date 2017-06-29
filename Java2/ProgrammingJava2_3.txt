@@ -1,0 +1,1008 @@
+	
+
+
+============================================================================================
+
+             Programming Java2 Vol.3
+
+============================================================================================
+
+	Learn More About Java2 Professional Tutrial
+
+			Chapter 1 変数とオブジェクト
+			Chapter 2 お約束とコメント
+			Chapter 3 メソッドと基本制御
+			Chapter 4 コンストラクタと初期化
+			Chapter 5 クラスの再利用
+			Chapter 6 継承
+			Chapter 7 ポリモフィズム
+      Chapter 8 インターフェイスとインナークラス
+      Chapter 9 コレクション
+      Chapter10 エラーハンドリング
+			Chapter11 ファイル入出力
+			Chapter12 Creating Windows AWT
+			Chapter13 Creating Windows Swing
+			Chapter14 Multiple Threads
+			Chapter15 ネットワーク
+			Chapter16 アルゴリズムとデータ構造
+
+
+
+///////////////////////////////////////////////////////////////////////////////////////////
+//// 	Chapter 8: インターフェイスとインナークラス
+
+//: c08:Adventure.java
+// インターフェイスのimplements
+
+import java.util.*;
+
+interface CanFight 
+{
+    void fight();
+}
+interface CanSwim 
+{
+    void swim();
+}
+interface CanFly 
+{
+    void fly();
+}
+class ActionCharacter 
+{
+    public void fight() {}
+}
+class Hero extends ActionCharacter implements CanFight, CanSwim, CanFly 
+{
+    public void swim() {}
+    public void fly() {}
+}
+public class Adventure 
+{
+    static void t(CanFight x) 
+    { 
+	    x.fight(); 
+    }
+    static void u(CanSwim x) 
+    { 
+	    x.swim(); 
+    }
+    static void v(CanFly x) 
+    { 
+	    x.fly(); 
+    }
+    static void w(ActionCharacter x) 
+    { 
+   	    x.fight(); 
+    }
+    public static void main(String[] args) 
+    {
+	    Hero h = new Hero();
+	    t(h); // Treat it as a CanFight
+	    u(h); // Treat it as a CanSwim
+	    v(h); // Treat it as a CanFly
+	    w(h); // Treat it as an ActionCharacter
+    }
+}
+
+
+//------------------------------------------------
+//: c08:HorrorShow.java
+// インターフェイスの継承とimplements
+
+interface Monster 
+{
+    void menace();
+}
+interface DangerousMonster extends Monster 
+{
+    void destroy();
+}
+class DragonZilla implements DangerousMonster 
+{
+    public void menace() {}
+    public void destroy() {}
+}
+interface Lethal 
+{
+    void kill();
+}
+interface Vampire extends DangerousMonster, Lethal 
+{
+    void drinkBlood();
+}
+class HorrorShow 
+{
+    static void u(Monster b) 
+    {
+	 b.menace(); 
+    }
+    static void v(DangerousMonster d) 
+    {
+	    d.menace();
+	    d.destroy();
+    }
+    public static void main(String[] args) 
+    {
+	    DragonZilla if2 = new DragonZilla();
+	    u(if2);
+	    v(if2);
+    }
+} 
+
+
+//------------------------------------------------
+//: c08:RandVals.java インターフェイスの使い方
+import java.util.*;
+
+interface RandVals 
+{
+    int rint = (int)(Math.random() * 10);
+    long rlong = (long)(Math.random() * 10);
+    float rfloat = (float)(Math.random() * 10);
+    double rdouble = Math.random() * 10;
+} 
+
+//: c08:TestRandVals.java
+public class TestRandVals 
+{
+    public static void main(String[] args) 
+    {
+	    System.out.println(RandVals.rint);
+	    System.out.println(RandVals.rlong);
+	    System.out.println(RandVals.rfloat);
+	    System.out.println(RandVals.rdouble);
+    }
+} 
+
+/**
+ * 8
+ * 7
+ * 6.237678
+ * 1.3951962033539977
+ */
+
+
+//------------------------------------------------
+//: c08:Parcel1.java インナークラス
+
+public class Parcel1 
+{
+    class Destination 
+    {
+	    private String label;
+	    Destination(String whereTo) 
+	    {
+	        label = whereTo;
+	    }
+	    String readLabel() 
+	    {
+		 return label; 
+	    }
+    }
+    public void ship(String dest) 
+    {
+	    Destination d = new Destination(dest);
+	    System.out.println(d.readLabel());
+    }    
+    public static void main(String[] args) 
+    {
+	    Parcel1 p = new Parcel1();
+	    p.ship("Tanzania");
+    }
+} 
+
+/**
+ * Tanzania
+ */
+
+
+//------------------------------------------------
+//: c08:Parcel2.java　    return new
+
+public class Parcel2 
+{
+    public Destination to(String s) 
+    {
+	    return new Destination(s);
+    }
+    class Destination 
+    {
+	    private String label;
+	    Destination(String whereTo) 
+	    {
+	        label = whereTo;
+	    }
+	    String readLabel() { return label; }
+    }
+    public void ship(String dest) 
+    {
+	    Contents c = cont();
+	    Destination d = to(dest);
+	    System.out.println(d.readLabel());
+    }    
+    public static void main(String[] args) 
+    {
+	    Parcel2 p = new Parcel2();
+	    p.ship("Tanzania");
+    }
+} 
+
+/**
+ * Tanzania
+ */
+
+
+//------------------------------------------------
+//: c08:Parcel5.java
+// Nesting a class within a scope.
+
+public class Parcel5 {
+    private void internalTracking(boolean b) 
+    {
+	    if(b) 
+	    {
+	        TrackingSlip ts = new TrackingSlip("slip");
+	        String s = ts.getSlip(); // slip
+			class TrackingSlip 
+	        {
+		        private String id;
+		        TrackingSlip(String s) 
+		        {
+		            id = s;
+		        }
+		        String getSlip() 
+		        {
+				 return id; 
+				}
+	        }
+	    }
+    }
+    public void track() 
+    {
+	 internalTracking(true); 
+    }
+    public static void main(String[] args) 
+    {
+	    Parcel5 p = new Parcel5();
+	    p.track();
+    }
+} 
+
+
+//------------------------------------------------
+//: c08:MultiNestingAccess.java ネスト
+
+class MNA 
+{
+    private void f() {}
+    class A 
+    {
+	    private void g() {}
+	    public class B 
+	    {
+	        void h() 
+	        {
+		        g();
+		        f();
+	        }
+	    }
+    }
+}
+
+public class MultiNestingAccess 
+{
+    public static void main(String[] args) 
+    {
+	    MNA mna = new MNA();
+	    MNA.A mnaa = mna.new A();
+	    MNA.A.B mnaab = mnaa.new B();
+	    mnaab.h();
+    }
+} 
+
+
+//------------------------------------------------
+//: c08:InheritInner.java　インナークラスの継承
+
+class WithInner 
+{
+    class Inner {}
+}
+
+public class InheritInner extends WithInner.Inner 
+{
+    //! InheritInner() {} // Won't compile
+    InheritInner(WithInner wi) 
+    {
+    	wi.super();
+    }
+    public static void main(String[] args) 
+    {
+	    WithInner wi = new WithInner();
+	    InheritInner ii = new InheritInner(wi);
+    }
+} 
+
+
+//------------------------------------------------
+//: c08:BigEgg.java インナークラス実行順序
+
+class Egg 
+{
+    private Yolk y;
+    public Egg() 
+    {
+	    System.out.println("New Egg()");
+	    y = new Yolk();
+    }
+    protected class Yolk 
+    {
+	    public Yolk() 
+	    {
+	        System.out.println("Egg.Yolk()");
+	    }
+    }
+}
+
+public class BigEgg extends Egg 
+{
+    public class Yolk 
+    {
+	    public Yolk() 
+	    {
+	        System.out.println("BigEgg.Yolk()");
+	    }
+    }
+    public static void main(String[] args) 
+    {
+	    new BigEgg();
+    }
+} 
+
+/**
+ * New Egg()
+ * Egg.Yolk()
+ */
+
+ 
+
+
+///////////////////////////////////////////////////////////////////////////////////////////
+//// 	Chapter 9: コレクション
+
+//------------------------------------------------
+
+//: c09:PrintingContainers.java     fill() ;
+
+import java.util.*;
+
+public class PrintingContainers 
+{
+    static Collection fill(Collection c) 
+    {
+	    c.add("dog");
+	    c.add("dog");
+	    c.add("cat");
+	    return c;
+    }
+    static Map fill(Map m) 
+    {
+	    m.put("dog", "Bosco");
+	    m.put("dog", "Spot");
+	    m.put("cat", "Rags");
+	    return m;
+    }
+    public static void main(String[] args) 
+    {
+	    System.out.println(fill(new ArrayList()));
+	    System.out.println(fill(new HashSet()));
+	    System.out.println(fill(new HashMap()));
+    }
+} 
+
+/**
+ * [dog, dog, cat]
+ * [cat, dog]
+ * {cat=Rags, dog=Spot}
+ */
+
+
+//------------------------------------------------
+//: c09:FillingLists.java       fill() ;
+
+import java.util.*;
+
+public class FillingLists 
+{
+    public static void main(String[] args) 
+    {
+	    List list = new ArrayList();
+	    for(int i = 0; i < 10; i++)
+	    {
+	        list.add("");
+	    }
+	    Collections.fill(list, "Hello");
+	    System.out.println(list);
+    }
+} 
+
+/**
+ * [Hello, Hello, Hello, Hello, Hello, Hello, Hello, Hello, Hello, Hello]
+ */
+
+//------------------------------------------------
+//: c09:CatsAndDogs.java コンテナ
+
+import java.util.*;
+
+class Cat 
+{
+    private int catNumber;
+    Cat(int i) 
+    {
+	 catNumber = i; 
+    }
+    void print() 
+    {
+    	System.out.println("Cat #" + catNumber);
+    }
+} 
+class Dog 
+{
+    private int dogNumber;
+    Dog(int i) 
+    { 
+    	dogNumber = i; 
+    }
+    void print() 
+    {
+    	System.out.println("Dog #" + dogNumber);
+    }
+}
+public class CatsAndDogs 
+{
+    public static void main(String[] args) 
+    {
+	    ArrayList cats = new ArrayList();
+	    for(int i = 0; i < 7; i++)
+	    {
+	        cats.add(new Cat(i));
+	    }
+	    // Not a problem to add a dog to cats:
+	    cats.add(new Dog(7));
+	    for(int i = 0; i < cats.size(); i++)
+	    {
+	        ((Cat)cats.get(i)).print();
+	    }
+	    // Dog is detected only at run-time
+    }
+} 
+
+/**
+ * Cat #0
+ * Cat #1
+ * Cat #2
+ * Cat #3
+ * Cat #4
+ * Cat #5
+ * Cat #6
+ */
+
+
+//------------------------------------------------
+//: c09:WorksAnyway.java toString()の使い方
+
+import java.util.*;
+class Mouse 
+{
+    private int mouseNumber;
+    Mouse(int i) 
+    { 
+    	mouseNumber = i; 
+    }
+    // Override Object.toString():
+    public String toString() 
+    {
+	    return "This is Mouse #" + mouseNumber;
+    }
+    public int getNumber() 
+    {
+    	return mouseNumber;
+    }
+} 
+class MouseTrap 
+{
+    static void caughtYa(Object m) 
+    {
+	    Mouse mouse = (Mouse)m; // Cast from Object
+	    System.out.println("Mouse: " + mouse.getNumber());
+    }
+}
+public class WorksAnyway 
+{
+    public static void main(String[] args) 
+    {
+	    ArrayList mice = new ArrayList();
+	    for(int i = 0; i < 3; i++)
+	    {
+	        mice.add(new Mouse(i));
+	    }
+	    for(int i = 0; i < mice.size(); i++) 
+	    {
+	        // No cast necessary, automatic 
+	        // call to Object.toString():
+	        System.out.println("Free mouse: " + mice.get(i));
+	        MouseTrap.caughtYa(mice.get(i));
+	    }
+    }
+} 
+
+/**
+ * Free mouse: This is Mouse #0
+ * Mouse: 0
+ * Free mouse: This is Mouse #1
+ * Mouse: 1
+ * Free mouse: This is Mouse #2
+ * Mouse: 2
+ */
+
+
+//------------------------------------------------
+//: c09:HamsterMaze.java　イテレータの使い方
+
+import java.util.*;
+
+class Hamster 
+{
+    private int hamsterNumber;
+    Hamster(int i) 
+    {
+	 hamsterNumber = i; 
+    }
+    public String toString() 
+    {
+    	return "This is Hamster #" + hamsterNumber;
+    }
+}
+class Printer 
+{
+    static void printAll(Iterator e) 
+    {
+    	while(e.hasNext())
+    	{
+	        System.out.println(e.next());
+		}
+    }
+}
+public class HamsterMaze 
+{
+    public static void main(String[] args) 
+    {
+	    ArrayList v = new ArrayList();
+	    for(int i = 0; i < 3; i++)
+	    {
+	        v.add(new Hamster(i));
+	    }
+	    Printer.printAll(v.iterator());
+    }
+} 
+
+/**
+ * This is Hamster #0
+ * This is Hamster #1
+ * This is Hamster #2
+ */
+
+
+//------------------------------------------------
+//: c09:Queue.java キュー
+
+import java.util.*;
+
+public class Queue 
+{
+    private LinkedList list = new LinkedList();
+    public void put(Object v) 
+    {
+	 list.addFirst(v); 
+    }
+    public Object get() 
+    { 
+    	return list.removeLast(); 
+    }
+    public boolean isEmpty() 
+    { 
+    	return list.isEmpty(); 
+    }
+    public static void main(String[] args) 
+    {
+	    Queue queue = new Queue();
+	    for(int i = 0; i < 10; i++)
+	    {
+	        queue.put(Integer.toString(i));
+	    }
+	    while(!queue.isEmpty())
+	    {
+	        System.out.println(queue.get());
+	    }
+    }
+}
+
+/**
+ * 0
+ * 1
+ * 2
+ * 3
+ * 4
+ * 5
+ * 6
+ * 7
+ * 8
+ * 9
+ */
+
+
+//------------------------------------------------
+//: c09:Stacks.java スタック
+
+import java.util.*;
+
+public class Stacks 
+{
+    static String[] months = { 
+	    "January", "February", "March", "April",
+	    "May", "June", "July", "August", "September",
+	    "October", "November", "December" };
+    public static void main(String[] args) 
+    {
+	    Stack stk = new Stack();
+	    for(int i = 0; i < months.length; i++)
+	    {
+	        stk.push(months[i] + " ");
+	    }
+	    System.out.println("stk = " + stk);
+	    // Treating a stack as a Vector:
+	    stk.addElement("The last line");
+	    System.out.println( "element 5 = " + stk.elementAt(5));
+	    System.out.println("popping elements:");
+	    while(!stk.empty())
+	    {
+	        System.out.println(stk.pop());
+	    }
+    }
+} 
+
+/* stk = [January , February , March , April , May , June , July , August , September ,
+ October , November , December ]
+ * element 5 = June
+ * popping elements:
+ * The last line
+ * December
+ * November
+ * October
+ * September
+ * August
+ * July
+ * June
+ * May
+ * April
+ * March
+ * February
+ * January
+*/
+
+
+
+///////////////////////////////////////////////////////////////////////////////////////////
+//// 	Chapter 10: エラーハンドリング
+
+
+//: c10:SimpleExceptionDemo.java
+// throws 
+
+class SimpleException extends Exception {} 
+
+public class SimpleExceptionDemo 
+{
+    public void f() throws SimpleException 
+	{
+		System.out.println( "Throwing SimpleException from f()");
+	    throw new SimpleException ();
+    }
+    public static void main(String[] args) 
+	{
+		SimpleExceptionDemo sed = new SimpleExceptionDemo();
+		try 
+		{
+		    sed.f();
+		}
+		catch(SimpleException e) 
+		{
+		    System.err.println("Caught it!");
+		}
+    }
+} 
+
+/* Throwing SimpleException from f()
+ * Caught it!
+ */
+
+
+//------------------------------------------------
+//: c10:FullConstructors.java
+// StackTrace 
+
+class MyException extends Exception 
+{
+    public MyException() {}
+    public MyException(String msg) 
+	{
+		super(msg);
+    }
+}
+public class FullConstructors 
+{
+    public static void f() throws MyException 
+	{
+		System.out.println("Throwing MyException from f()");
+		throw new MyException();
+    }
+    public static void g() throws MyException 
+	{
+		System.out.println("Throwing MyException from g()");
+	    throw new MyException("Originated in g()");
+    }
+    public static void main(String[] args) 
+	{
+		try 
+		{
+		    f();
+		}
+		catch(MyException e) 
+		{
+		    e.printStackTrace(System.err);
+		}
+		try 
+		{
+		    g();
+		}
+		catch(MyException e) 
+		{
+		    e.printStackTrace(System.err);
+		}
+    }
+} 
+
+/*
+ * Throwing MyException from f()
+ * MyException
+ *         at hoe.f(hoe.java:14)
+ *         at hoe.main(hoe.java:25)
+ * Throwing MyException from g()
+ * MyException: Originated in g()
+ *         at hoe.g(hoe.java:19)
+ *         at hoe.main(hoe.java:33)
+*/
+
+
+//------------------------------------------------
+//: c10:ExceptionMethods.java
+
+public class ExceptionMethods 
+{
+    public static void main(String[] args) 
+	{
+		try 
+		{
+		    throw new Exception("Here's my Exception");
+		}
+		catch(Exception e) 
+		{
+		    System.err.println("Caught Exception");
+		    System.err.println("e.getMessage(): " + e.getMessage());
+		    System.err.println("e.getLocalizedMessage(): " + e.getLocalizedMessage());
+		    System.err.println("e.toString(): " + e);
+		    System.err.println("e.printStackTrace():");
+		    e.printStackTrace(System.err);
+		}
+    }
+} 
+
+/*
+ * Caught Exception
+ * e.getMessage(): Here's my Exception
+ * e.getLocalizedMessage(): Here's my Exception
+ * e.toString(): java.lang.Exception: Here's my Exception
+ * e.printStackTrace():
+ * java.lang.Exception: Here's my Exception
+ *         at hoe.main(hoe.java:7)
+ */
+
+
+//------------------------------------------------
+//: c10:Rethrowing.java
+
+public class Rethrowing 
+{
+    public static void f() throws Exception 
+	{
+		System.out.println("originating the exception in f()");
+	    throw new Exception("thrown from f()");
+    }
+    public static void g() throws Throwable 
+	{
+		try 
+		{
+		    f();
+		}
+		catch(Exception e) 
+		{
+		    System.err.println("Inside g(), e.printStackTrace()");
+		    e.printStackTrace(System.err);
+		    throw e;
+		}
+    }
+    public static void main(String[] args) throws Throwable 
+	{
+		try 
+		{
+		    g();
+		}
+		catch(Exception e) 
+		{
+		    System.err.println("Caught in main, e.printStackTrace()");
+		    e.printStackTrace(System.err);
+		}
+    }
+} 
+
+/*
+ * originating the exception in f()
+ * Inside g(), e.printStackTrace()
+ * java.lang.Exception: thrown from f()
+ *         at hoe.f(hoe.java:6)
+ *         at hoe.g(hoe.java:12)
+ *         at hoe.main(hoe.java:26)
+ * Caught in main, e.printStackTrace()
+ * java.lang.Exception: thrown from f()
+ *         at hoe.f(hoe.java:6)
+ *         at hoe.g(hoe.java:12)
+ *         at hoe.main(hoe.java:26)
+ */
+
+
+//------------------------------------------------
+//: c10:ThrowOut.java
+public class ThrowOut 
+{
+    public static void main(String[] args) throws Throwable 
+	{
+		try 
+		{
+		    throw new Throwable(); 
+		}
+		catch(Exception e) 
+		{
+		    System.err.println("Caught in main()");
+		}
+    }
+} 
+
+
+//------------------------------------------------
+//: c10:RethrowNew.java
+// Rethrow a different object 
+// from the one that was caught.
+
+class OneException extends Exception 
+{
+    public OneException(String s) { super(s); }
+}
+class TwoException extends Exception 
+{
+    public TwoException(String s) { super(s); }
+}
+public class RethrowNew 
+{
+    public static void f() throws OneException 
+	{
+		System.out.println("originating the exception in f()");
+		throw new OneException("thrown from f()");
+    }
+    public static void main(String[] args) throws TwoException 
+	{
+		try 
+		{
+		    f();
+		}
+		catch(OneException e) 
+		{
+		    System.err.println("Caught in main, e.printStackTrace()");
+		    e.printStackTrace(System.err);
+		    throw new TwoException("from main()");
+		}
+    }
+} 
+
+/*
+ * originating the exception in f()
+ * Caught in main, e.printStackTrace()
+ * OneException: thrown from f()
+ *         at hoe.f(hoe.java:14)
+ *         at hoe.main(hoe.java:20)
+ * Exception in thread "main" TwoException: from main()
+ *         at hoe.main(hoe.java:26)
+ */
+
+
+//------------------------------------------------
+//: c10:FinallyWorks.java finally
+
+class ThreeException extends Exception {}
+
+public class FinallyWorks 
+{
+    static int count = 0;
+    public static void main(String[] args) 
+	{
+		while(true) 
+		{
+		    try 
+			{
+				// Post-increment is zero first time:
+				if(count++ == 0)
+				    throw new ThreeException();
+				System.out.println("No exception");
+		    }
+			catch(ThreeException e) 
+			{
+				System.err.println("ThreeException");
+		    }
+			finally 
+			{
+				System.err.println("In finally clause");
+				if(count == 2)
+					break; // out of "while"
+		    }
+		}
+    }
+} 
+
+/**
+ * ThreeException
+ * In finally clause
+ * No exception
+ * In finally clause
+ */
+
+
+//------------------------------------------------
+//: c10:Human.java
+
+class Annoyance extends Exception {}
+class Sneeze extends Annoyance {}
+public class Human 
+{
+    public static void main(String[] args) 
+	{
+		try 
+		{
+		    throw new Sneeze();
+		}
+		catch(Sneeze s) 
+		{
+		    System.err.println("Caught Sneeze");
+		}
+		catch(Annoyance a) 
+		{
+		    System.err.println("Caught Annoyance");
+		}
+    }
+} 
+
+/**
+ * Caught Sneeze
+ */
+
+

@@ -1,0 +1,1715 @@
+	
+
+================================================================================
+
+	Programming Java TCP/IP Programming
+
+================================================================================
+
+
+
+Java 基本編
+	1. Hello.java 		ただ単に出力するだけのプログラム
+	2. Testargs.java	コマンドへの引数を画面に表示します
+	3. Readwrite.java	キーボードからの入力を受け取りそのまま画面に出力
+	4. Readfile.java 	ファイルの内容を読みとりそのまま画面出力する
+
+Javaによるネットワーク基礎
+	5. Netclock.java	時刻を答えるだけのサーバープログラム
+	6. Readnet.java		サーバーへ接続してデータを受け取り画面出力するクライアントプログラム
+
+JavaによるTelnetクライアント作成
+	7. Telnet.java 		指定されたアドレスのポートに標準入出力Telnet接続します
+
+JavaによるFTPクライアント作成
+	8. Ftp.java		FTPサーバーと接続してFTPに基づくファイル転送を行います。
+
+Javaによる電子メールクライアント作成
+	9.MMGui.java		電子メールクライアントGUI部分
+	  MailManager.java	電子メールクライアントSMTP, POP3関連部分
+	  jet.cf		設定ファイル
+
+Javaによるチャットクライアントとチャットサーバーの作成
+	10.Chat.java		マルチキャスト版　チャットサーバーの必要のないチャットプログラム
+
+
+
+
+
+////////////////////////////////////////////////////////////////////////////////////////////////////
+// Hello.java ただ単に出力するだけのプログラム
+// コンパイルjavac Hello.java[Enter]
+// 使い方　java Hello[Enter]
+import java.io.* ;// I/Oに必要
+public class Hello//ﾌｧｲﾙ名と同じ名前のpublic class名
+{
+	public static void main(String[] args) //mainから実行される
+	{
+		System.out.println("Hello, world!") ;//出力
+	}
+}
+
+
+////////////////////////////////////////////////////////////////////////////////////////////////////
+// Readwrite.java キーボードからの入力を受け取りそのまま画面に出力
+// 使い方　java Readwrite
+// 終了は　Ctrl+c
+import java.io.* ;//I/Oの為
+public class Readwrite
+{
+	public static void main(String[] args) 
+	{
+		byte[] buff = new byte[1024] ;//配列の定義
+		while(true) //無限に繰り返す
+		{
+			try 
+			{
+				int n = System.in.read(buff) ;//System.inからの読み込み
+				System.out.write(buff, 0, n) ;//System.outへの書き出し
+			}
+			catch(Exception e)//エラーの時に実行される
+			{
+				System.exit(1) ;//システム終了
+			}
+		}
+	}
+}
+
+
+////////////////////////////////////////////////////////////////////////////////////////////////////
+// Testargs.java コマンドへの引数を画面に表示します
+// 使い方　java Testargs 文字列　文字列
+import java.io.* ;// I/Oの為
+public class Testargs
+{
+	public static void main(String[] args)
+	{
+		int number = 0 ; 
+		while(number < args.length)//引数の数を調べるargs.length
+		{
+			System.out.println(args[number]) ;
+			++number ;
+		}
+	}
+}
+
+
+////////////////////////////////////////////////////////////////////////////////////////////////////
+// Writefile.java 画面に出力と同時にファイルへデータを格納します
+// プログラムの終了はピリオド.を入力
+// 使い方　java Writefile [ファイル名]
+import java.io.* ;//I/Oの為
+public class Writefile
+{
+	public static void main(String[] args)
+	{
+		byte[] buff = new byte[1024] ;//配列の定義
+		boolean cont = true ;//ループ制御用変数
+		FileOutputStream outfile = null ;//ファイル出力用オブジェクト
+		try
+		{
+			outfile = new FileOutputStream(args[0]) ;
+		}
+		catch(FileNotFoundException e)//オブジェクト作成失敗
+		{
+			System.err.println("File Not Found Error : " + e) ;
+			System.exit(1) ;
+		}
+		while(cont) //trueの限り繰り返す
+		{
+			try
+			{
+				int n = System.in.read(buff) ;//System.inからの読み込み
+				System.out.write(buff, 0, n) ;//System.outへの書き出し
+				if(buff[0] == '.') //.だったら
+				{
+					cont = false ;//falseにする
+				}
+				else
+				{
+					outfile.write(buff, 0, n) ;//.でなければ出力する
+				}
+			}
+			catch(Exception e) //エラーがあれば・・
+			{
+				System.out.println("Excepton Error : " + e) ;
+				System.exit(1) ;
+			}
+		}
+		try
+		{
+			outfile.close() ;//ファイルを閉じる
+		}
+		catch(IOException e)//ファイルを閉じることが出来なかったら
+		{
+			System.err.println("File I/O Error : " + e) ;
+			System.exit(1) ;
+		}
+	}
+}
+
+
+////////////////////////////////////////////////////////////////////////////////////////////////////
+// Readfile.java ファイルの内容を読みとりそのまま画面出力する
+// 使い方　java Readfile ファイル名
+import java.io.* ;// I/Oの為
+public class Readfile
+{
+	public static void main(String[] args)
+	{
+		byte[] buff = new byte[1024] ;// 配列の定義
+		boolean cont = true ;// ループ制御用変数
+		FileInputStream infile = null ;//ファイル読み取り用オブジェクト
+		try
+		{
+			infile = new FileInputStream(args[0]) ;
+		}
+		catch(FileNotFoundException e) // オブジェクト作成失敗
+		{
+			System.err.println("FileNotFouneError : " + e) ;
+			System.exit(1) ;
+		}
+		while(cont)
+		{
+			try
+			{
+				int n = infile.read(buff) ;//ファイルからの読み取り
+				System.out.write(buff, 0, n) ;//ファイルへの書き出し
+			}
+			catch(Exception e)
+			{
+				cont = false ;// 読み出し終了時に変数をfalseにする
+			}
+		}
+		try
+		{
+			infile.close() ;//ファイルを閉じる
+		}
+		catch(IOException e) //ファイルのクローズ時のエラー
+		{
+			System.err.println("File I/O Error : " + e) ;
+			System.exit(1) ;
+		}
+	}
+}
+
+
+////////////////////////////////////////////////////////////////////////////////////////////////////
+// Netclock.java 時刻を答えるだけのサーバー　下のクライアントとセットで動作させる
+// ポート番号6000番で動作します。動作停止はCtrl+c
+// 使い方：java Netclock
+
+import java.io.* ;
+import java.net.* ;
+import java.util.* ;
+public class Netclock
+{
+	public static void main(String[] args)
+	{
+		ServerSocket servsock = null ;// サーバーソケット
+		Socket sock ;//ソケット読み書き用オブジェクト
+		OutputStream out ; //出力ストリーム
+		String outstr ;//出力データを格納する文字列
+		Date d ;//日付時刻処理用オブジェクト
+		try 
+		{
+			servsock = new ServerSocket(6000, 300) ;
+			while(true)
+			{
+				sock = servsock.accept() ;
+				d = new Date() ;
+				outstr = "\n"
+				+ "Hello, this is Netclock server."
+				+ "\n" + d.toString() + "\n"
+				+ "Thank you." + "\n" ;// 出力データの作成
+				out = sock.getOutputStream() ;
+				for(int i = 0 ; i < outstr.length() ;++i) // データの出力
+				{
+					out.write( (int)outstr.charAt(i)) ;
+				}
+				out.write('\n') ;
+				sock.close() ;// 接続終了
+			}
+		}
+		catch(IOException e) 
+		{
+			System.out.println("IOExeption Error! : " + e) ;
+			System.exit(1) ;
+		}
+	}
+}
+
+
+////////////////////////////////////////////////////////////////////////////////////////////////////
+// Readnet.java ネットワーク上のサーバーからデータを受け取りそのまま画面に出力するクライアント
+// 使い方：java Readnet DNSname ポート番号 　例：java Readnet 192.168.0.1 6000
+
+import java.io.* ;
+import java.net.* ;
+public class Readnet
+{
+	public static void main(String[] args)
+	{
+		byte[] buff = new byte[1024] ;// 配列の定義
+		Socket readsocket = null ;// サーバー接続用ソケット
+		InputStream instr = null ;// データ読み取り用オブジェクト
+		boolean cont = true ;
+		try // 指定のポートに対してソケットを作成します。
+		{
+			readsocket = new Socket(args[0], Integer.parseInt(args[1])) ;
+			instr = readsocket.getInputStream() ;
+		}
+		catch(Exception e)
+		{
+			System.err.println("Exception error : " + e) ;
+			System.exit(1) ;
+		}
+		while(cont)
+		{
+			try
+			{
+				int n = instr.read(buff) ;// 読み込み
+				System.out.write(buff, 0, n) ;// 書き出し
+			}
+			catch(Exception e) 
+			{
+				cont =false ;//読み出し終了時にループを終了
+			}
+		}
+		try
+		{
+			instr.close() ;//コネクションを閉じる
+		}
+		catch(Exception e)// ネットワーククローズ失敗
+		{
+			System.err.println("Exception Error " + e) ;
+			System.exit(1) ;
+		}
+	}
+}
+
+
+////////////////////////////////////////////////////////////////////////////////////////////////////
+// Telnet.java 指定されたアドレスのポートに標準入出力を接続します
+// ポートが23番の場合ネゴシエーションを行います。
+// 使い方：java Telnet サーバーアドレス　ポート番号　例：java Telnet 192.168.0.1 23
+// 使い方：java Telnet サーバーアドレス　ポート番号　例：java Telnet ux02.so-net.ne.jp
+// ポート番号を省略すると23番を仮定します　終了はCtrl+c
+
+import java.net.* ;
+import java.io.* ;
+// Telnetクラス　
+// Telnetクラスはネットワーク接続の管理を行います。
+public class Telnet
+{
+	public Socket serverSocket ;//接続用ソケット
+	public OutputStream serverOutput ;// ネットワーク出力用ストリーム
+	public BufferedInputStream serverInput ;//ネットワーク入力用ストリーム
+	public String host ;// 接続用サーバーアドレス
+	public int port ; // 接続先サーバーポート番号
+	static final int DEFAULT_TELNET_PORT = 23 ;//telnetのポート番号23番
+	
+	// コンストラクタアドレスとポートの指定がある場合
+	public Telnet(String host, int port)
+	{
+		this.host = host ;
+		this.port = port ;
+	}
+	//コンストラクタアドレスのみ指定の場合
+	public Telnet(String host)
+	{
+		this(host, DEFAULT_TELNET_PORT) ;
+	}
+	// openConnectionメソッド
+	// アドレスとポート番号からソケットを作りストリームを作成ます。
+	public void openConnection()
+	{
+		try
+		{
+			serverSocket = new Socket(host, port) ;
+			serverOutput = serverSocket.getOutputStream() ;
+			serverInput = new BufferedInputStream(serverSocket.getInputStream()) ;
+			if(port == DEFAULT_TELNET_PORT)
+			{
+				negotiation(serverInput, serverOutput) ;
+			}
+		}
+		catch(UnknownHostException e)
+		{
+			System.err.println("UnknownHostException Error : " + e) ;
+			System.exit(1) ;
+		}
+		catch(IOException e)
+		{
+			System.err.println("IOException Error : " + e) ;
+			System.exit(1) ;
+		}
+	}
+	// main_procメソッド
+	// ネットワークとのやりとりをするスレッドをスタート
+	public void main_proc() throws IOException
+	{
+		try // スレッド用クラスStreamConnectorのオブジェクトを生成
+		{
+			StreamConnector stdin_to_socket = new StreamConnector(System.in, serverOutput) ;
+			StreamConnector socket_to_stdout = new StreamConnector(serverInput, System.out) ;
+			Thread input_thread = new Thread(stdin_to_socket) ;// スレッドを生成
+			Thread output_thread = new Thread(socket_to_stdout) ;
+			input_thread.start() ;// スレッドを起動
+			output_thread.start() ;
+		}
+		catch(Exception e) 
+		{
+			System.err.print(e) ;
+			System.exit(1) ;
+		}
+	}
+	//ネゴシエーションに用いるコマンドの定義
+	static final byte IAC  = (byte) 255 ;
+	static final byte DONT = (byte) 254 ;
+	static final byte DO   = (byte) 253 ;
+	static final byte WONT = (byte) 252 ;
+	static final byte WILL = (byte) 251 ;
+	// negotiationメソッド
+	// NVTによる通信をネゴシエートします
+	static void negotiation(BufferedInputStream in, OutputStream out) throws IOException
+	{
+		byte[] buff = new byte[3] ;// コマンド受信用配列
+		while(true) 
+		{
+			in.mark(buff.length) ;
+			if(in.available() >= buff.length) 
+			{
+				in.read(buff) ;
+				if(buff[0] != IAC)//ネゴシエーション終了
+				{
+					in.reset() ;
+					return ;
+				}
+				else if(buff[1] == DO)//DOコマンドに対しては
+				{
+					buff[1] = WONT ;// WON'Tで返答
+					out.write(buff) ;
+				}
+			}
+		}
+	}
+	// mainメソッド
+	// TCPコネクションを開いて処理を開始します。
+	public static void main(String[] arg)
+	{
+		try 
+		{
+			Telnet t = null ;
+			switch(arg.length)
+			{
+				case 1 : // サーバーアドレスのみの指定
+					t = new Telnet(arg[0]) ;
+					break ;
+				case 2 : // アドレスとポートの指定
+					t = new Telnet(arg[0], Integer.parseInt(arg[1])) ;
+					break ;
+				default ://使い方が間違っている場合
+					System.out.println("usage:java Telnet<host name> {<port number>}") ;
+					return ;
+			}
+			t.openConnection() ;
+			t.main_proc() ;
+		}
+		catch(Exception e) 
+		{
+			e.printStackTrace() ;
+			System.exit(1) ;
+		}
+	}
+}
+// StreamConnectorクラス
+// ストリームを受け取り両者を結合してデータを受け渡します。
+// スレッドを構成するためのクラス
+class StreamConnector implements Runnable 
+{
+	InputStream src = null ;
+	OutputStream dist = null ;
+	//　コンストラクタ 入出力ストリームを受け取ります。
+	public StreamConnector (InputStream in, OutputStream out)
+	{
+		src = in ;
+		dist = out ;
+	}
+	// 処理の本体 ストリームの読み書きを無限に繰り返します。
+	public void run()
+	{
+		byte[] buff = new byte[1024] ;
+		while(true)
+		{
+			try 
+			{
+				int n = src.read(buff) ;
+				if(n > 0)
+				{
+					dist.write(buff, 0, n) ;
+				}
+			}
+			catch(Exception e)
+			{
+				e.printStackTrace() ;
+				System.err.print("StreamConnector Error : " + e) ;
+				System.exit(1) ;
+			}
+		}
+	}
+}
+
+
+////////////////////////////////////////////////////////////////////////////////////////////////////
+// Ftp.java	ftpプログラム
+// このプログラムはftpサーバーと接続してファイル転送をします。
+// 使い方：java Ftp サーバーアドレス　例：java Ftp ftp4.broadband.co.jp
+
+import java.net.* ;// I/Oの為
+import java.io.* ;
+
+public class Ftp
+{
+	Socket ctrlSocket ;//制御用ソケット
+	public PrintWriter ctrlOutput ;// 制御出力用ストリーム
+	public BufferedReader ctrlInput ;// 制御入力用ストリーム
+	
+	final int CTRLPORT = 21 ;// FTPの制御用ポート
+	//-----------------------------------------------------------------------------------------
+	public void openConnection(String host) throws IOException, UnknownHostException
+	{//アドレスとポート番号からソケットを作り制御用ストリームを作成します。
+		ctrlSocket = new Socket(host, CTRLPORT) ;
+		ctrlOutput = new PrintWriter(ctrlSocket.getOutputStream()) ;
+		ctrlInput = new BufferedReader(new InputStreamReader(ctrlSocket.getInputStream())) ;
+	}
+	//-----------------------------------------------------------------------------------------
+	public void closeConnection() throws IOException
+	{// 制御用のソケットを閉じます。
+		ctrlSocket.close();
+	}
+	//-----------------------------------------------------------------------------------------
+	public void showMenu()
+	{//FTPのコマンドメニューを出力します。
+		System.out.println(">Command?") ;
+		System.out.print("2 ls") ;
+		System.out.print("  3 cd") ;
+		System.out.print("  4 get") ;
+		System.out.print("  5 put") ;
+		System.out.print("  6 ascii") ;
+		System.out.print("  7 binary") ;
+		System.out.print("  9 quit") ;
+	}
+	//-----------------------------------------------------------------------------------------
+	public String getCommand()
+	{//利用者の指定したコマンド番号を読みとります。
+		String buf = "" ;
+		BufferedReader Lineread = new BufferedReader(new InputStreamReader(System.in)) ;
+		
+		while(buf.length() != 1)
+		{// 文字の入力を受け取るまで繰り返す
+			try
+			{
+				buf = Lineread.readLine() ;
+			}
+			catch(Exception e)
+			{
+				e.printStackTrace() ;
+				System.exit(1) ;
+			}
+		}
+		return(buf) ;
+	}
+	//-----------------------------------------------------------------------------------------
+	public void doLogin()
+	{//FTPサーバーにログインします。
+		String loginName = "" ;
+		String password = "" ;
+		BufferedReader Lineread = new BufferedReader(new InputStreamReader(System.in)) ;
+		try
+		{
+			System.out.println("ログイン名を入力してください") ;
+			loginName = Lineread.readLine() ;
+			ctrlOutput.println("USER " + loginName) ;
+			ctrlOutput.flush() ;
+			System.out.println("パスワードを入力してください") ;
+			password = Lineread.readLine() ;
+			ctrlOutput.println("PASS " + password) ;
+			ctrlOutput.flush() ;
+		}
+		catch(Exception e)
+		{
+			e.printStackTrace() ;
+			System.exit(1) ;
+		}
+	}
+	//-----------------------------------------------------------------------------------------
+	public void doQuit()
+	{//FTPサーバーからログアウトします。
+		try
+		{//QUITコマンドの送信
+			ctrlOutput.println("QUIT ") ;
+			ctrlOutput.flush() ;
+		}
+		catch(Exception e)
+		{
+			e.printStackTrace() ;
+			System.exit(1) ;
+		}
+	}
+	//-----------------------------------------------------------------------------------------
+	public void doCd()
+	{//ディレクトリを変更します。
+		String dirName = "" ;
+		BufferedReader Lineread = new BufferedReader(new InputStreamReader(System.in)) ;
+		try
+		{
+			System.out.println("ディレクトリ名を入力してください") ;dirName = Lineread.readLine() ;
+			ctrlOutput.println("CWD " + dirName) ;//CWDコマンド
+			ctrlOutput.flush() ;
+		}
+		catch(Exception e)
+		{
+			e.printStackTrace() ;
+			System.exit(1) ;
+		}
+	}
+	
+	//-----------------------------------------------------------------------------------------
+	public void doLs()
+	{// ディレクトリ情報を取得します。
+		try
+		{
+			int n ;
+			byte[] buff = new byte[1024] ;
+			Socket dataSocket = dataConnection("LIST") ;// データコネクションを作成します
+			// データ読みとりようストリームを用意
+			BufferedInputStream dataInput = new BufferedInputStream(dataSocket.getInputStream()) ;
+			while((n = dataInput.read(buff)) > 0 ) 
+			{// ディレクトリ情報を読みとります。
+				System.out.write(buff, 0, n) ;
+			}
+			dataSocket.close() ;
+		}
+		catch(Exception e)
+		{
+			e.printStackTrace() ;
+			System.exit(1) ;
+		}
+	}
+	
+	//-----------------------------------------------------------------------------------------
+	public Socket dataConnection(String ctrlcmd)
+	{// サーバーとのデータ交換用にソケットを作ります。またサーバーに対してportコマンドでポートを通知します。
+		String cmd = "PORT " ;// PORTコマンドで送るデータの格納用変数
+		int i ;
+		Socket dataSocket = null ;// データ転送用ソケット
+		try {
+			byte[] address = InetAddress.getLocalHost().getAddress() ;// 自分のアドレスの取得
+			// 適当なポート番号のサーバーソケットの作成
+			ServerSocket serverDataSocket = new ServerSocket(0, 1) ;
+			for(i = 0 ; i < 4 ; ++i) // PORTコマンド用の送信データを用意します
+			{
+				cmd = cmd + (address[i] & 0xff) + "," ;
+			}
+			cmd = cmd + (((serverDataSocket.getLocalPort()) /256) & 0xff)
+			+ ","
+			+ (serverDataSocket.getLocalPort() & 0xff) ;
+			ctrlOutput.println(cmd) ;// PORTコマンドを制御用ストリームを通して送ります。
+			ctrlOutput.flush() ;
+			ctrlOutput.println(ctrlcmd) ;//処理対象コマンド(LIST, RETR, STOR)をサーバーに送ります。
+			ctrlOutput.flush() ;
+			dataSocket = serverDataSocket.accept() ;// サーバーからの接続を受け付けます。
+			serverDataSocket.close() ;
+		}
+		catch(Exception e)
+		{
+			e.printStackTrace() ;
+			System.exit(1) ;
+		}
+		return dataSocket ;
+	}
+	//-----------------------------------------------------------------------------------------
+	public void doAscii()
+	{// テキスト転送モードにセット
+		try
+		{
+			ctrlOutput.println("TYPE A") ;
+			ctrlOutput.flush() ;
+		}
+		catch(Exception e)
+		{
+			e.printStackTrace() ;
+			System.exit(1) ;
+		}
+	}
+	//-----------------------------------------------------------------------------------------
+	public void doBinary()
+	{//バイナリ転送モードにセット
+		try
+		{
+			ctrlOutput.println("TYPE I") ;
+			ctrlOutput.flush() ;
+		}
+		catch(Exception e)
+		{
+			e.printStackTrace();
+			System.exit(1) ;
+		}
+	}
+	//-----------------------------------------------------------------------------------------
+	public void doGet()
+	{// サーバー上のファイルを取り込みます
+		String fileName = "" ;
+		BufferedReader Lineread = new BufferedReader(new InputStreamReader(System.in)) ;
+		try
+		{
+			int n ;
+			byte[] buff = new byte[1024] ;
+			System.out.println("ファイル名を入力してください") ;
+			fileName = Lineread.readLine() ;
+			FileOutputStream outfile = new FileOutputStream(fileName) ;// クライアント上に受信用ファイルを準備
+			Socket dataSocket = dataConnection ("RETR " + fileName) ;// ファイル転送用データストリームを作成
+			BufferedInputStream dataInput = new BufferedInputStream(dataSocket.getInputStream()) ;
+			while((n = dataInput.read(buff)) > 0) // サーバーからデータを受け取りファイルに格納
+			{
+				outfile.write(buff, 0, n) ;
+			}
+			dataSocket.close() ;
+			outfile.close() ;
+		}
+		catch(Exception e)
+		{
+			e.printStackTrace() ;
+			System.exit(1) ;
+		}
+	}
+
+	//-----------------------------------------------------------------------------------------
+	public void doPut()
+	{// サーバーへファイルを送ります。
+		String fileName = "" ;
+		BufferedReader Lineread = new BufferedReader(new InputStreamReader(System.in)) ;
+		try
+		{
+			int n ;
+			byte[] buff = new byte[1024] ;
+			FileInputStream sendfile = null ;
+			
+			System.out.println("ファイル名を入力してください") ;
+			fileName = Lineread.readLine() ;
+			try
+			{// クライアント上のファイルの読み出し準備を行います。
+				sendfile = new FileInputStream(fileName) ;
+			}
+			catch(Exception e)
+			{
+				System.out.println("ファイルがありません") ;
+				return ;
+			}
+			// 転送用データストリームを用意します。
+			Socket dataSocket = dataConnection("STRO " + fileName) ;
+			OutputStream outstr = dataSocket.getOutputStream() ;
+			while((n = sendfile.read(buff)) > 0 ) 
+			{// ファイルを読み出し、ネットワーク経由でサーバーに送ります。
+				outstr.write(buff, 0, n) ;
+			}
+			dataSocket.close() ;
+			sendfile.close() ;
+		}
+		catch(Exception e)
+		{
+			e.printStackTrace() ;
+			System.exit(1) ;
+		}
+	}
+	//-----------------------------------------------------------------------------------------
+	public boolean execCommand(String command)
+	{// コマンドに対応する各処理を呼び出します。
+		boolean cont = true ;
+		switch(Integer. parseInt(command))
+		{
+			case 2 : doLs() ; 	break ;// サーバーのディレクトリ表示処理
+			case 3 : doCd() ; 	break ;// サーバーの作業ディレクトリ変更処理
+			case 4 : doGet() ;	break ;// サーバーからのファイル取得処理
+			case 5 : doPut() ;	break ;// サーバーへのファイル転送処理
+			case 6 : doAscii() ;	break ;// テキスト転送モード
+			case 7 : doBinary () ;	break ;// バイナリ転送モード
+			case 9 : doQuit() ;	cont = false ;	break ;// 処理の終了
+			default : System.out.println("番号を選択して下さい") ;// それ以外
+		}
+		return (cont) ;
+	}
+	//-----------------------------------------------------------------------------------------
+	public void main_proc() throws IOException 
+	{// FTPのコマンドメニューを出力して各処理を呼び出します
+		boolean cont = true ;
+		try
+		{
+			doLogin() ;// ログイン処理
+			while(cont)
+			{
+				showMenu() ;// メニューを出力
+				cont = execCommand(getCommand()) ;// コマンドの受け取り
+			}
+		
+		}
+		catch(Exception e)
+		{
+			System.err.print(e) ;
+			System.exit(1) ;
+		}
+	}
+	//-----------------------------------------------------------------------------------------
+	public void getMsgs()
+	{// 制御ストリームの受信スレッドを開始します
+		try
+		{
+			CtrlListen listener = new CtrlListen(ctrlInput) ;
+			Thread listenerthread = new Thread(listener) ;
+			listenerthread.start() ;
+		}
+		catch(Exception e)
+		{
+			e.printStackTrace() ;
+			System.exit(1) ;
+		}
+	}
+	//-----------------------------------------------------------------------------------------
+	public static void main(String[] args)
+	{// TCPコネクションを開いて処理を開始します。
+		try
+		{
+			Ftp f = null ;
+			if(args.length< 1)
+			{
+				System.out.println("usage: java Ftp <host name>") ;
+				return ;
+			}
+			f = new Ftp() ;
+			f.openConnection(args[0]) ;
+			f.getMsgs() ;
+			f.main_proc() ;
+			f.closeConnection() ;
+			System.exit(0) ;
+		}
+		catch(Exception e)
+		{
+			e.printStackTrace() ;
+			System.exit(1) ;
+		}
+	}
+}
+	//-----------------------------------------------------------------------------------------
+class CtrlListen implements Runnable
+{
+	BufferedReader ctrlInput = null ;
+	public CtrlListen(BufferedReader in) // コンストラクタ　読み取り先の指定
+	{
+		ctrlInput = in ;
+	}
+	public void run()
+	{
+		while(true)
+		{
+			try
+			{	// ひたすら行を読み取り標準出力にコピーします
+				System.out.println(ctrlInput.readLine()) ;
+			}
+			catch(Exception e) 
+			{
+				e.printStackTrace() ;
+				System.exit(1) ;
+			}
+		}
+	}
+}
+
+
+////////////////////////////////////////////////////////////////////////////////////////////////////
+// MMGui.java	GUIメールクライアントプログラム
+// 使い方：java MMGui
+// MailManager.javaとセットでコンパイルして実行する必要があります。
+// 
+// 以下のファイルをjet.cfという名前で作成してください
+//----------------------------------------------------------
+username = 	userAccountを記入します
+password = 	userPasswordを記入します。
+popserver=	pop3 サーバー名を記入します。
+smtpserver=	smtpサーバー名を記入します。
+maildir =	jetmail
+keepmail = 	on
+code.net = 	JIS
+code.file = 	SJIS
+//----------------------------------------------------------
+import java.awt.* ;
+import java.awt.event.* ;
+import java.util.StringTokenizer ;
+
+public class MMGui {
+
+	static boolean debug = MailManager.debug ;
+	MailManager mm = null ;
+
+	/**
+	 * 無名クラスによるボタン処理の設定
+	 */
+	ActionListener listAction = new ActionListener() {
+		public void actionPerformed(ActionEvent ae) {
+			String cmd = ae.getActionCommand() ;
+			if(debug)
+				System.out.println("MMGui.listAction: " + cmd) ;
+			StringTokenizer st = new StringTokenizer(cmd) ;
+			readMail(Integer.parseInt(st.nextToken())) ;
+
+		}
+	};
+	/**
+	 * 無名クラスによるボタン処理の設定
+	 */
+	ActionListener buttonAction = new ActionListener() {
+		public void actionPerformed(ActionEvent ae) {
+			String cmd = ae.getActionCommand() ;
+			if(debug)
+				System.out.println("MMGui.buttonAction: " + cmd) ;
+			if("終　了".equalsIgnoreCase(cmd))
+			   System.exit(0) ;
+			else if ("受　信".equalsIgnoreCase(cmd)){
+					 mm.getmail() ;
+					list() ;
+			}
+			else if("送　信".equalsIgnoreCase(cmd))
+					sendMail() ;
+		}
+	};
+	TextArea message ;
+	List list ;
+	Frame f ;
+	/**
+	 * コンストラクタ　ウインドウなどの設定
+	 */
+	public MMGui() {
+		f = new Frame() ;
+		f.setSize(800, 600) ;
+		GridBagLayout layout = new GridBagLayout() ;
+		f.setLayout(layout) ;
+
+		Panel p = new Panel() ;
+		// Get Button
+		Button b = new Button("受　信") ;
+		b.addActionListener(buttonAction) ;
+		p.add(b) ;
+		// send Button
+		b = new Button("送　信") ;
+		b.addActionListener(buttonAction) ;
+		p.add(b) ;
+		// quit button
+		b = new Button("終　了") ;
+		b.addActionListener(buttonAction) ;
+		p.add(b) ;
+
+		GridBagConstraints c = new GridBagConstraints() ;
+		c.fill = GridBagConstraints.BOTH ;
+		c.gridwidth = GridBagConstraints.REMAINDER ;
+
+		layout.setConstraints(p, c) ;
+		f.add(p) ;
+
+		// メールリストエリアの表示
+		list = new List(10) ;
+		list.addActionListener(listAction) ;
+		layout.setConstraints(list, c) ;
+		f.add(list) ;
+
+		// メッセージエリアの表示
+		message = new TextArea(25, 100) ;
+		message.setEditable(false) ;
+		layout.setConstraints(message, c) ;
+		f.add(message) ;
+
+		f.show() ;
+		mm = new MailManager() ;
+	   list() ;
+	}
+	/**
+	 * List メソッド メールのリストを表示します
+	 */
+	void list() {
+		String[] mailList = mm.list() ;
+		list.removeAll() ;
+		for(int i = 0 ; i < mailList.length ; i++)
+			list.add(mailList[i]) ;
+	}
+	/**
+	 * readMailメソッド　メッセージを表示
+	 */
+	void readMail(int i) {
+		message.setText(mm.readMail(i)) ;
+	}
+	/**
+	 * sendMailメソッド　Editorクラスを使ってメールを送信
+	 */
+	void sendMail(){
+		new Editor() ;
+	}
+	/**
+	 * main メソッド
+	 */
+	public static void main(String[] arg) {
+		new MMGui() ;
+	}
+	/**
+	 * Editor クラス　メッセージを編集画面を提示し、メールとして送信します。
+	 */
+	class Editor {
+		Frame f ;
+		TextField subject ;
+		TextField to ;
+		TextArea message ;
+
+		/**
+		*  ボタン処理
+		*/
+		ActionListener editorAction = new ActionListener() {
+			public void actionPerformed(ActionEvent ae) {
+				String cmd = ae.getActionCommand() ;
+				if(debug)
+					System.out.println("MMGui.Editor.editorAction" + cmd) ;
+				if("OK".equalsIgnoreCase(cmd) ) {
+					mm.sendmail(to.getText(),
+								subject.getText(),
+								message.getText()) ;
+				}
+				f.dispose() ;
+			}
+		} ;
+	/**
+	 * コンストラクタ　メッセージウインドウを準備
+	 */
+		Editor() {
+			f = new Frame() ;
+			f.setSize(600, 400) ;
+
+			subject = new TextField(50) ;
+			 to = new TextField(50) ;
+			 message = new TextArea(15, 70) ;
+			 f.setLayout(new FlowLayout()) ;
+			 Panel p = new Panel() ;
+			 p.add(new Label("Subject: ")) ;
+			 p.add(subject) ;
+			 f.add(p) ;
+			 p = new Panel() ;
+			 p.add(new Label("To:"));
+			 p.add(to) ;
+			 f.add(p) ;
+			 f.add(message) ;
+			 Button b = new Button("OK") ;
+			 b.addActionListener(editorAction) ;
+			 f.add(b) ;
+			 b = new Button("CANCEL") ;
+			 b.addActionListener(editorAction) ;
+			 f.add(b) ;
+			 f.show() ;
+		}
+	}
+}
+
+
+/////////////////////////////////////////////////////////////////////////////////////
+// MailManager.java　メール送受信プログラムMMGui.java用 SMTP,POP3関連部分
+// MMGui.javaとセットでコンパイル、実行する必要があります。
+
+import java.util.* ;
+import java.io.* ;
+import java.net.* ;
+/**
+ * MailManagerクラス*****************************************************************
+ */
+public class MailManager {
+	// MailManager の機能を監視するdebug機能を使う場合には変数debugをtrueにセット
+	static boolean debug = true ;
+	Properties property ;
+	String home ;
+	String cf ;
+	File mailDir ;
+	String fsep ;
+	String username ;
+	String password ;
+	String fromString ;
+	String popServ ;
+	String smtpServ ;
+	boolean keepmail = false ;
+	String codeNet ;
+	String codeFile ;
+	int lastMail_NO = 0 ;
+	/**
+	 * コンストラクタ
+	 * サーバーの設定やユーザー名の設定などメールクライアントで必要となる
+	 * 各種の設定
+	 */
+	public MailManager() {
+		Properties prop = System.getProperties() ;
+		home = prop.getProperty("user.home") ;
+		fsep = prop.getProperty("file.separator") ;
+		// cf = home + fsep + "jet.cf" ;
+		cf = "jet.cf" ;
+		property = new Properties() ;
+		try {
+			property.load(new FileInputStream(cf)) ;
+		}
+		catch (FileNotFoundException ex) {
+			System.err.println("file not found: " + cf) ;
+			System.exit(1) ;
+		} 
+		catch(IOException ex) {
+			ex.printStackTrace() ;
+			System.exit(1) ;
+		}
+		username = property.getProperty("username") ;
+		password = property.getProperty("password") ;
+		popServ = property.getProperty("popserver") ;
+		fromString = property.getProperty("from") ;
+		if(fromString == null) {
+			fromString = username + ":" + popServ;
+		}
+		String dummy = property.getProperty("keepmail") ;
+		keepmail = ((dummy == null) ? false : (("off".equalsIgnoreCase(dummy)) ? false : true)) ;
+		codeNet = property.getProperty("code.net", "JIS") ;
+		codeFile = property.getProperty("code.file", "SJIS") ;
+		String propMailDir = property.getProperty("maildir") ;
+		mailDir = new File(propMailDir) ;
+		if(!mailDir.isAbsolute()) {
+		//	mailDir = new File(home + fsep + propMailDir) ;
+			mailDir = new File(propMailDir) ;
+		}
+		if(mailDir.exists()){
+			if(!mailDir.isDirectory()){
+				System.err.println("not a directory : " + mailDir.toString()) ;
+				System.exit(1) ;
+			}
+		} else {
+			System.err.println("not found mail directory : "
+							   + mailDir.toString()) ;
+			System.err.println("and create it.") ;
+			mailDir.mkdir() ;
+		}
+		String[] files = mailDir.list() ;
+		for(int i = 0 ; i < files.length ; i++) {
+			try {
+				int num = Integer.parseInt(files[i]) ;
+				if(lastMail_NO < num) {
+					lastMail_NO = num ;
+				}
+			}catch (NumberFormatException ex) {
+				;
+			}
+		}
+	}
+	/**
+	 * listメソッド
+	 * 受信済みのメール一覧を表示します
+	 */
+	public String[] list(){
+		Vector v = new Vector() ;
+		for(int i = 1 ; i<= lastMail_NO ; i++) {
+			try {
+				if(debug) {
+					System.out.println("MMllist: scanfile " + i ) ;
+				}
+				Mail mail = new Mail(i) ;
+				String space10 = "               " ;
+				String from = mail.from + space10 + space10 ;
+				from = from.substring(0, 20) ;
+				String subject = mail.subject + space10 + space10 + space10 + space10 ;
+				subject = subject.substring(0, 40) ;
+				String num = i + space10 ;
+				v.addElement(num.substring(0, 8) + "[" + from + "]" + subject) ;
+			} catch (FileNotFoundException ex) {
+			}
+		}
+		String[] res = new String[v.size()] ;
+		v.copyInto(res) ;
+		return res ;
+	}
+	/**
+	 * readMailメソッド
+	 * メッセージの本文を返します。
+	 */
+	public String readMail(int i) {
+		try {
+			Mail mail = new Mail(i) ;
+			return mail.message ;
+		}catch (FileNotFoundException ex) {
+			return null ;
+		}
+	}
+	/**
+	 * sendmailメソッド
+	 * SmtpClientオブジェクトを使ってメールを送信します。
+	 */
+	public void sendmail(String to, String subject, String message) {
+		SmtpClient smtp = new SmtpClient(smtpServ, codeNet) ;
+		String[] dummy = new String[1] ;
+		dummy[0] = to ;
+		smtp.sendmail(fromString, dummy, subject, message) ;
+	}
+	/**
+	 * getmailメソッド
+	 * popClientクラスのオブジェクトを使ってpopサーバからメールを受信します。
+	 */
+	public int getmail() {
+		int n = 0 ; 
+		PopClient pop = new PopClient(popServ, username, password, codeNet) ;
+		pop.login() ;
+		String res = pop.stat() ;
+		StringTokenizer st = new StringTokenizer(res) ;
+		if("+OK".equals(st.nextToken())){
+			n = Integer.parseInt(st.nextToken()) ;
+			for (int i = 0 ; i <= n ; i++) {
+				try {
+					new Mail(pop.retr(i)) ;
+					if(!keepmail) {
+						pop.dele(i) ;
+					}
+				}catch(IOException ex) {
+					ex.printStackTrace() ;
+					System.exit(1) ;
+				}
+			}
+		}
+		pop.quit() ;
+		return n  ;
+	}
+	/**
+	 * Mailクラス**************************************************************************
+	 * メール管理のための機能を提供します。
+	 */
+	public class Mail {
+		String message ;
+		String subject ;
+		String to ;
+		String from ;
+		String replyto ;
+		File file ;
+		/**
+		 * コンストラクタ
+		 * メッセージを引数としてMailクラスのオブジェクトを作成します。
+		 */
+		Mail(String msg) throws IOException{
+			message = msg ;
+			lastMail_NO++ ;
+			file = new File(mailDir.getPath() + fsep + lastMail_NO) ;
+			PrintWriter mail = new PrintWriter(new OutputStreamWriter (new FileOutputStream(file), codeFile)) ;
+			mail.print(msg) ;
+			mail.flush() ;
+			mail.close() ;
+			parse() ;
+		}
+		/**
+		 * コンストラクタ
+		 * 受信済みファイルに対応する番号を引数としてMailクラスのオブジェクトを作成します。
+		 */
+		Mail(int i) throws FileNotFoundException{
+			try {
+				file = new File(mailDir.getPath() + fsep + i) ;
+				InputStreamReader mailIn = new InputStreamReader(new FileInputStream(file), codeFile) ;
+				char[] cbuf = new char[1024] ;
+				StringBuffer sb = new StringBuffer() ;
+				while(true) {
+					int n = mailIn.read(cbuf, 0, 1024) ;
+					if(n == -1) {
+						break ;
+					}
+					sb.append(cbuf, 0, n) ;
+				}
+					message = sb.toString() ;
+			}catch (IOException ex) {
+				if(ex instanceof FileNotFoundException) {
+					throw (FileNotFoundException) ex ;
+				}else {
+					ex.printStackTrace() ;
+					System.exit(1) ;
+				}
+			}
+			parse() ;
+		}
+		/**
+		 * Parseメソッド
+		 * parseHeaderメソッドを用いてメッセージのヘッダを解析します。
+		 */
+		void parse() {
+			from = parseHeader("From") ;
+			to = parseHeader("To:") ;
+			subject = parseHeader("Subject:") ;
+			replyto = parseHeader("Reply-To:") ;
+		}
+		/**
+		 * parseHeaderメソッド
+		 * メッセージの中から指定されたヘッダの情報を探し出します。
+		 */
+		String parseHeader(String header) {
+			int begin = 0 ; 
+			int end = 0 ;
+			for(end = message.indexOf("\n", begin) ;end >= 0 && begin >= 0 ; begin = end + 1, end = message.indexOf("\n", begin)){
+				String line = message.substring(begin, end) ;
+				if("".equals(line)){
+					break ;
+				}
+				if(line.startsWith(header))
+					return line.substring(header.length()) ;
+			}
+			return null ;
+		}
+	}
+	/**
+	 * NetClientクラス***********************************************************************
+	 * smtpClientクラスとPopClientクラスの共通部分を与えます
+	 */
+	class NetClient {
+//		static boolean debug = MailManager.debug ;
+		Socket s ;
+		BufferedReader from_server ;
+		PrintWriter to_server ;
+		String encode = "JIS";
+		/**
+		 * コンストラクタ
+		 * 文字コードを指定する場合
+		 */
+		NetClient(String enc){
+		encode = enc ;
+		if(debug) {
+			System.out.println("NetClient.encode: " + encode) ;
+		}
+		}
+		/**
+		 * コンストラクタ
+		 * 文字コードがデフォルトの場合
+		 */
+		NetClient(){
+			this("JIS") ;
+		}
+		/**
+		 * connectメソッド
+		 * 	サーバーとの接続用ソケットとストリームを作成します
+		 */
+		public void connect(String server, int port) {
+			try {
+				s = new Socket(server, port) ;
+				from_server = new BufferedReader(
+							new InputStreamReader(s.getInputStream(), encode)) ;
+				to_server = new PrintWriter(
+											new OutputStreamWriter(s.getOutputStream(), encode)) ;
+			}
+			catch (IOException e) {
+				e.printStackTrace() ;
+				System.exit(1) ;
+			}
+		}
+		/**
+		 * disconnectメソッド
+		 * サーバーとの接続を切断します
+		 */
+		public void disconnect(){
+			try {
+				s.close() ;
+			}
+			catch(IOException e) {
+				e.printStackTrace() ;
+				System.exit(1) ;
+			}
+		}
+		/**
+		 * receive メソッド
+		 * サーバーから行を読みとります
+		 */
+		public String receive(){
+			String res = null ;
+			try {
+				res = from_server.readLine() ;
+				if(debug) {
+					System.out.println("RECV> " + res) ;
+				}
+			} catch (IOException e) {
+				e.printStackTrace() ;
+				System.exit(1) ;
+			}
+			return res ;
+		}
+		/**
+		 * sendメソッド
+		 * サーバーに１行データを送ります
+		 */
+		public void send(String msg) {
+			to_server.println(msg) ;
+			to_server.flush() ;
+			if(debug) {
+				System.out.println("SEND> " + msg) ;
+			}
+		}
+	}
+	/**
+	 * PopClientクラス********************************************************************
+	 * NetClientを継承してPop3受信機能を実現します
+	 */
+	class PopClient extends NetClient {
+		final int POP3_PORT = 110 ;
+		String server ;
+		String username ;
+		String password ;
+		boolean loginFlag = false ;
+		/**
+		 * コンストラクタ
+		 * 受信に必要な情報をセットします。
+		 */
+		PopClient(String serv, String user, String pass, String enc) {
+			super(enc) ;
+			username = user ;
+			password = pass ;
+			server = serv ;
+		}
+		/**
+		 * loginメソッド
+		 * POP3サーバーにloginします
+		 */
+		public boolean login(){
+			if(loginFlag)
+				return loginFlag ;
+			connect(server, POP3_PORT) ;
+			String res = receive() ;
+			if(res.startsWith("-ERR")) {
+				System.err.println("connect failed.:" + res) ;
+				disconnect() ;
+				return false ;
+			}
+			send("user " + username) ;
+			res = receive() ;
+			if(res.startsWith("-ERR")){
+				System.err.println("login user failed :  "+ res) ;
+				disconnect() ;
+				return false ;
+			}
+			send("pass " + password) ;
+			res = receive() ;
+			if(res.startsWith("-ERR")) {
+				System.err.println("login pass failed : " + res) ;
+				disconnect() ;
+				return false ;
+			}
+			return loginFlag = true ;
+		}
+		/**
+		 * statメソッド
+		 * サーバーにstatコマンドを送付します
+		 */
+		public String stat() {
+			send("stat") ;
+			String res = "" ;
+			res = receive() ;
+			if(res.startsWith("-ERR")) {
+			    System.err.println(res) ;
+			}
+			return res ;
+		}
+		/**
+		 * listメソッド
+		 * サーバーにlistメソッドコマンドを送付します
+		 */	
+		public String list(){
+			String res = "" ;
+			send("list") ;
+			String line = receive() ;
+			if(line.startsWith("-ERR")){
+				System.err.println(line) ;
+				res = line ;
+			}
+			else{
+				while(true) {
+					line = receive() ;
+					if(".".equals(line)){
+						break ;
+					}
+					res += line + "\n" ;
+				}
+			}
+			return res ;
+		}
+		/**
+		 * retrメソッド
+		 * サーバーにretrコマンドを送付します
+		 */
+		public String retr(int i) {
+			String res = "" ;
+			send("retr " + i) ;
+			String line = receive() ;
+			if(line.startsWith("-ERR")){
+				System.err.println(line) ;
+				res = line ;
+			} else {
+				while (true) {
+					line = receive() ;
+					if(".".equals(line)) {
+						break ;
+					}
+					res += line + "\n" ;
+				}
+			}
+			return res ;
+		}
+		/**
+		 * deleメソッド
+		 * サーバーにdeleコマンドを送付します
+		 */
+		public String dele(int i) {
+			send("dlel " + i) ;
+			String res = receive() ;
+			if(res.startsWith("-ERR")){
+				System.err.println(res) ;
+			}
+			return res ;
+		}
+		/**
+		 * quit　メソッド
+		 * サーバーにquitコマンドを送付します
+		 */
+		public void quit() {
+			if(loginFlag) {
+				send("quit") ;
+				loginFlag = false ;
+			}
+		}
+	}
+	/**
+	 * SmtpClientクラス*********************************************************************
+	 * NetClientを継承してSMTP受信機能を実現します
+	 */
+	class SmtpClient extends NetClient {
+		int SMTP_PORT = 25 ;
+		String server ;
+		/**
+		 * コンストラクタ
+		 */
+		SmtpClient(String serv, String enc){
+			super(enc) ;
+			server = serv ;
+		}
+		/**
+		 * sendCommendAndResultChechメソッド
+		 * サーバーにコマンドを送付し、その結果をresultCheckメソッドでチェックします
+		 */
+		void sendCommandAndResultCheck(String command, int successCode) {
+			send(command) ;
+			resultCheck(successCode) ;
+		}
+		/**
+		 * resultCheckメソッド
+		 * サーバーからの返答コードを解析し、エラーなら通信を終了します
+		 */
+		void resultCheck(int successCode) {
+			String res = receive() ;
+			if(Integer.parseInt(res.substring(0, 3)) != successCode) {
+				disconnect() ;
+				throw new RuntimeException(res) ;
+			}
+		}
+		/**
+		 * sendmailメソッド
+		 * SMTPを用いてサーバーにメッセージを送信します
+		 */
+		public void sendmail(String from, String[] to, String subject, String message) {
+			//CONNECT
+			connect(server, SMTP_PORT) ;
+			resultCheck(220) ;
+			// HELO
+			try {
+				String myname = InetAddress.getLocalHost().getHostName() ;
+				sendCommandAndResultCheck("HELO " + myname, 250) ;
+			}catch(UnknownHostException ex) {
+				ex.printStackTrace() ;
+				System.exit(1) ;
+			}
+			// MAIL FROM
+			sendCommandAndResultCheck("MAIL FROM: " + from, 250) ;
+			// RCPT TO
+			for(int i = 0 ; i < to.length ; i++) {
+				sendCommandAndResultCheck("RCPT TTO: " + to[i], 250) ;
+			}
+			// DATA
+			sendCommandAndResultCheck("DATA", 354) ;
+			send("Subject : " + subject) ;
+			send("From: " + from) ;
+			String toString = to[0] ; 
+			for (int i = 1 ; i < to.length ; i++) {
+				toString += "," + to[i] ;
+			}
+			send("To: " + toString ) ;
+			send("") ;
+			send(message) ;
+			send(".") ;
+			resultCheck(250) ;
+			// QUIT
+			sendCommandAndResultCheck("QUIT" , 221) ;
+			// CLOSE
+			disconnect() ;
+		}
+	}
+}
+
+
+////////////////////////////////////////////////////////////////////////////////////////////////////
+// Chat.java マルチキャスト版　チャットサーバーの必要のないチャットプログラム
+// 使い方：java Chat ポート番号
+// 終了は　Ctrl+c 
+import java.net.* ;
+import java.io.* ;
+
+// Chatクラスは受信スレッドを作成実行し、送信を担当します。
+public class Chat 
+{
+	final byte TTL = 1 ;
+	final String MULTICASTADDRESS = ("224.0.0.1") ;// マルチキャストアドレス
+	int port = 6000 ; // チャットようのポート番号　指定がなければ6000にする
+	byte[] buff = new byte[1024] ;// 送信用バッファ
+	String myname = "" ;// 利用者名
+	int nameLength = 0 ;
+	MulticastSocket soc = null ;
+	InetAddress chatgroup = null ;
+	
+	public Chat(int portno)
+	{
+		port = portno ;
+		BufferedReader lineread = new BufferedReader(new InputStreamReader(System.in)) ;
+		System.out.println("お名前をどうぞ") ;
+		try 
+		{
+			myname = lineread.readLine() ;
+		}
+		catch(Exception e)
+		{
+			e.printStackTrace() ;
+			System.exit(1) ;
+		}
+		System.out.println("ようこそ" + myname + "さん") ;
+		myname = myname + ">" ;
+		nameLength = (myname.getBytes()).length ;
+		for(int i = 0 ; i < nameLength ;++i) 
+		{
+			buff[i] = (myname.getBytes())[i] ;
+		}
+	}
+	// MULTICASTADDRESSに対してマルチキャストソケットを作成
+	public void makeMulticastSocket()
+	{
+		try
+		{
+			chatgroup = InetAddress.getByName(MULTICASTADDRESS) ;
+			soc = new MulticastSocket(port) ;
+			soc.joinGroup(chatgroup) ;
+		}
+		catch(Exception e)
+		{
+			e.printStackTrace() ;
+			System.exit(1) ;
+		}
+	}
+	// スレッド用クラスListenPacketのオブジェクトを生成し起動
+	public void startListener()
+	{
+		try
+		{
+			ListenPacket lisner = new ListenPacket(soc) ;
+			Thread lisner_thread = new Thread(lisner) ;;
+			lisner_thread.start() ; //受信スレッドの開始
+		}
+		catch(Exception e)
+		{
+			e.printStackTrace() ;
+			System.exit(1) ;
+		}
+	}
+	// マルチキャストパケットの送信担当
+	public void sendMsgs()
+	{
+		try
+		{
+			while(true)// 送信ループ
+			{
+				int n = System.in.read(buff, nameLength, 1024 - nameLength) ;
+				if(n > 0) 
+				{
+					DatagramPacket dp = new DatagramPacket( buff, 
+										n + nameLength, 
+										chatgroup, 
+										port) ;
+					soc.send(dp, TTL) ;
+				}
+				else
+					break ;// 送信終了
+			}
+		}
+		catch(Exception e) 
+		{
+			e.printStackTrace() ;
+			System.exit(1) ;
+		}
+	}
+	// 接続を終了する
+	public void quitGroup()
+	{
+		try
+		{
+			System.out.println("接続終了") ;
+			soc.leaveGroup(chatgroup) ;
+			System.exit(0) ;
+		}
+		catch(Exception e)
+		{
+			e.printStackTrace() ;
+			System.exit(1) ;
+		}
+	}
+	
+	public static void main(String[] arg)
+	{
+		Chat c = null ;
+		int portno = 6000 ;
+		if(arg.length >= 1)
+		{
+			portno = Integer.parseInt(arg[0]) ;
+		}
+		c = new Chat(portno) ;
+		c.makeMulticastSocket() ;
+		c.startListener() ;
+		c.sendMsgs() ;
+		c.quitGroup() ;
+	}
+}
+// マルチキャストパケットを受信
+class ListenPacket implements Runnable
+{
+	MulticastSocket  s = null ;
+	public ListenPacket(MulticastSocket soc)// コンストラクタでマルチキャストスレッドを受け取ります。
+	{
+		s = soc ;
+	}
+	public void run()// 処理の本体
+	{
+		byte[] buff = new byte[1024] ;
+		try
+		{
+			while(true)
+			{
+				DatagramPacket recv = new DatagramPacket(buff, buff.length) ;
+				s.receive(recv) ;
+				if(recv.getLength() > 0 ) 
+				{
+					System.out.write(buff, 0, recv.getLength()) ;
+				}
+			}
+		}
+		catch(Exception e)
+		{
+			e.printStackTrace() ;
+			System.exit(1) ;
+		}
+	}
+}

@@ -1,0 +1,999 @@
+	
+
+
+============================================================================================
+
+             Programming Java2 Vol.5
+
+============================================================================================
+
+	Learn More About Java2 Professional Tutrial
+
+			Chapter 1 変数とオブジェクト
+			Chapter 2 お約束とコメント
+			Chapter 3 メソッドと基本制御
+			Chapter 4 コンストラクタと初期化
+			Chapter 5 クラスの再利用
+			Chapter 6 継承
+			Chapter 7 ポリモフィズム
+			Chapter 8 インターフェイスとインナークラス
+			Chapter 9 コレクション
+			Chapter10 エラーハンドリング
+			Chapter11 ファイル入出力
+		  Chapter12 Creating Windows AWT
+			Chapter13 Creating Windows Swing
+			Chapter14 Multiple Threads
+			Chapter15 ネットワーク
+			Chapter16 アルゴリズムとデータ構造
+
+
+
+///////////////////////////////////////////////////////////////////////////////////////////
+//// 	Chapter 12: Creating Windows AWT
+
+
+<Applet code=hoe width=400 height=300></Applet>
+
+ Applet		アプレットを作成する
+ TextField	１次元テキストフィールドを作成する
+ Button 	ボタンを作成する
+ Label		ラベルを作成する
+ Checkbox	チェックボックス・ラジオボタンを作成する
+ FlowLayout	アプレットのデフォルトレイアウト
+ GridLayout	５行４列　GridLayout(5,1)
+ BorderLayout	コンテナの外辺部へのレイアウト
+ CardLayout	受け取ったコンテナをカード形式でレイアウト
+ Panel		他のコントロールを含むパネルを作成する
+ TextArea	２次元テキストコントロールを作成する
+ List		リストコントロールを作成する
+ Choice		選択コントロールを作成する
+ Scrollbar	スクロールバーを作成する
+ ScrollPane	スクロール可能な面を作成する
+ Frame		ウインドウ型アプリケーション用のフレームを作成する
+ Window		独立したウインドウを作成する
+ Menu		メニューを作成する
+ PopupMenu	ポップアップメニューを作成する
+ Dialog		ダイアログボックスを作成する
+ Canvas		描画する為のキャンバスを作成する
+ */
+
+/** Applet =============================================================*/
+import java.awt.* ;
+import java.applet.* ;
+ 
+public class hoe extends java.applet.Applet{
+
+	public hoe(){
+	}
+	//-------------------------------------
+	public void init(){
+		
+	}
+	//-------------------------------------
+}
+
+/** TextField =============================================================*/
+import java.awt.* ;
+import java.awt.event.* ;
+import java.applet.* ;
+public class hoe extends java.applet.Applet{
+
+	public TextField textField = new TextField(20) ;
+	public TextField textField2 = new TextField(20) ;
+	//-------------------------------------
+	public hoe(){
+		textField.setText("JOKERHOE") ;// テキストの追加
+		textField2.setEchoChar('*') ;// パスワード設定
+		textField2.addActionListener(new ActionListener() {// Enterキーで反応するリスナー
+			public void actionPerformed(ActionEvent e) {
+				textField.setText("OK") ;
+			}
+		}) ;
+	}
+	//-------------------------------------
+	public void init(){
+		add(textField) ;// テキストフィールドの追加
+		add(textField2) ;
+	}
+	//-------------------------------------
+}
+/** Button =============================================================*/
+import java.awt.* ;
+import java.awt.event.* ;
+import java.applet.* ;
+public class hoe extends java.applet.Applet{
+
+	public TextField textField = new TextField(20) ;
+	public Button button = new Button("ClickHere") ;
+	//-------------------------------------
+	public hoe(){
+		textField.setText("JOKERHOE") ;// テキストの追加
+		button.addMouseListener(new MouseAdapter() {
+			public void mousePressed(MouseEvent me) {
+				textField.setText("Hello to Java!") ;
+			}
+		}) ;
+	}
+	//-------------------------------------
+	public void init(){
+		add(textField) ;// テキストフィールドの追加
+		add(button) ;
+	}
+	//-------------------------------------
+}
+
+/** Label =============================================================*/
+import java.awt.* ;
+import java.awt.event.* ;
+import java.applet.* ;
+public class hoe extends java.applet.Applet{
+
+	Label label1 = new Label("JOKERHOE Label", Label.LEFT) ;
+	Label label2 = new Label("JOKERHOE Label", Label.CENTER) ;
+	Label label3 = new Label("JOKERHOE Label", Label.RIGHT) ;
+	//-------------------------------------
+	public hoe(){
+	}
+	//-------------------------------------
+	public void init(){
+		add(label1) ;
+		add(label2) ;
+		add(label3) ;
+	}
+	//-------------------------------------
+}
+
+/** Checkbox =============================================================*/
+import java.awt.* ;
+import java.awt.event.* ;
+import java.applet.* ;
+public class hoe extends java.applet.Applet{
+
+	Checkbox checkBox1 = new Checkbox("Check 1") ;
+	Checkbox checkBox2 = new Checkbox("Check 2") ;
+	Checkbox checkBox3 = new Checkbox("Check 3") ;
+	CheckboxGroup radioGroup = new CheckboxGroup() ;
+	Checkbox radio1 = new Checkbox("Radio 1", false, radioGroup) ;
+	Checkbox radio2 = new Checkbox("Radio 2", false, radioGroup) ;
+	Checkbox radio3 = new Checkbox("Radio 3", false, radioGroup) ;
+	TextField textField = new TextField(20) ;
+	//-------------------------------------
+	public hoe(){
+		checkBox1.addItemListener(new ItemListener() {
+			public void itemStateChanged(ItemEvent e) {
+				textField.setText( 
+					( (Checkbox)e.getItemSelectable() ).getLabel() 
+				) ;
+			}
+		}) ;
+		checkBox2.addItemListener(new ItemListener() {
+			public void itemStateChanged(ItemEvent e) {
+				textField.setText( 
+					( (Checkbox)e.getItemSelectable() ).getLabel() 
+				) ;
+			}
+		}) ;
+		checkBox3.addItemListener(new ItemListener() {
+			public void itemStateChanged(ItemEvent e) {
+				textField.setText( 
+					( (Checkbox)e.getItemSelectable() ).getLabel() 
+				) ;
+			}
+		}) ;
+		radio1.addItemListener(new ItemListener() {
+			public void itemStateChanged(ItemEvent e) {
+				textField.setText( 
+					( (Checkbox)e.getItemSelectable() ).getLabel() 
+				) ;
+			}
+		}) ;
+		radio2.addItemListener(new ItemListener() {
+			public void itemStateChanged(ItemEvent e) {
+				textField.setText( 
+					( (Checkbox)e.getItemSelectable() ).getLabel() 
+				) ;
+			}
+		}) ;
+		radio3.addItemListener(new ItemListener() {
+			public void itemStateChanged(ItemEvent e) {
+				textField.setText( 
+					( (Checkbox)e.getItemSelectable() ).getLabel() 
+				) ;
+			}
+		}) ;
+	}
+	//-------------------------------------
+	public void init(){
+		add(checkBox1) ;
+		add(checkBox2) ;
+		add(checkBox3) ;
+		add(radio1) ;
+		add(radio2) ;
+		add(radio3) ;
+		add(textField) ;
+	}
+	//-------------------------------------
+}
+
+/** FlowLayout =============================================================*/
+import java.awt.* ;
+import java.applet.* ;
+import java.awt.event.* ; 
+public class hoe extends java.applet.Applet{
+
+	TextField textField1 = new TextField(20) ;
+	TextField textField2 = new TextField(20) ;
+	TextField textField3 = new TextField(20) ;
+	//-------------------------------------
+	public hoe(){
+	}
+	//-------------------------------------
+	public void init(){
+		setLayout(new FlowLayout(FlowLayout.RIGHT)) ;
+		add(textField1) ;
+		add(textField2) ;
+		add(textField3) ;
+	}
+	//-------------------------------------
+}
+
+/** GridLayout =============================================================*/
+import java.awt.* ;
+import java.applet.* ;
+import java.awt.event.* ; 
+public class hoe extends java.applet.Applet{
+
+	TextField textField1 = new TextField(20) ;
+	TextField textField2 = new TextField(20) ;
+	TextField textField3 = new TextField(20) ;
+	//-------------------------------------
+	public hoe(){
+	}
+	//-------------------------------------
+	public void init(){
+		setLayout(new GridLayout(3, 1)) ; // ３行１列
+		add(textField1) ;
+		add(textField2) ;
+		add(textField3) ;
+	}
+	//-------------------------------------
+}
+
+/** BorderLayout =============================================================*/
+import java.awt.* ;
+import java.applet.* ;
+import java.awt.event.* ; 
+public class hoe extends java.applet.Applet{
+
+	Button button1 = new Button("1") ;
+	Button button2 = new Button("2") ;
+	Button button3 = new Button("3") ;
+	Button button4 = new Button("4") ;
+	TextField textField = new TextField() ;
+	//-------------------------------------
+	public hoe(){
+	}
+	//-------------------------------------
+	public void init(){
+		setLayout(new BorderLayout()) ;
+		add(button1, "North") ;
+		add(button2, "South") ;
+		add(button3, "East") ;
+		add(button4, "West") ;
+		add(textField, "Center") ;
+	}
+	//-------------------------------------
+}
+
+/** CardLayout =============================================================*/
+import java.awt.* ;
+import java.applet.* ;
+import java.awt.event.* ; 
+public class hoe extends java.applet.Applet implements ActionListener{
+
+	int index = 1 ;
+	CardLayout cardLayout = new CardLayout() ;
+	cardPanel cp1 = new cardPanel(this, "one") ;
+	cardPanel cp2 = new cardPanel(this, "two") ;
+	cardPanel cp3 = new cardPanel(this, "three") ;
+
+	//-------------------------------------
+	public hoe(){
+	}
+	//-------------------------------------
+	public void init(){
+		setLayout(cardLayout) ;
+		add("first", cp1) ;
+		add("second", cp2) ;
+		add("third", cp3) ;
+		cardLayout.show(this, "first") ;
+	}
+	//-------------------------------------
+	public void actionPerformed(ActionEvent event){
+		switch(++index) {
+			case 1 : cardLayout.show(this, "first") ; break ;
+			case 2 : cardLayout.show(this, "second") ; break ;
+			case 3 : cardLayout.show(this, "third") ; break ;
+		}
+		if(index == 3) index = 0 ; 
+		repaint() ;
+	}
+	//-------------------------------------
+}
+class cardPanel extends Panel {
+	
+	//-------------------------------------
+	public cardPanel(hoe applet, String cardnumber) {
+		Button button = new Button("NextCard") ;
+		button.addActionListener(applet) ;
+		Label label = new Label("This is card" + cardnumber) ;
+		add(button) ;
+		add(label) ;
+	}
+	//-------------------------------------
+}
+
+/** Panel =============================================================*/
+import java.awt.* ;
+import java.applet.* ;
+import java.awt.event.* ; 
+public class hoe extends java.applet.Applet{
+
+	TextFieldBlock tfb = new TextFieldBlock() ;
+	ButtonBlock bb = new ButtonBlock() ;
+	//-------------------------------------
+	public hoe(){
+	}
+	//-------------------------------------
+	public void init(){
+		setLayout(new GridLayout(2, 1)) ;// ２行１列
+		add(tfb) ;
+		add(bb) ;
+	}
+	//-------------------------------------
+}
+class TextFieldBlock extends Panel {
+
+	TextField textField1 = new TextField(10) ;
+	TextField textField2 = new TextField(10) ;
+	TextField textField3 = new TextField(10) ;
+	//-------------------------------------
+	public TextFieldBlock() {
+		setLayout(new FlowLayout()) ;
+		add(textField1) ;
+		add(textField2) ;
+		add(textField3) ;
+	}
+	//-------------------------------------
+}
+class ButtonBlock extends Panel {
+	
+	Button button1 = new Button("1") ;
+	Button button2 = new Button("1") ;
+	Button button3 = new Button("1") ;
+
+	//-------------------------------------
+	public ButtonBlock() {
+		setLayout(new FlowLayout()) ;
+		add(button1) ;
+		add(button2) ;
+		add(button3) ;
+	}
+	//-------------------------------------
+}
+
+/** TextArea =============================================================*/
+import java.awt.* ;
+import java.awt.event.* ;
+import java.applet.* ;
+public class hoe extends java.applet.Applet{
+
+	public TextArea textArea1 = new TextArea("", 5, 20, TextArea.SCROLLBARS_BOTH) ;
+	public TextArea textArea2 = new TextArea("", 5, 20, TextArea.SCROLLBARS_HORIZONTAL_ONLY) ;
+	public TextArea textArea3 = new TextArea("", 5, 20, TextArea.SCROLLBARS_NONE) ;
+	public TextArea textArea4 = new TextArea("", 5, 20, TextArea.SCROLLBARS_VERTICAL_ONLY) ;
+	public Button button = new Button("ClickHere") ;
+	//-------------------------------------
+	public hoe(){
+		button.addMouseListener(new MouseAdapter() {
+			public void mousePressed(MouseEvent me) {
+				textArea1.setText("Hello to Java!") ;
+				textArea2.setText("Hello to Java!") ;
+				textArea3.setText("Hello to Java!") ;
+				textArea4.setText("Hello to Java!") ;
+			}
+		}) ;
+	}
+	//-------------------------------------
+	public void init(){
+		add(textArea1) ;
+		add(textArea2) ;
+		add(textArea3) ;
+		add(textArea4) ;
+		add(button) ;
+	}
+	//-------------------------------------
+}
+
+/** TextArea Serch =============================================================*/
+import java.awt.* ;
+import java.awt.event.* ;
+import java.applet.* ;
+public class hoe extends java.applet.Applet{
+
+	public TextArea textArea1 = new TextArea(
+		"日本語はとっても難しいので注意しましょう！", 5, 50, TextArea.SCROLLBARS_BOTH) ;
+	public Label label = new Label("検索する文字列");
+	public TextField textField1 = new TextField(35) ;
+	public Label label2 = new Label("置換後の文字列") ;
+	public TextField textField2 = new TextField(35) ;
+	public Button button = new Button("置換") ;
+
+	//-------------------------------------
+	public hoe(){
+		button.addMouseListener(new MouseAdapter() {
+			public void mousePressed(MouseEvent me) {
+				String before = textField1.getText() ;
+				String after = textField2.getText() ;
+				String area = textArea1.getText() ;// テキストエリア内文字列読み込み
+				int location = area.indexOf(before) ;// 検索文字列を探して何文字目かを調べる
+				
+				textArea1.select(location, location + before.length()) ;
+				// 範囲選択された部分をafterに置換する
+				textArea1.replaceRange(after, textArea1.getSelectionStart(), 
+							textArea1.getSelectionEnd() ) ;
+			}
+		}) ;
+	}
+	//-------------------------------------
+	public void init(){
+		add(textArea1) ;
+		add(label) ;
+		add(textField1) ;
+		add(label2) ;
+		add(textField2) ;
+		add(button) ;
+	}
+	//-------------------------------------
+}
+
+/** List =============================================================*/
+import java.awt.* ;
+import java.awt.event.* ;
+import java.applet.* ;
+public class hoe extends java.applet.Applet{
+
+	List list = new List(4) ; // ４つ見えるように設定
+	List list2 = new List(4, true) ; // ４つ見えるように設定 ２つ目の引数で複数選択可に
+	TextField textField = new TextField(40) ;
+	//-------------------------------------
+	public hoe(){
+		list.add("ITEM 1") ;
+		list.add("ITEM 2") ;
+		list.add("ITEM 3") ;
+		list.add("ITEM 4") ;
+		list.add("ITEM 5") ;
+		list.add("ITEM 6") ;
+		list.add("ITEM 7") ;
+		list.addActionListener(new ActionListener() {// ダブルクリックに対応
+			public void actionPerformed(ActionEvent e) {
+				textField.setText( ( (List)e.getSource() ).getSelectedItem() ) ;
+			}
+		}) ;
+		list2.add("複数選択可1") ;
+		list2.add("複数選択可2") ;
+		list2.add("複数選択可3") ;
+		list2.add("複数選択可4") ;
+		list2.add("複数選択可5") ;
+		list2.add("複数選択可6") ;
+		list2.add("複数選択可7") ;
+		list2.addActionListener(new ActionListener() {// ダブルクリックに対応
+			public void actionPerformed(ActionEvent e) {
+				String outString = ""  ;
+				String selections[] = list2.getSelectedItems() ;
+				for(int i = 0 ; i < selections.length ; i++) 
+					outString += selections[i] ;
+				textField.setText(outString) ;
+			}
+		}) ;
+	}
+	//-------------------------------------
+	public void init(){
+		add(textField) ;
+		add(list) ;
+		add(list2) ;
+	}
+	//-------------------------------------
+}
+
+/** Choice =============================================================*/
+import java.awt.* ;
+import java.awt.event.* ;
+import java.applet.* ;
+public class hoe extends java.applet.Applet{
+
+	TextField textField = new TextField(20) ;
+	Choice choice = new Choice() ;
+	//-------------------------------------
+	public hoe(){
+		choice.add("Item 1") ;
+		choice.add("Item 2") ;
+		choice.add("Item 3") ;
+		choice.add("Item 4") ;
+		choice.add("Item 5") ;
+		choice.add("Item 6") ;
+		choice.add("Item 7") ;
+		choice.add("Item 8") ;
+		choice.add("Item 9") ;
+		choice.add("Item 10") ;
+		choice.addItemListener(new ItemListener() {
+			public void itemStateChanged(ItemEvent e) {
+				textField.setText( ( (Choice)e.getItemSelectable() ).getSelectedItem() ) ;
+			}
+		}) ;
+	}
+	//-------------------------------------
+	public void init(){
+		add(textField) ;
+		add(choice) ;
+	}
+	//-------------------------------------
+}
+
+/** Scrollbar =============================================================*/
+import java.awt.* ;
+import java.awt.event.* ;
+import java.applet.* ;
+public class hoe extends java.applet.Applet{
+
+	TextField textField = new TextField(20) ;
+	Scrollbar scroll1 = new Scrollbar(Scrollbar.HORIZONTAL, 1, 20, 1, 200) ;
+	Scrollbar scroll2 = new Scrollbar(Scrollbar.VERTICAL, 1, 20, 1, 200) ;
+	//-------------------------------------
+	public hoe(){
+		scroll1.addAdjustmentListener(new AdjustmentListener() {
+			public void adjustmentValueChanged(AdjustmentEvent e) {
+					textField.setText(scroll1.getValue() + "   "  + scroll2.getValue() ) ;
+			}
+		}) ;
+		scroll2.addAdjustmentListener(new AdjustmentListener() {
+			public void adjustmentValueChanged(AdjustmentEvent e) {
+					textField.setText(scroll1.getValue() + "   "  + scroll2.getValue() ) ;
+			}
+		}) ;
+	}
+	//-------------------------------------
+	public void init(){
+		add(scroll1) ;
+		add(textField) ;
+		add(scroll2) ;
+	}
+	//-------------------------------------
+}
+
+/** Scrollbar 2=============================================================*/
+import java.awt.* ;
+import java.awt.event.* ;
+import java.applet.* ;
+public class hoe extends java.applet.Applet{
+
+	TextField textField = new TextField() ;
+	Scrollbar scrollBarV = new Scrollbar(Scrollbar.VERTICAL, 1, 1, 1, 100) ;
+	Scrollbar scrollBarH = new Scrollbar(Scrollbar.HORIZONTAL, 1, 1, 1, 100) ;
+	//-------------------------------------
+	public hoe(){
+		scrollBarV.addAdjustmentListener(new AdjustmentListener() {
+			public void adjustmentValueChanged(AdjustmentEvent e) {
+					textField.setText(scrollBarV.getValue() + "   "  + scrollBarH.getValue() ) ;
+			}
+		}) ;
+		scrollBarH.addAdjustmentListener(new AdjustmentListener() {
+			public void adjustmentValueChanged(AdjustmentEvent e) {
+					textField.setText(scrollBarV.getValue() + "   "  + scrollBarH.getValue() ) ;
+			}
+		}) ;
+	}
+	//-------------------------------------
+	public void init(){
+		setLayout(new BorderLayout()) ;
+		add(textField, "Center") ;
+		add(scrollBarV, "East") ;
+		add(scrollBarH, "South") ;
+	}
+	//-------------------------------------
+}
+
+/** ScrollPane=============================================================*/
+import java.awt.* ;
+import java.awt.event.* ;
+import java.applet.* ;
+public class hoe extends java.applet.Applet{
+
+	ScrollPane scrollPane = new ScrollPane()) ;
+	TextField textField = new TextField("ABCDEFGHIJKLMNOPQRSTUVWXYZ") ;
+	//-------------------------------------
+	public hoe(){
+	}
+	//-------------------------------------
+	public void init(){
+		scrollPane.add(textField) ;
+		add(scrollPane) ;
+	}
+	//-------------------------------------
+}
+
+/** Frame =============================================================*/
+import java.awt.* ;
+import java.awt.event.* ;
+import java.applet.* ;
+public class hoe extends java.applet.Applet{
+
+	labelFrame frameWindow =new labelFrame("New Window") ;
+	Button buttonClose = new Button("Close") ;
+	Button buttonOpen = new Button("Open") ;
+	//-------------------------------------
+	public hoe(){
+		frameWindow.setSize(300, 200) ;
+		buttonClose.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				frameWindow.setVisible(false) ;
+			}
+		}) ;
+		buttonOpen.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				frameWindow.setVisible(true) ;
+			}
+		}) ;
+	}
+	//-------------------------------------
+	public void init(){
+		add(buttonClose) ;
+		add(buttonOpen) ;
+	}
+	//-------------------------------------
+}
+class labelFrame extends Frame {
+	
+	labelFrame(String title) {
+		super(title) ;
+		addWindowListener(new WindowAdapter() {
+			public void windowClosing(WindowEvent e) {
+				setVisible(false) ;
+			}
+		}) ;
+	}
+}
+/** Window =============================================================*/
+import java.awt.* ;
+import java.awt.event.* ;
+import java.applet.* ;
+public class hoe extends java.applet.Applet{
+
+	AppFrame f = new AppFrame() ;
+	//---------------------------
+	public hoe() {
+		f.setSize(200, 200) ;
+		f.setLocation(300, 300) ;
+		f.addWindowListener(new WindowAdapter(){
+			public void windowClosing(WindowEvent e) {
+				System.exit(0) ;
+			}
+		}) ;
+	}
+	//---------------------------
+	public void init() {
+		f.show() ;
+	}
+	//---------------------------
+}
+class AppFrame extends Frame {
+
+	Button b1 = new Button("Display") ;
+	Button b2 = new Button("Hide") ;
+	labelWindow window = new labelWindow(this) ;
+	//---------------------------
+	public AppFrame() {
+		addWindowListener(new WindowAdapter() {
+			public void windowClosing(WindowEvent e) {
+				setVisible(false) ;
+			}
+		}) ;
+		setLayout(new FlowLayout()) ;
+		window.setSize(400, 300) ;
+		window.setLocation(300, 200) ;
+		b1.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				window.setVisible(true) ;
+			}
+		}) ;
+		add(b1) ;
+		b2.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				window.setVisible(false) ;
+			}
+		}) ;
+		add(b2) ;
+	}
+	//---------------------------
+}
+class labelWindow extends Window {
+	
+	//---------------------------
+	public labelWindow (AppFrame af) {
+		super(af) ;
+	}
+	//---------------------------
+	public void paint(Graphics g) {
+		int width = getSize().width ;
+		int height = getSize().height ;
+		g.drawRect(0, 0, --width, --height) ;
+	}
+	//---------------------------
+}
+
+/** Menu =============================================================*/
+import java.awt.* ;
+import java.awt.event.* ;
+import java.applet.* ;
+public class hoe extends java.applet.Applet{
+
+	mainFrame mf = new mainFrame("MainFrame") ;
+	//---------------------------
+	public hoe() {
+		mf.setSize(500, 400) ;
+		mf.addWindowListener(new WindowAdapter(){
+			public void windowClosing(WindowEvent e) {
+				System.exit(0) ;
+			}
+		}) ;
+	}
+	//---------------------------
+	public void init() {
+		mf.setVisible(true) ;
+	}
+	//---------------------------
+}
+class mainFrame extends Frame {
+	
+	MenuBar menuBar = new MenuBar() ;
+	Menu menu = new Menu("ﾌｧｲﾙ");
+	MenuItem menuItem1 = new MenuItem("開") ;
+	MenuItem menuItem2 = new MenuItem("保存") ;
+	Menu menuItem3 = new Menu("ｻﾌﾞﾒﾆｭｰ") ;		// ｻﾌﾞﾒﾆｭｰはMenuで無くてはならない
+	MenuItem menuItem3_1 = new MenuItem("Sub1") ;
+	MenuItem menuItem3_2 = new MenuItem("Sub2") ;
+	MenuItem menuItem3_3 = new MenuItem("Sub3") ;
+	CheckboxMenuItem menuItem4 = new CheckboxMenuItem("Check Item") ;
+	MenuItem menuItem5 = new MenuItem("終了") ;
+	Label label = new Label("                 ") ;
+	//---------------------------
+	public mainFrame(String title) {
+		super(title) ;
+		addWindowListener(new WindowAdapter() {
+			public void windowClosing(WindowEvent e) {
+				setVisible(false) ;
+			}
+		}) ;
+		menu.add(menuItem1) ;
+		menuItem1.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				label.setText("menuItem1") ;
+			}
+		}) ;
+		menu.add(menuItem2) ;
+		menuItem2.setEnabled(false) ;		// 淡色表示
+		
+		menuItem3.add(menuItem3_1) ;// ｻﾌﾞﾒﾆｭｰ化
+		menuItem3_1.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				label.setText("menuItem3_1") ;
+			}
+		}) ;
+		menuItem3.add(menuItem3_2) ;
+		menuItem3_2.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				label.setText("menuItem3_2") ;
+			}
+		}) ;
+		menuItem3.add(menuItem3_3) ;
+		menuItem3_3.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				label.setText("menuItem3_3") ;
+			}
+		}) ;
+		menu.add(menuItem3) ;
+		menu.add(menuItem4) ;
+		menuItem4.addItemListener(new ItemListener() {
+			public void itemStateChanged(ItemEvent event) {
+				if(  ( (CheckboxMenuItem)event.getItemSelectable() ).getState() )
+					label.setText("Item4 is Checked") ;
+				else
+					label.setText("Item4 is Not Checked") ;
+			}
+		}) ;
+		
+		menu.addSeparator() ;// セパレータ挿入
+		menu.add(menuItem5) ;
+		menuItem5.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				setVisible(false) ;
+			}
+		}) ;
+		menuBar.add(menu) ;
+		setMenuBar(menuBar) ;
+		add(label) ;
+	}
+}
+
+/** PopupMenu =============================================================*/
+import java.awt.* ;
+import java.awt.event.* ;
+import java.applet.* ;
+public class hoe extends java.applet.Applet implements MouseListener{
+
+	PopupMenu popup = new PopupMenu("Menu") ;
+	MenuItem menuItem1 = new MenuItem("コピー") ;
+	MenuItem menuItem2 = new MenuItem("切り取り") ;
+	MenuItem menuItem3 = new MenuItem("貼り付け") ;
+	MenuItem menuItem4 = new MenuItem("プロパティ") ;
+	//---------------------------
+	public hoe() {
+	}
+	//---------------------------
+	public void init() {
+		popup.add(menuItem1) ;
+		popup.add(menuItem2) ;
+		popup.add(menuItem3) ;
+		popup.add(menuItem4) ;
+		add(popup) ;
+		addMouseListener(this) ;
+	}
+	//---------------------------
+	public void mousePressed(MouseEvent e) {
+		if(e.getModifiers() != 0) {
+			popup.show(this, e.getX(), e.getY() ) ;
+		}
+	}
+	public void mouseClicked(MouseEvent e) {}
+	public void mouseReleased(MouseEvent e) {}
+	public void mouseEntered(MouseEvent e) {}
+	public void mouseExited(MouseEvent e) {}
+	//---------------------------
+}
+
+
+/** Dialog =============================================================*/
+import java.awt.* ;
+import java.awt.event.* ;
+import java.applet.* ;
+public class hoe extends java.applet.Applet{
+
+	DialogFrame f = new DialogFrame("Dialogs") ;
+	//---------------------------
+	public hoe() {
+		f.setSize(200, 200) ;
+		f.addWindowListener(new WindowAdapter() {
+			public void windowClosing(WindowEvent e) {
+				System.exit(0) ;
+			}
+		}) ;
+	}
+	//---------------------------
+	public void init() {
+		f.show() ;
+	}
+	//---------------------------
+}
+class DialogFrame extends Frame {
+	
+	Menu menu1 = new Menu("File") ;
+	MenuBar menuBar = new MenuBar() ;
+	MenuItem menuItem1 = new MenuItem("DialogBox") ;
+	MenuItem menuItem2 = new MenuItem("File Open...") ;
+	Label label = new Label("             ") ;
+	OkCancelDialog dialog = new OkCancelDialog(this, "Dialog", true) ;
+	FileDialog fileDialog = new FileDialog(this, "File Dialog") ;
+	//---------------------------
+	public DialogFrame(String title) {
+		super(title) ;
+		addWindowListener(new WindowAdapter() {
+			public void windowClosing(WindowEvent e) {
+				setVisible(false) ;
+			}
+		}) ;
+		menuItem1.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				dialog.setVisible(true) ;
+				label.setText(dialog.data) ;
+			}
+		}) ;
+		menuItem2.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				fileDialog.setVisible(true) ;
+				label.setText(fileDialog.getFile()) ;
+			}
+		}) ;
+		init() ;
+	}
+	//---------------------------
+	public void init() {
+		setLayout(new GridLayout(1, 1) ) ;
+		add(label) ;
+		menu1.add(menuItem1) ;
+		menu1.add(menuItem2) ;
+		menuBar.add(menu1) ;
+		setMenuBar(menuBar) ;
+	}
+	//---------------------------
+}
+class OkCancelDialog extends Dialog {
+
+	TextField textField = new TextField(20) ;
+	Button buttonOk = new Button("OK") ;
+	Button buttonCancel = new Button("Cancel") ;
+	String data = "" ;
+	//---------------------------
+	public OkCancelDialog(Frame hostFrame, String title, boolean dModal) {
+		super(hostFrame, title, dModal) ;
+		buttonOk.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				data = textField.getText() ;
+				setVisible(false) ;
+			}
+		}) ;
+		buttonCancel.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				data = "" ;
+				setVisible(false) ;
+			}
+		}) ;
+		init() ;
+	}
+	//---------------------------
+	public void init() {
+		setSize(300, 100) ;
+		setLayout(new FlowLayout()) ;
+		add(textField) ;
+		add(buttonOk) ;
+		add(buttonCancel) ;
+	}
+	//---------------------------
+}
+
+/** Dialog =============================================================*/
+import java.awt.* ;
+import java.awt.event.* ;
+import java.applet.* ;
+public class hoe extends java.applet.Applet implements MouseListener{
+	
+	GraphicsCanvas gc = new GraphicsCanvas() ;
+	//---------------------------
+	public hoe () {
+		gc.setSize(100, 100) ;
+		addMouseListener(this) ;
+	}
+	//---------------------------
+	public void init() {
+		add(gc) ;
+	}
+	//---------------------------
+	public void mousePressed(MouseEvent e) {} 
+	public void mouseClicked(MouseEvent e) {
+		for(int i = 0 ; i < 150 ; i++) 
+			gc.setLocation(i, 0) ;
+	}
+	public void mouseReleased(MouseEvent e) {}
+	public void mouseEntered(MouseEvent e) {}
+	public void mouseExited(MouseEvent e) {}
+}
+class GraphicsCanvas extends java.awt.Canvas {
+	public void paint(Graphics g) {
+		g.drawOval(10, 50, 40, 40) ;
+		g.drawLine(10, 50, 50, 90) ;
+		g.drawLine(50, 50, 10, 90) ;
+	}
+}
+
+
+
+
