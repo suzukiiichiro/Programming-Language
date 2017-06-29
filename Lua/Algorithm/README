@@ -1,0 +1,64 @@
+アルゴリズムとデータ構造
+
+01array.lua から順番に *.luaを習熟して下さい。
+ソースを模写する事から始めて、見ないで実装・実行できるレベルになったら次へ進みます。
+
+
+  Javaによるアルゴリズムとデータ構造も併せて習熟すると良いです。
+  https://github.com/suzukiiichiro/AI_Algorithm_Java
+  Bash版 N-Queen
+  https://github.com/suzukiiichiro/AI_Algorithm_Bash
+  Lua版  N-Queen
+  https://github.com/suzukiiichiro/AI_Algorithm_Lua
+
+
+
+
+アルゴリズムとデータ構造１
+
+   1. データ構造
+      <>配列          01array.lua               
+
+   2. 簡単なソート                             
+      <>バブルソート  02_1BubbleSort.lua        
+      <>選択ソート    02_2SelectionSort.lua     
+      <>挿入ソート    02_3InsertionSort.lua     
+
+   3. データ構造                               
+      <>スタック      03_1Stack.lua             
+      <>キュー        03_1Queque.lua            
+      <>円環キュー    03_1CircularQueue.lua     
+
+アルゴリズムとデータ構造２                     
+
+   4. 再帰                                     
+      <>階乗値        04_1Factorial.lua         
+      <>ユークリッド  04_2Euclid.lua            
+      <>三角数        04_3Trianglar.lua         
+      <>ハノイの塔    04_4Hanoi.lua             
+
+   5. 高度なソート                             
+      <>マージソート  05_1MergeSort.lua         
+      <>シェルソート  05_2ShellSort.lua         
+      <>クイックソート05_3QuickSort.lua         
+
+   6. ソートアルゴリズムまとめ
+      <>ソート比較    06SortAlgorithm.lua
+
+
+アルゴリズムとデータ構造３
+
+   7. プロフェッショナルlua N-Queen問題
+   https://github.com/suzukiiichiro/AI_Algorithm_N-Queen
+
+    １．ブルートフォース（力まかせ探索） 07_1NQueen.lua
+    ２．バックトラック                   07_2NQueen.lua
+    ３．配置フラグ（制約テスト高速化）   07_3NQueen.lua
+    ４．対称解除法(回転と斜軸）          07_4NQueen.lua
+    ５．枝刈りと最適化                   07_5NQueen.lua
+    ６．スレッド                         07_6NQueen.lua
+    ７．ビットマップ                     07_7NQueen.lua
+    ８．マルチスレッド                   07_8NQueen.lua
+
+
+
