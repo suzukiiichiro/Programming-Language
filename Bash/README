@@ -1,0 +1,1109 @@
+
+Bash script tutorial
+
+Bashを用いたシェルスクリプトのチュートリアルです。
+最速でBashシェルスクリプトの基礎をマスターしてもらうことを目標にしたチュートリ
+アルです。 以下のような内容を盛り込んだシェルスクリプトを題材に学習します。
+
+シェルスクリプトのコマンドは以下程度を覚えれば充分。必要に応じて覚えればよいです。
+
+cat
+grep  ex.grep -v  ex.grep -i
+sed 
+awk   ex.awk '{ print $1; }';
+head  ex.head -n10
+tail  ex.tail -n10
+sort  ex.sort -u / sort -n / sort -r
+uniq  ex.uniq -c  
+cut
+wc    wc -l
+mkdir mkdir -p
+/bin/cp
+/bin/rm
+touch ex. :> 
+wget  ex. wget http://xxx.com/***.html .
+
+
+変数と特殊変数
+関数
+条件分岐
+ループ
+入力待ちとキーボード入力
+
+これだけ盛り込まれていれば、シェルスクリプトでよく必要になる基本的な事項をかな
+りカバーできるようになっています。
+もちろんそれだけですべてではありませんが、あとは自分で調べながら目的に合ったシェ
+ルを作っていくことが出来ると思います。
+
+シェルスクリプトとは？
+そもそもシェルスクリプトとはなんでしょうか？ 通常コンソールで操作するようなコマ
+ンドを実行したい順に記述したテキストファイルです。 テキストファイルに処理を順に
+記述しておくことで一括で実行することが出来ます。このようなテキストファイルを	
+Shell
+スクリプトと呼びます。
+
+シェルスクリプトを構成するテキストファイルには決まったフォーマットというかお作法
+があります。 以下が基本のフォーマットです。
+
+
+#!/bin/bash
+(処理の記述)
+exit 0
+先頭行はこのスクリプトがbashで実行されることを宣言しています。
+最終行のexitは明示的にスクリプトが完了したことを表しています。
+
+「処理の記述」部分にOSに指示したい内容を書いていくことでシェルプログラミングがで	
+きます。
+ もっとも簡単なスクリプトは、以下のように、ただ実行したいコマンドを順に書いただ	
+ けのものです。
+
+
+#!/on usage() {
+    message=`cat <<EOF
+
+About this script:
+    Backup script for files
+Usage:
+    ${0} targent_file_name [backup_file_name]
+    target_file_name : file to backup
+    backup_file_name : backup file name
+                       default file_name is date and time based file_name
+                       yyyymmddhhmmss.tgz like 20140101000000.tgz
+EOF
+`
+    echo "${message}"
+    return 0
+}
+
+function die() {
+    if [ $# -eq 1 ] ; then
+        echo "ERROR : ${1}"
+    else
+        echo "ERROR : unknow error"
+    fi
+    usage
+    exit 1
+}
+
+if [ $# -lt 1 ]; then
+    die "missing target file name"
+fi
+
+if [ -e $1 ]; then
+    target_file_name=$1
+else
+    die "target file ${1} that you specified does not exists."
+fi
+
+if [ $2 ]; then
+    if [ -e $2 ]; then
+        die "backup file ${2} already exists"
+    else
+        backup_file_name=$2
+    fi
+else
+    backup_file_name=`date +%Y%m%d%H%M%S`.tgz
+fi
+
+echo -n "backup ${target_file_name} to ${backup_file_name} ? [yes/no] : "
+while read confirmation; do
+    case $confirmation in
+        'yes' ) tar zcf ${backup_file_name} ${target_file_name}
+            break ;;
+        'no' ) echo "stopped operation"
+            exit 0 ;;
+        *) echo "unknown option. try again."
+            echo -n "backup ${target_file_name} to ${backup_file_name} ? [yes/no]	
+             : " ;;
+    esac
+done
+
+if [ $? -eq 0 ] ; then
+    exit 0
+else
+    exit 1
+fi
+
+
+ まず、スクリプトの先頭にある"#!"で始まる行のことをshebang lineといいます。
+ このスクリプトが/bin/bashというプログラムで実行されることの宣言です。
+ このshebang lineを解析してコンピュータはこのスクリプトを/bin/bashで実行す
+ る必要があることを理解します。
+
+#!/bin/bash
+次に以下の部分は、関数宣言です。
+関数とはプログラム上から何度も呼ばれたりする処理をまとめて関数にしたものです。
+
+function usage() {
+    message=`cat <<EOF
+
+About this script:
+    Backup script for files
+Usage:
+    ${0} targent_file_name [backup_file_name]
+    target_file_name : file to backup
+    backup_file_name : backup file name
+                       default file_name is date and time based file_name
+                       yyyymmddhhmmss.tgz like 20140101000000.tgz
+EOF
+`
+    echo "${message}"
+    return 0
+}
+
+function die() {
+    if [ $# -eq 1 ] ; then
+        echo "ERROR : ${1}"
+    else
+        echo "ERROR : unknow error"
+    fi
+    usage
+    exit 1
+}
+以下の部分はシェルスクリプト実行時の引数のチェックと内部で使用する変数の準備です。
+ ここでは変数と特殊変数、if文による条件分岐について説明します。
+
+if [ $# -lt 1 ]; then
+    die "missing target file name"
+fi
+
+if [ -e $1 ]; then
+    target_file_name=$1
+else
+    die "target file ${1} that you specified does not exists."
+fi
+
+if [ $2 ]; then
+    if [ -e $2 ]; then
+        die "backup file ${2} already exists"
+    else
+        backup_file_name=$2
+    fi
+else
+    backup_file_name=`date +%Y%m%d%H%M%S`.tgz
+fi
+
+
+以下の部分は、スクリプトの中心となる処理を実行する部分です。
+ ここでは、ループとcaseを使った条件分岐について説明します。
+ また、ユーザの確認入力を待つ方法についても解説します。
+
+echo -n "backup ${target_file_name} to ${backup_file_name} ? [yes/no] : "
+while read confirmation; do
+    case $confirmation in
+        'yes' ) tar zcf ${backup_file_name} ${target_file_name}
+            break ;;
+        'no' ) echo "stopped operation"
+            exit 0 ;;
+        *) echo "unknown option. try again."
+            echo -n "backup ${target_file_name} to ${backup_file_name} ? [yes/no]	
+             : " ;;
+    esac
+done
+
+最後に終了時の処理です。
+ここは習慣的なものでもあり、なくてもプログラムは動作しますが、 
+このシェルスクリプトを他のシェルプログラムが利用するときに重要な
+終了ステータスを明示的に反して終了しています。
+
+if [ $? -eq 0 ] ; then
+    exit 0
+else
+    exit 1
+fiin/bash
+echo "hello world"
+echo "bye world"
+exit 0
+
+たとえば、上記のechoの部分を以下のように変更するだけで、
+簡単なバックアップスクリプトが作れます。
+
+このコマンドをディレクトリを作る（mkdirコマンドなど）
+必要なファイルをディレクトリにコピーする（cpコマンドなど）
+圧縮する（tarコマンドなど）
+不要なファイルを削除する（rmコマンドなど）
+バックアップサーバに転送する（scpなど）
+こういった一連の処理をまとめてシェルスクリプトにしておくだけで、シェルスクリプト	
+一つ起動するだけで面倒な作業を完了したり、オペレーションミスを減らしたり、といっ	
+た効果が生まれます。
+日ごろからよく行う作業などはシェルスクリプト化しておくというのはサーバ運用の基本	
+になります。
+
+
+題材
+本チュートリアルでは以下のスクリプトを題材に進めていきます。
+
+#!/bin/bash
+
+function usage() {
+    message=`cat <<EOF
+
+About this script:
+    Backup script for files
+Usage:
+    ${0} targent_file_name [backup_file_name]
+    target_file_name : file to backup
+    backup_file_name : backup file name
+                       default file_name is date and time based file_name
+                       yyyymmddhhmmss.tgz like 20140101000000.tgz
+EOF
+`
+    echo "${message}"
+    return 0
+}
+
+function die() {
+    if [ $# -eq 1 ] ; then
+        echo "ERROR : ${1}"
+    else
+        echo "ERROR : unknow error"
+    fi
+    usage
+    exit 1
+}
+
+if [ $# -lt 1 ]; then
+    die "missing target file name"
+fi
+
+if [ -e $1 ]; then
+    target_file_name=$1
+else
+    die "target file ${1} that you specified does not exists."
+fi
+
+if [ $2 ]; then
+    if [ -e $2 ]; then
+        die "backup file ${2} already exists"
+    else
+        backup_file_name=$2
+    fi
+else
+    backup_file_name=`date +%Y%m%d%H%M%S`.tgz
+fi
+
+echo -n "backup ${target_file_name} to ${backup_file_name} ? [yes/no] : "
+while read confirmation; do
+    case $confirmation in
+        'yes' ) tar zcf ${backup_file_name} ${target_file_name}
+            break ;;
+        'no' ) echo "stopped operation"
+            exit 0 ;;
+        *) echo "unknown option. try again."
+            echo -n "backup ${target_file_name} to ${backup_file_name} ? [yes/no]	
+             : " ;;
+    esac
+done
+
+if [ $? -eq 0 ] ; then
+    exit 0
+else
+    exit 1
+fi
+スクリプトファイル
+
+シェルスクリプトのファイル名に特にルールはありませんが、
+慣習的にxxx.shのように拡張子を.shにして、シェルスクリプトであることを明示するこ	
+とが多いです。
+ また、シェルスクリプトのファイルには実行するユーザに対する実行権限が必要です。
+ 上記題材のスクリプトをテキストファイルに記載して、実行権限をつけておいて動作を
+試しながら以降を読み進めてもらえるとよいと思います。
+
+
+
+題材スクリプトの概要
+それではスクリプトの解説に入ります。
+まずは、今回題材としたスクリプトのおおざっぱな構造と処理の流れを解説します。
+
+処理内容
+この題材スクリプトの仕様は以下の通りです。
+
+第1引数に指定したファイルをバックアップする。
+第1引数に指定したファイルを第2引数に指定したファイル名でtar zcfで圧縮します。
+第2引数が存在しない場合はスクリプトで日付+時刻ベースのファイル名を勝手に付与しま	
+す。
+引数指定が不正な場合は使用方法を表示して終了します。
+圧縮した結果のファイルが既に存在した場合は、処理を停止します。
+コードの概要
+
+スクリプトの全体は以下のようになっています。
+
+#!/bin/bash
+
+function usage() {
+    message=`cat <<EOF
+
+About this script:
+    Backup script for files
+Usage:
+    ${0} targent_file_name [backup_file_name]
+    target_file_name : file to backup
+    backup_file_name : backup file name
+                       default file_name is date and time based file_name
+                       yyyymmddhhmmss.tgz like 20140101000000.tgz
+EOF
+`
+    echo "${message}"
+    return 0
+}
+
+function die() {
+    if [ $# -eq 1 ] ; then
+        echo "ERROR : ${1}"
+    else
+        echo "ERROR : unknow error"
+    fi
+    usage
+    exit 1
+}
+
+if [ $# -lt 1 ]; then
+    die "missing target file name"
+fi
+
+if [ -e $1 ]; then
+    target_file_name=$1
+else
+    die "target file ${1} that you specified does not exists."
+fi
+
+if [ $2 ]; then
+    if [ -e $2 ]; then
+        die "backup file ${2} already exists"
+    else
+        backup_file_name=$2
+    fi
+else
+    backup_file_name=`date +%Y%m%d%H%M%S`.tgz
+fi
+
+echo -n "backup ${target_file_name} to ${backup_file_name} ? [yes/no] : "
+while read confirmation; do
+    case $confirmation in
+        'yes' ) tar zcf ${backup_file_name} ${target_file_name}
+            break ;;
+        'no' ) echo "stopped operation"
+            exit 0 ;;
+        *) echo "unknown option. try again."
+            echo -n "backup ${target_file_name} to ${backup_file_name} ? [yes/no]	
+             : " ;;
+    esac
+done
+
+if [ $? -eq 0 ] ; then
+    exit 0
+else
+    exit 1
+fi
+
+
+まず、スクリプトの先頭にある"#!"で始まる行のことをshebang lineといいます。
+ このスクリプトが/bin/bashというプログラムで実行されることの宣言です。
+ このshebang lineを解析してコンピュータはこのスクリプトを/bin/bashで実行する必要	
+ があることを理解します。
+
+#!/bin/bash
+次に以下の部分は、関数宣言です。関数とはプログラム上から何度も呼ばれたりする処理	
+をまとめて関数にしたものです。
+
+function usage() {
+    message=`cat <<EOF
+
+About this script:
+    Backup script for files
+Usage:
+    ${0} targent_file_name [backup_file_name]
+    target_file_name : file to backup
+    backup_file_name : backup file name
+                       default file_name is date and time based file_name
+                       yyyymmddhhmmss.tgz like 20140101000000.tgz
+EOF
+`
+    echo "${message}"
+    return 0
+}
+
+function die() {
+    if [ $# -eq 1 ] ; then
+        echo "ERROR : ${1}"
+    else
+        echo "ERROR : unknow error"
+    fi
+    usage
+    exit 1
+}
+
+
+以下の部分はシェルスクリプト実行時の引数のチェックと内部で使用する変数の準備です。
+ ここでは変数と特殊変数、if文による条件分岐について説明します。
+
+if [ $# -lt 1 ]; then
+    die "missing target file name"
+fi
+
+if [ -e $1 ]; then
+    target_file_name=$1
+else
+    die "target file ${1} that you specified does not exists."
+fi
+
+if [ $2 ]; then
+    if [ -e $2 ]; then
+        die "backup file ${2} already exists"
+    else
+        backup_file_name=$2
+    fi
+else
+    backup_file_name=`date +%Y%m%d%H%M%S`.tgz
+fi
+
+
+ 以下の部分は、スクリプトの中心となる処理を実行する部分です。
+ ここでは、ループとcaseを使った条件分岐について説明します。
+ また、ユーザの確認入力を待つ方法についても解説します。
+
+echo -n "backup ${target_file_name} to ${backup_file_name} ? [yes/no] : "
+while read confirmation; do
+    case $confirmation in
+        'yes' ) tar zcf ${backup_file_name} ${target_file_name}
+            break ;;
+        'no' ) echo "stopped operation"
+            exit 0 ;;
+        *) echo "unknown option. try again."
+            echo -n "backup ${target_file_name} to ${backup_file_name} ? [yes/no]	
+             : " ;;
+    esac
+done
+
+
+最後に終了時の処理です。
+ここは習慣的なものでもあり、なくてもプログラムは動作しますが、 
+このシェルスクリプトを他のシェルプログラムが利用するときに重要な終了ステータスを	
+明示的に反して終了しています。
+
+if [ $? -eq 0 ] ; then
+    exit 0
+else
+    exit 1
+fi
+
+
+
+コードの解説 (変数、条件判定)
+それではコードの解説に入ります。
+
+一番最初の関数の宣言部分は後回しで説明したいので、まず最初に以下の部分を見ていき	
+ます。
+
+if [ $# -lt 1 ]; then
+    die "missing target file name"
+fi
+
+if [ -e $1 ]; then
+    target_file_name=$1
+else
+    die "target file ${1} that you specified does not exists."
+fi
+
+if [ $2 ]; then
+    if [ -e $2 ]; then
+        die "backup file ${2} already exists"
+    else
+        backup_file_name=$2
+    fi
+else
+    backup_file_name=`date +%Y%m%d%H%M%S`.tgz
+fi
+
+
+この部分を理解するためにまず、変数、特殊変数、そして条件分岐の一つであるif～	
+then～の構文を理解する必要があります。 まずこの三つを解説します。
+
+変数
+
+変数の宣言は以下のように変数名にイコール（=）をつけて値を代入します。
+
+変数名=値
+そして変数を使うときは以下のように変数名に$マークをつけることで変数の値にアクセ	
+スできます。
+ 使うときはなるべく${変数名}のように{}で囲んだほうが安全です。
+
+${変数名}
+$変数名
+プログラム上では、以下の部分が変数宣言に該当します。
+
+target_file_name=$1                          # $1の値を代入
+backup_file_name=$2                          # $2の値を代入
+backup_file_name=`date +%Y%m%d%H%M%S`.tgz    # dateコマンドの結果と文字列".tgz"	
+を連結した結果を代入
+また、以下のような場所で変数を利用してました。
+
+target_file_name=$1                          # $1の値を代入
+backup_file_name=$2                          # $2の値を代入
+die "target file ${1} that you specified does not exists."
+                                             # $1の中身を文字列に埋め込み
+die "backup file ${2} already exists"
+                                             # $2の中身を文字列に埋め込み
+$1、$2は特殊変数という特別な変数ですが、ほかの変数のように$に続く変数名の中に値	
+を持っています。
+
+なお、変数宣言の注意点として、イコール（=）の前後にスペースがあってはいけません。
+
+name=value    # OK
+name = value  # NG
+特殊変数
+
+ここまで、$1、$2という記号が出てきましたが、これらはシェルプログラムの中では特殊	
+変数と呼ばれています。
+ 一般的な変数はシェルプログラミングの中でユーザが明示的に宣言をして利用していき	
+ ます。
+特殊変数は、このような一般の変数とはちょっと異なり、プログラム自身が予約している	
+特別な変数になります。
+
+特殊変数が持っている主な値は、シェルプログラム自身に関する情報です。
+特にシェルを実行したときの引数などがこれにあたります。
+ 上記の$1や$2にはシェルプログラム実行時の第1引数、第2引数がそれぞれ格納されてい	
+ ます。
+
+特殊変数には以下のようなものがあります。ちなみにこれらの特殊な変数は参照されるだ	
+けであり、値を代入することは許されません。
+
+変数名	概要
+$0	シェルスクリプトのファイル名
+$1～$n	シェル引数の値。
+$1は第1引数、$2は第2引数…。
+$#	シェル引数の数
+$*	全引数リスト。"$*"のようにダブルクオートで囲むと、"$1 $2 … $n"形式。
+$@	全引数リスト。"$@"のようにダブルクオートで囲むと、"$1" "$2" … "$n"形式。
+$$	実行中のシェルのプロセスID。
+$?	最後に実行したコマンドのリターンコード(戻り値)。通常は成功していれば0
+$-	シェルの実行オプション（setコマンドや#!/bin/bash行に付けたオプション。
+$!	シェルが最後に実行したバックグラウンドプロセスのPID。
+条件分岐
+
+多くの言語でサポートされているif文による条件分岐はbashでも利用可能です。
+
+基本の構文は以下の通りです。
+
+if 条件式1;
+then
+    条件式1が真だったときに実行する処理
+elif 条件式2
+    条件式1が偽で条件式2が真だったときに実行する処理
+else
+    条件式1と条件式2が偽だったときに実行する処理
+fi
+elifやelseの部分は不要であればない場合もあります。 以下は条件式が一つだけの場合	
+です。
+
+if 条件式;
+then
+    条件式が真だったときに実行する処理
+else
+    条件式が偽だったときに実行するデフォルトの処理
+fi
+デフォルトの挙動も無い場合は以下のようになります。
+
+if 条件式;
+then
+    条件式が真だったときに実行する処理
+fi
+ちなみに、thenの部分はこれだけのために一行使うのも無駄が多いので、以下のようにす	
+るのも一般的です。
+
+if 条件式; then
+    条件式が真だったときに実行する処理
+fi
+
+次に条件式の記述方法です。条件式の部分には基本的には、成功すれば0を返し、失敗し	
+たら0以外を返すコマンドを利用可能です。 ここですべてを説明してしまうと話が長くなっ	
+てしまい、チュートリアルの趣旨からだいぶ外れてしまいそうなので、よく使う方法	
+(test)を説明しておきます。
+
+if文などの条件判定に特化したコマンドとして、testコマンドがあります。 testコマン	
+ドは引数を比較したり、引数に指定したファイルの有無をチェックしたりする条件判定で	
+よく使う判定に特化したコマンドです。
+
+例えば、シェルの実行パラメータとして引数が1個以上必要な場合、引数の個数をチェッ	
+クして足りなかった場合に処理を停止したいといった場合があります。 これをtestコマ	
+ンドを用いて表現すると以下のようになります。
+
+if test $# -lt 1; then
+    die "missing target file name"
+fi
+さらにtestコマンドは簡略表現が用意されていて[]で条件式を囲むとtestコマンドに与え	
+ることになります。この簡略表現を利用すると上記は以下のように書き直すことができま	
+す。
+
+if [ $# -lt 1 ]; then
+    die "missing target file name"
+fi
+シェルスクリプトの多くはこの表現を使うことが一般的です。なんとなく"if [ 条件式 ]	
+"という表現はほかのプログラミング言語の"if()"にも似てますし、読みやすさの観点か	
+らも好まれています。 記述の際、"if [ 条件式 ]"のスペースは注意が必要です。ifの後、	
+[の後、]の前には必ず半角スペースが必要です。
+
+$#というのは引数の数を保持している特殊変数です。それに対して"-lt"の部分は"less 	
+than"を表していています。 全体で「引数の数が1より少なかったら～」という条件式に	
+なっています。-ltなどの部分はほかにもたくさんバリエーションがあります。
+
+testコマンドで数値の比較の場合は以下のような演算子が利用可能です。
+
+利用可能な演算子	該当する算術演算子
+-eq	＝
+-ne	≠
+-lt	＜
+-le	≦
+-gt	＞
+-ge	≧
+文字列比較の場合は以下のような演算子が利用可能です。
+
+利用可能な演算子	該当する比較演算子
+=	＝
+!=	≠
+ファイルに関する判定の場合は以下のような演算子が利用可能です。
+
+利用可能な演算子	該当する比較演算子
+-e	ファイルが存在するかどうか
+-f	指定したファイルが通常のファイルかどうか
+-d	指定したファイルがディレクトリかどうか
+-s	指定したファイルのサイズがあるかどうか（空のファイルの場合1を返す）
+-r	ファイルに読み取り属性があるかどうか
+-w	ファイルに書き込み属性があるかどうか
+-x	ファイルに実行可能属性があるかどうか
+-nt	左辺が右辺より新しいか(newer than)
+-ot	左辺が右辺より古いか(older than)
+コード解説
+
+ここまでの情報でソースコードを見ていきます。 最初の部分は引数チェックです。
+
+if [ $# -lt 1 ]; then
+    die "missing target file name"
+fi
+この部分は、条件判定を用いて引数の数をチェックしています。
+引数が1つ以上ない場合はシェルプログラムを継続することが出来ません。
+ そのため、die関数を呼び出して停止します。die関数については後程解説します。
+
+以下の部分ではさらに引数を細かくチェックしています。 この部分は引数に指定したバッ	
+クアップ対象のファイルが存在するかどうかをチェックしています。
+
+if [ -e $1 ]; then
+    target_file_name=$1
+else
+    die "target file ${1} that you specified does not exists."
+fi
+"[ -e $1 ]"の部分は第一引数で指定されたバックアップ対象のファイルが存在するかど	
+うかをチェックして、存在すれば、変数target_file_nameに代入しています。 ファイル	
+が存在しない場合は、シェルプログラムを継続することが出来ません。die関数を呼び出	
+して停止します。
+
+最後の部分はif文の入れ子になっています。
+
+if [ $2 ]; then
+    if [ -e $2 ]; then
+        die "backup file ${2} already exists"
+    else
+        backup_file_name=$2
+    fi
+else
+    backup_file_name=`date +%Y%m%d%H%M%S`.tgz
+fi
+外側のif文では$2引数が存在するかどうかだけを"if [ $2 ]"という簡単なチェックで調	
+べています。 このif文では$2という引数が存在する場合（[ $2 ]がtrueの場合）と存在	
+しない場合で処理を分岐しています。
+
+第2引数である$2が存在しなければ、以下の部分で日付形式のファイル名(変数	
+backup_file_name)を指定します。
+
+backup_file_name=`date +%Y%m%d%H%M%S`.tgz
+この中の以下のコマンドは20140102030405のような日付＋時刻の文字列を出力します。
+
+date +%Y%m%d%H%M%S
+結果、全体で変数backup_file_nameの中には20140102030405.tgzという文字列の値が格納	
+されます。
+
+第2引数である$2が存在した場合は、さらに過去に作成したバックアップファイルを上書	
+きしてはいけないので、内側のif文の中ですでにファイルが存在しないかどうかをチェッ	
+クします。 第2引数である$2で指定したファイルがすでに存在した場合（[ -e $2 ]が	
+trueの場合）は、処理を停止します。
+
+コードの解説 (入力待ち、whileループ、case)
+
+
+  
+
+ 
+次に以下の部分を解説します。 この部分は、今回のプログラムの中心的な処理になりま	
+す。
+
+echo -n "backup ${target_file_name} to ${backup_file_name} ? [yes/no] : "
+while read confirmation; do
+    case $confirmation in
+        'yes' ) tar zcf ${backup_file_name} ${target_file_name}
+            break ;;
+        'no' ) echo "stopped operation"
+            exit 0 ;;
+        *) echo "unknown option. try again."
+            echo -n "backup ${target_file_name} to ${backup_file_name} ? [yes/no]	
+             : " ;;
+    esac
+done
+この部分を理解するためにまず、キーボードから入力を待つ方法、ループ、そして条件分	
+岐の一つであるcaseの構文を理解する必要があります。 まずこの三つを解説します。
+
+入力待ち
+
+シェルスクリプトではキーボードからの入力を受け取って動作を制御したりすることが可	
+能です。キーボードからの入力待ちをおこなうにはreadコマンドを使用します。 シェル	
+のプロンプトからreadコマンドに引数として変数名を与えると、入力を待ち状態に入りま	
+す。この入力待ち状態は、Enterキーがたたかれるまで継続します。 Enterキーが叩かれ	
+たら、それまでにキーボードから入力された文字列が引数で変数名を与えた変数に格納さ	
+れます。
+
+read 変数名
+以下のスクリプトをsay_something.shとして作成します。
+
+#!/bin/bash
+
+echo -n "say something : "
+read message
+echo "message : $message"
+これを実行してみます。 最初のechoコマンドで"say something : "という出力をして入	
+力待ちに入りますので、何か入力した後に、Enterキーで終了させます。
+
+$ ./say_something.sh
+say something : hello(Enter)
+message : hello
+となると思います。
+
+ちなみにecho に-nオプションをつけたのは、行末の改行を出力抑制するためです。 read	
+を使用したプロンプト表示でよく使うので覚えておくと便利です。
+
+whileループ
+
+シェルスクリプトでは一定の条件の間、同じ処理を繰り返すということがしたい場合があ	
+ります。そのような条件判定で繰り返し制御をおこなうループはwhile構文で実現します。	
+ whileの基本的な構文は以下の通りです。
+
+while 条件式
+do
+    実行文
+done
+条件式の内容が真(0)である限り、実行文が繰り返され、条件式の内容が偽(0以外)になる	
+とループが停止します。
+
+条件分岐（case）
+
+他のプログラミング言語同様、if文以外の条件分岐としてcase文も使えます。多数の条件	
+分岐を行うときなどではcaseのほうが記述量が少なく便利だったりする場合があります。	
+ caseを用いた条件分岐の基本的な構文は以下の通りです。
+
+case $var in
+    'yes' ) 実行文1 ;;
+    'no' ) 実行文2 ;;
+    *) 実行文3 ;;
+esac
+この場合、$varの値が'yes'だった場合は実行文1、'no'だった場合は実行文2、それ以外	
+の場合は実行文3が実行されることになります。 caseを用いた条件分岐ではif文のように	
+値の範囲を条件に分岐したりすることはできません。このあたりは使い分ける必要があり	
+ます。
+
+コード解説
+
+ここまでの情報でソースコードを見ていきます。 最初の部分はユーザに確認の文章を表	
+示するところです。
+
+echo -n "backup ${target_file_name} to ${backup_file_name} ? [yes/no] : "
+これから${backup_file_name}を${target_file_name}に保存するので最終確認になります。	
+ ユーザからのキーボードでの入力としては、yesまたはnoを期待しています。
+
+ここからwhileのループに入りますが、なぜか、条件文のところにread confirmationがあ	
+ります。
+
+readコマンドを実行して、キーボードからの入力があり、最後にEnterが入力され、正常	
+にreadコマンドが終了すると、readコマンドが真を返します。 ということは、正常に入	
+力があると、whileの条件文がtrueになり、ループの中の処理が実行されることになりま	
+す。 whileの条件文はいつも真を返すので無限ループになるように作られています。無限	
+ループについては別の場所で止める必要があります。
+
+while read confirmation; do
+    case $confirmation in
+        'yes' ) tar zcf ${backup_file_name} ${target_file_name}
+            break ;;
+        'no' ) echo "stopped operation"
+            exit 0 ;;
+        *) echo "unknown option. try again."
+            echo -n "backup ${target_file_name} to ${backup_file_name} ? [yes/no]	
+             : " ;;
+    esac
+done
+キーボードからの入力が完了するとwhileループの中の以下のcase文が実行されます。 	
+case文では、readで作成した$confirmationの値を使って条件分岐をしています。 	
+$confirmationの値が'yes'の時はtarを使った圧縮処理を実行します。また、	
+$confirmationの値が'no'だったときは処理を停止します。$confirmationの値が'yes'で	
+も'no'でもなかったときは、入力の誤りとみなし再度、確認を繰り返します。これが無限	
+ループになっていた理由です。
+
+case $confirmation in
+    'yes' ) tar zcf ${backup_file_name} ${target_file_name}
+        break ;;
+    'no' ) echo "stopped operation"
+        exit 0 ;;
+    *) echo "unknown option. try again."
+        echo -n "backup ${target_file_name} to ${backup_file_name} ? [yes/no] : 	
+        " ;;
+esac
+なお、case文の分岐では$confirmationの値が'yes'の場合は'break'が最後に実行されて	
+います。 breakはループを抜け出すときに利用します。この場合、$confirmationが'yes'	
+になった時点で目的の処理が実行されます。その後、プログラムを終了させるためにルー	
+プを抜け出しています。
+
+
+コードの解説 (リターンコード、関数宣言、ヒアドキュメント)
+
+
+  
+
+ 
+次に以下の二カ所について解説します。
+
+ひとつはスクリプトの先頭の関数宣言の部分で、もう一つは、スクリプトの最後の終了処	
+理の部分です。
+
+function usage() {
+    message=`cat <<EOF
+
+About this script:
+    Backup script for files
+Usage:
+    ${0} targent_file_name [backup_file_name]
+    target_file_name : file to backup
+    backup_file_name : backup file name
+                       default file_name is date and time based file_name
+                       yyyymmddhhmmss.tgz like 20140101000000.tgz
+EOF
+`
+    echo "${message}"
+    return 0
+}
+
+function die() {
+    if [ $# -eq 1 ] ; then
+        echo "ERROR : ${1}"
+    else
+        echo "ERROR : unknow error"
+    fi
+    usage
+    exit 1
+}
+
+（中略）
+
+if [ $? -eq 0 ] ; then
+    exit 0
+else
+    exit 1
+fi
+この部分を理解するためにまず、リターンコード、関数を作る方法、ヒアドキュメントを	
+理解する必要があります。 まずこの三つを解説します。
+
+リターンコード
+
+題材のシェルプログラムの最後の部分に以下のような場所があります。
+
+if [ $? -eq 0 ] ; then
+    exit 0
+else
+    exit 1
+fi
+シェルや多くのLinuxコマンドではリターンコード(戻り値)を返します。 全ての処理が正	
+常に終わった場合は、"exit 0"で終了するのが作法です。 途中の処理が失敗している場	
+合は"exit 1"などで終了しておくことで、スクリプトでエラーが発生していることを利用	
+者に伝えることができます。ここでいう0や1はリターンコードと呼ばれます。特にコマン	
+ドが成功したかどうかを気にする必要がない場合は省略してもかまいませんが、そうでな	
+い場合は、以下のフォーマットのように、終了ステータスと一緒にスクリプトを終わらせ	
+ておくとよいと思います。
+
+#!/bin/bash
+(処理の記述)
+exit 0
+リターンコードは、コマンドの実行結果が成功した場合は0、失敗した場合は0以外（通常	
+は1）を返すのが習慣です。
+
+直前のコマンドが成功/失敗を表すリターンコードは$?という特殊変数に格納されていま	
+す。 以下では$?に格納されているリターンコードを確認しています。 "1回目の"mkdir 	
+test"ではディレクトリ作成に成功したので、"echo $?"の結果が0になっていて、2回目の	
+"mkdir test"ではすでにディレクトリがあるのでディレクトリの作成に失敗します。その	
+ため、2回目の"echo $?"の結果は1になっています。
+
+$ mkdir test
+$ echo $?
+0
+$ mkdir test
+mkdir: ディレクトリ `test' を作成できません: ファイルが存在します
+$ echo $?
+1
+関数宣言
+
+関数の宣言は以下の書式で行います。
+
+function 関数名() {
+     実際の処理
+}
+引数
+
+宣言"function 関数名()"の部分で引数を指定しておく必要はありません。 引数はシェル	
+の引数と同様に$1～といった特殊変数に格納されています。関数宣言の中でも以下のよう	
+な特殊変数が利用できます。
+
+変数名	概要
+$0	シェルスクリプトのファイル名
+$1～$n	シェル引数の値。$1は第1引数、$2は第2引数…。
+$#	シェル引数の数
+$*	全引数リスト。"$*"のようにダブルクオートで囲むと、"$1 $2 … $n"形式。
+$@	全引数リスト。"$@"のようにダブルクオートで囲むと、"$1" "$2" … "$n"形式。
+$$	実行中のシェルのプロセスID。
+$?	最後に実行したコマンドのリターンコード(戻り値)。通常は成功していれば0
+$-	シェルの実行オプション（setコマンドや#!/bin/bash行に付けたオプション。
+$!	シェルが最後に実行したバックグラウンドプロセスのPID。
+ただし、$0や$$のように実行中のスクリプトの値も入っていますので注意してください。	
+ $0は関数の名前などではなく、元のスクリプトの名前が入っています。 念のため、以下	
+のスクリプトで試してみます。
+
+#!/bin/bash
+
+echo "script name \$0: "$0
+echo "arg 1 \$1: "$1
+echo "arg 2 \$2: "$2
+echo "arg 3 \$3: "$3
+echo "args count \$#: "$#
+echo "args list \$@: "$@
+echo "args list \$*: "$*
+echo "PID \$\$: "$$
+
+function param_test() {
+    echo "script name \$0: "$0
+    echo "arg 1 \$1: "$1
+    echo "arg 2 \$2: "$2
+    echo "arg 3 \$3: "$3
+    echo "args count \$#: "$#
+    echo "args list \$@: "$@
+    echo "args list \$*: "$*
+    echo "PID \$\$: "$$
+}
+
+param_test "func_param_1", "func_param_2"
+これを実行した結果は以下のようになります。 $$や$0は元のスクリプトに依存する値に	
+なっています。
+
+$ ./param.sh script_param_1, script_param_2, script_param_3
+script name $0: ./param.sh
+arg 1 $1: script_param_1,
+arg 2 $2: script_param_2,
+arg 3 $3: script_param_3
+args count $#: 3
+args list $@: script_param_1, script_param_2, script_param_3
+args list $*: script_param_1, script_param_2, script_param_3
+PID $$: 13008
+script name $0: ./param.sh
+arg 1 $1: func_param_1,
+arg 2 $2: func_param_2
+arg 3 $3:
+args count $#: 2
+args list $@: func_param_1, func_param_2
+args list $*: func_param_1, func_param_2
+PID $$: 13008
+処理結果
+
+シェルスクリプトにおいては、ほかのプログラミング言語における戻り値のようなものは	
+ありません。 代わりに、終了ステータス、標準出力を使用します。 終了ステータスは正	
+常終了であれば0、異常であればそれ以外の値というのが通常です。 return文で0または1	
+を返すことで関数の正常／異常を通知することができます。 また標準出力を使用して、	
+処理結果を返すのが一般的です。
+
+ヒアドキュメント
+
+最後に関数のお話とはあまり関係ないですが、よく使用されるヒアドキュメントについて。
+
+シェルスクリプトでもヒアドキュメントを使用することが可能です。 複数行のテキスト	
+を出力するといった場合、以下のように複数行を出力することも可能です。
+
+cat "文字列1行目" >> out.txt
+cat "文字列2行目" >> out.txt
+cat "文字列3行目" >> out.txt
+または
+
+echo "文字列1行目" >> out.txt
+echo "文字列2行目" >> out.txt
+echo "文字列3行目" >> out.txt
+同じことを、ヒアドキュメントで行う場合は以下のようにします。
+
+標準出力に出力する場合は、
+
+cat <<EOF
+文字列1行目
+文字列2行目
+文字列3行目
+EOF
+ファイルに出力する場合は、
+
+cat <<EOF > out.txt
+文字列1行目
+文字列2行目
+文字列3行目
+EOF
+変数に格納する場合は、
+
+var=`cat <<EOF
+文字列1行目
+文字列2行目
+文字列3行目
+EOF
+`
+のようにすることができます。
+
+コード解説
+
+ここまでの情報でソースコードを見ていきます。 最初の部分はユーザにヘルプとして操	
+作方法の文章を表示するところです。
+
+function usage() {
+    message=`cat <<EOF
+
+About this script:
+    Backup script for files
+Usage:
+    ${0} targent_file_name [backup_file_name]
+    target_file_name : file to backup
+    backup_file_name : backup file name
+                       default file_name is date and time based file_name
+                       yyyymmddhhmmss.tgz like 20140101000000.tgz
+EOF
+`
+    echo "${message}"
+    return 0
+}
+ヒアドキュメントを用いて複数行テキストを変数messageに格納してから終了しています。	
+念のため関数が成功したら終了ステータスとして0を返しています。
+
+次の部分は、異常終了時の処理をdie関数にしています。 die関数は、最初のif文で出力	
+すべきメッセージが与えられれば、それをエラーメッセージとして出力し、そうでない場	
+合は不明なエラーである旨の出力をおこないます。 その後、共通的にusage関数を実行し	
+て、ユーザにこのシェルスクリプトの使い方の情報を表示してから終了します。 最後に、	
+異常終了のステータスである1とともにexitを用いてプログラム自体を終了します。
+
+function die() {
+    if [ $# -eq 1 ] ; then
+        echo "ERROR : ${1}"
+    else
+        echo "ERROR : unknow error"
+    fi
+    usage
+    exit 1
+}
+シェルプログラム全体では3か所でdie関数が呼ばれますが、このように何度も実行される	
+処理を一つの関数にまとめておくことで、 エラーメッセージの出力形式を共通化したり、	
+仕様変更時の修正箇所を関数内に限ることができます。
+
+
+
