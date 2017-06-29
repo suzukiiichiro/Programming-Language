@@ -1,0 +1,374 @@
+
+bash 基本ルール
+
+１．ログインする。（自分のアカウントのホームディレクトリにログインします）
+２．作業ディレクトリ(work)に移動する（なければ作成する）
+    $ mkdir work（Enter）
+
+３．作業ディレクトリに移動できたかを確認する
+　　$ pwd (Enter)
+      $ ~/work ( 作業ディレクトリworkに移動できた）
+
+４．作業ディレクトリに実行ファイルを作成する
+　　$ touch hello.sh 
+
+５．実行ファイルに実行権限を付与する
+　　＄ chmod -x hello.sh
+
+６．実行ファイルをエディタ(vim)でひらく
+　　＄ vim hello.sh
+
+７．１行目に利用するシェルを書く
+
+　　#!/bin/bash　
+
+８．３行目に以下をコピペ
+    echo “Hello world” ;
+
+９．vim を保存して閉じる
+　　:wq
+
+１０．実行してみる
+　　$ ./hello.sh
+
+１１．４行目に以下を書いてみる
+　　echo “日本語” ;
+
+１２．vim を保存して閉じる
+　　:wq
+
+１３．実行してみる
+　　$ ./hello.sh
+
+
+実効できない場合
+　パターン１　ソースないに含まれる日本語の文字コード・または改行コードがOSとあってない
+  NKF(日本語漢字フィルタ）がインストールされているかを調べる
+
+　$which nkf 
+
+　インストールされている場合
+  $ /usr/bin/nkf
+
+
+  LINUX
+  yum install nkf
+
+  mac 
+  sudo ports install nkf
+
+  windows 
+　nkfのダウンロードサイトへ行く
+
+
+　パターン２　実行権限があるかを確認
+ 
+  $ la -la hello.sh
+
+    -rwxr-xr-x    755 になっていればオッケーです。
+　　r 読み取り権限
+　　w 書き込み源現
+　　x 実行権限
+
+
+　パターン３　ファイルを読み書きしている場所と実行している場所が同じであるか？
+　パターン４　タイプミスをしていないか
+
+
+
+以下、プログラム言語のシンタックス（構文規則）を覚える事と
+アルゴリズムの習熟とは別問題なので、読み飛ばして大丈夫です。
+余力があれば読みましょう。
+
+
+$ vim hello.sh
+
+#!/bin/bash 
+s="hello"
+
+# こういう書き方ができる
+echo $s #hello
+echo "$s" #hello
+echo "${s}" #hello
+
+# 文字列の連結はくっつけるだけ
+echo $s$s # hellohello
+echo "$s $s" # hello hello
+
+間違った書き方以下、まねしないように。
+
+#!/bin/bash
+
+# =の前後にスペースを入れてはいけない。
+s = "hello"
+# 変数の中身ではなく文字列として表示されてしまう
+echo '$s'
+
+
+四則演算
+
+計算したい時は`(バッククォート)を使う
+数値として展開したい変数の前にexprを使う。
+（この時計算する四則演算記号の前後にスペースを入れる）
+掛け算やカッコを使う場合は \* のように、記号の前にバックスラッシュが必要（エスケープ）
+readonly とすると変数の上書きができなくなる
+
+#!/bin/bash 
+
+x=10 ;
+echo $x ; # 10 
+echo $x+2 ; # 10+2
+echo `expr $x + 2` ; # 12
+echo `expr \($x + 5\) \* 2` ; # 30 
+echo $(( ($x+5)*2 )) ; #30
+
+readonly y=20
+y=25 # y: readonly variableというエラーが出る
+
+
+配列
+添字を指定して中身を取り出すには波括弧を使う
+$aで最初の要素が表示される
+${a[@]}で全ての要素が表示される
+${#a[@]}で要素数が表示される
+
+#!/bin/bash
+
+a=(2 4 6)
+echo $a # 2
+echo ${a[0]} # 2
+echo ${a[1]} # 4
+echo ${a[@]} # 2 4 6
+echo ${#a[@]} # 3
+
+# 中括弧を忘れた場合、最初の要素と文字列を連結した文字列になる
+echo $a[1] # 2[1]
+値の代入、要素の追加
+
+
+代入、追加時に中括弧は要らない
+`date`は日付や曜日を要素とした配列になっている。
+
+#!/bin/bash
+
+a=(2 4 6)
+a[2]=10 
+echo ${a[@]} # 2 4 10
+
+a+=(20 30)
+echo ${a[@]} # 2 4 10 20 30
+
+d=(`date`)
+echo $d # 2014年 11月 12日 水曜日 11時09分30秒 JST
+echo ${d[3]} # 水曜日
+
+
+条件式
+
+正常終了は0が返ってくる
+testコマンドで条件式を評価できる（ちなみにtestは[]で置き換え可能）
+$?で、直前に終了した命令が正常終了したかどうかを評価する
+比較演算子
+
+-eq ： equal
+-ne ： not equal
+-gt ： greater than (◯◯より大きい)
+-ge ： greater than or equal (◯◯以上)
+-lt ： less than (◯◯より小さい)
+-le ： less than or equal (◯◯以下)
+hello.sh
+test 1 -eq 2; echo $? # 1 ←正常でない
+test 1 -eq 1; echo $? # 0 ←正常終了
+
+文字列の比較演算子
+= ： 等値（前後にスペース）
+!= ： 不等値
+-z  : 空白だったら
+
+ファイルの比較演算子
+-f   : ファイルがあるかどうか
+-d ： ディレクトリかどうか)
+
+論理演算子
+-a ： and
+-o ： or
+! ： is not
+
+if文
+ifのあとに条件式を書く　条件に合致していればthenからfiまで実行
+
+#!/bin/bash 
+
+x=20
+if [ $x -gt 60 ]
+ then
+  echo "ok!"
+elif [ $x -gt 40 ]
+ then
+  echo "soso..."
+else
+  echo "ng...."
+fi
+
+# ng....
+
+
+case文 caseの値に合致したときに処理は)から;;まで
+何にも当てはまらない時の条件は*)で指定する
+
+#!/bin/bash
+
+signal="red"
+case $signal in
+ "red")
+  echo "stop!"
+  ;;
+ "yellow")
+  echo "caution!"
+  ;;
+ "green")
+  echo "go!"
+  ;;
+ *)
+  echo "..."
+  ;;
+esac
+# stop!
+
+
+ループ処理 while文
+条件式の間だけdoとdoneの間の処理を行う
+
+#!/bin/bash
+
+i=0
+while [ $i -lt 10 ]
+do
+    i=`expr $i + 1`
+    echo $i
+done
+
+
+途中で抜けたりしたい時
+
+#!/bin/bash
+
+# $iが3の時にはなにもしない
+# $iが10より大きくなったらループ終了
+i=0
+while : # :を使うと常に0(正常終了)を返すので、無限ループになる
+do
+    i=`expr $i + 1`
+    if [ $i -eq 3 ]; then
+        continue
+    fi
+    if [ $i -gt 10 ]; then
+        break
+    fi  
+    echo $i
+done
+
+
+for文  inに続くスペース区切りの値を入れていきdoとdoneの間の処理を実行
+
+#!/bin/bash
+
+for i in 1 2 3 4 5
+do
+    echo $i
+done
+
+
+配列を使いたい時
+
+#!/bin/bash
+
+a=(1 2 3 4 5)
+for i in ${a[@]}
+do
+    echo $i
+done
+
+
+コマンド引数の使い方
+
+#!/bin/bash
+
+echo $0 # ファイル名
+echo $1 # 1番目の引数
+echo $2 # 2番めの引数
+echo $@ # 全ての引数
+echo $# # 引数の数
+
+
+ユーザーからの入力を受け付る
+readコマンドを使うことで受け取った値を変数に代入できる。以下はkeyという変数にユーザーの入力した値を入れて処理している。
+
+#!/bin/bash
+
+while : 
+do
+    read key
+    echo "you pressed $key"
+    if [ $key = "end" ]; then
+        break
+    fi
+done
+
+
+選択肢で選ばせる  select というコマンドを使う
+
+#!/bin/bash
+
+select option in CODE DIE
+do
+    echo "you pressed $option"
+    break;
+done
+
+選択肢が表示され、ユーザーは数字で選べる。
+1) CODE
+2) DIE
+
+$? 1
+you pressed CODE
+
+
+ファイルから入力する
+以下は引数に指定したファイルを読み込み、行番号を表示する処理
+読み込むデータ。
+
+data.txt
+a
+aa
+aaa
+
+
+実行ファイル
+#!/bin/bash
+
+i=1
+while read line # 変数lineに1行ずつ格納される
+do
+    echo "$i: $line"
+    i=`expr $i + 1`
+done <$1 # ここで読み込むファイルを指定（引数）
+実行
+$ ./hello.sh data.txt
+
+
+関数
+関数内で作った変数は関数外でも使用できる。ローカル変数にしたい場合は local i=5 みたいにlocalを使う
+functionは省略可能
+
+#!/bin/bash
+
+# functionは省略可能
+hello() {
+    echo "hello $1 and $2" # hello Mike Tom
+    i=5
+    echo $i
+}
+hello Mike Tom
+
+

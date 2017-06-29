@@ -1,0 +1,52 @@
+アルゴリズムとデータ構造
+
+01array.sh から順番に *.shを習熟して下さい。
+ソースを転記する事から始めて、見ないで実行できるレベルになったら次へ進みます。
+bashでのアルゴリズムの仕組みを理解したらjavaディレクトリ内の、
+javaによるアルゴリズムとデータ構造も併せて習熟すると良いです。
+
+はじめに
+   ShellScript(bash)  000BashBasic
+   UNIXという考え方   001UNIXBasic
+
+アルゴリズムとデータ構造１
+
+   1. データ構造
+      <>配列          01array.sh               
+
+   2. 簡単なソート                             
+      <>バブルソート  02_1BubbleSort.sh        
+      <>選択ソート    02_2SelectionSort.sh     
+      <>挿入ソート    02_3InsertionSort.sh     
+
+   3. データ構造                               
+      <>スタック      03_1Stack.sh             
+      <>キュー        03_1Queque.sh            
+      <>円環キュー    03_1CircularQueue.sh     
+
+アルゴリズムとデータ構造２                     
+
+   4. 再帰                                     
+      <>階乗値        04_1Factorial.sh         
+      <>ユークリッド  04_2Euclid.sh            
+      <>三角数        04_3Trianglar.sh         
+      <>ハノイの塔    04_4Hanoi.sh             
+      <>ハノイ可視化版04_5Hanoi.sh
+
+   5. 高度なソート                             
+      <>マージソート  05_1MergeSort.sh         
+      <>シェルソート  05_2ShellSort.sh         
+      <>クイックソート05_3QuickSort.sh         
+
+   6. ソートアルゴリズムまとめ
+      <>ソート比較    06SortAlgorithm.sh
+
+
+アルゴリズムとデータ構造３
+
+   7. プロフェッショナルBash 
+   
+   N-Queen問題
+   https://github.com/suzukiiichiro/AI_Algorithm_N-Queen
+
+
