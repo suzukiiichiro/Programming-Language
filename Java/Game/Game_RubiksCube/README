@@ -1,0 +1,28 @@
+#!/bin/bash
+
+Author suzuki.iichiro
+http://www.kg-group.com/JavaContent/Game/RubiksCube/
+
+#ブラウザでjavaアプレットを実行するには
+・chromeでは実行できない（SafariとかIEとか）
+・Javaプラグイン(runtime JRE)をアップデートする（またはインストール）
+
+上記を正しく完了すればURLにルービックキューブが表示されます。
+Cube 面の回転
+Face 列の回転
+Puzzle ぐちゃぐちゃにする
+Solve 解決する
+数字 列の数設定
++/- 難易度の設定
+
+#ローカルで実行したい人、または自分でソースをいじりたい人
+・以下のRubiksCube.javaとindex.htmlをローカルに保存
+・ターミナルで以下を実行
+・$ javac と入力してjavaがコンパイルできない人はJDKをインストール
+・インストールしてあるのに・・・という人はJAVA_HOME/binをPATHに追加
+・PATHって何だという人はeclipseにソースを貼り付けるなど工夫する
+
+javac RubiksCube.java ;
+appletviewer index.html ;
+exit ;
+
