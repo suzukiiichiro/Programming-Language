@@ -1,9 +1,10 @@
 #
 ##############################################################################
-#UNIXという考え方
+# UNIXという考え方 suzuki.iichiro
+#
 ##############################################################################
 #
-#
+# keyword:
 #echo awk sed grep cat head tail sort uniq tr wc tee cut tee expr nkf touch xargs tac rev cp curl wget date du find read sleep file mpage xwd basename nroff pr dd split join merge cmp more less fold diff expand paste test
 #
 #■１．小さいものは美しい　「スモールイズビューティフル」
